@@ -117,6 +117,17 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
+}
+.font-rubik {
+  font-family: var(--font-rubik);
+}
+
+.font-handwritten-font {
+  font-family: var(--font-shadows-into-light);
+}
+
+* {
+  font-family: var(--font-rubik);
 }

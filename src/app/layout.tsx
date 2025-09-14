@@ -1,23 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+import RollingHillsBackground from "@/components/RollingHillsBackground";
+import { Rubik, Gloria_Hallelujah } from "next/font/google";
+import NavBar from "@/components/NavBar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const rubik = Rubik({
+  variable: "--font-rubik",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const shadowsIntoLight = Gloria_Hallelujah({
+  variable: "--font-shadows-into-light",
   subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -34,34 +30,12 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${rubik.variable} ${shadowsIntoLight.variable} antialiased bg-transparent`}
         >
-          <header className="border-b border-gray-200 bg-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between items-center py-4">
-                <h1 className="text-xl font-semibold text-gray-900">
-                  Yulissa and Matthew&apos;s Wedding
-                </h1>
-                <div className="flex items-center gap-4">
-                  <SignedOut>
-                    <SignInButton>
-                      <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                        Sign In
-                      </button>
-                    </SignInButton>
-                    <SignUpButton>
-                      <button className="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-md text-sm font-medium transition-colors border border-gray-300">
-                        Sign Up
-                      </button>
-                    </SignUpButton>
-                  </SignedOut>
-                  <SignedIn>
-                    <UserButton />
-                  </SignedIn>
-                </div>
-              </div>
-            </div>
-          </header>
+          <RollingHillsBackground />
+          <div>
+            <NavBar />
+          </div>
           {children}
         </body>
       </html>
