@@ -103,9 +103,8 @@ export default function Home() {
             </ul>
           </SignedIn>
           <SignedOut>
-            <div className="mb-6">
-              <h1 className="text-5xl font-bold mb-1">Our Guest List</h1>
-              <p className="text-stone-700 font-handwritten-font text-lg">
+            <div className="my-6">
+              <p className="text-stone-700 font-handwritten-font text-2xl text-center">
                 Please sign in to view the guest list.
               </p>
             </div>
