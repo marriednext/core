@@ -1,44 +1,28 @@
 "use client";
-import { Users, UserPlus, User } from "lucide-react";
-import { useEffect } from "react";
-import { guestList } from "@/lib/guestList";
+
+import { useEffect, useState } from "react";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 
-type Entry = [string] | [string, string];
-
-function displayName(entry: Entry) {
-  const [a, b] = entry;
-  if (!b) return a;
-  if (b === "PLUSONE") return `${a} + Guest`;
-  return `${a} & ${b}`;
-}
-
-function entryIcon(entry: Entry) {
-  const [, b] = entry;
-  if (!b) return <User className="h-5 w-5" />;
-  return b === "PLUSONE" ? (
-    <UserPlus className="h-5 w-5" />
-  ) : (
-    <Users className="h-5 w-5" />
-  );
-}
-
 export default function Home() {
-  const list = guestList as unknown as Entry[];
-  const invitationsCount = list.length;
-  const expectedPeople = list.reduce((acc, e) => acc + (e[1] ? 2 : 1), 0);
+  const [guestListWithGroups, setGuestListWithGroups] = useState<
+    {
+      guestA: string;
+      guestB: string | null;
+    }[]
+  >([]);
+  const [guestListCount, setGuestListCount] = useState<number>(0);
+  const [guestListWithGroupsCount, setGuestListWithGroupsCount] =
+    useState<number>(0);
+  const [plusOneCount, setPlusOneCount] = useState<number>(0);
 
   useEffect(() => {
-    // fetch("/api/web-analytics-overview")
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log(data);
-    //   });
-
     fetch("/api/guest-list")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        setGuestListWithGroups(data?.displayGuestListWithGroups);
+        setGuestListCount(data?.guestListCount);
+        setGuestListWithGroupsCount(data?.guestListWithGroupsCount);
+        setPlusOneCount(data?.plusOneCount);
       });
   }, []);
 
@@ -57,38 +41,37 @@ export default function Home() {
             <div className="grid grid-cols-3 gap-3 mb-8">
               <div className="rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-center">
                 <p className="text-2xl font-semibold font-handwritten-font">
-                  {invitationsCount}
+                  {guestListWithGroupsCount}
                 </p>
                 <p className="text-stone-700 text-sm">Invitations</p>
               </div>
               <div className="rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-center">
                 <p className="text-2xl font-semibold font-handwritten-font">
-                  {expectedPeople}
+                  {guestListCount}
                 </p>
                 <p className="text-stone-700 text-sm">Expected Guests</p>
               </div>
               <div className="rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-center">
                 <p className="text-2xl font-semibold font-handwritten-font">
-                  {list.filter(([, b]) => b === "PLUSONE").length}
+                  {plusOneCount}
                 </p>
                 <p className="text-stone-700 text-sm">Plus Ones</p>
               </div>
             </div>
 
             <ul className="divide-y divide-white/10">
-              {list.map((entry, i) => {
+              {guestListWithGroups.map((entry, i) => {
                 return (
                   <li
                     key={i}
                     className="py-3 flex items-center justify-between"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="h-10 w-10 rounded-full bg-violet-100 border border-violet-300 flex items-center justify-center text-violet-700 shadow-sm">
-                        {entryIcon(entry)}
-                      </div>
                       <div className="min-w-0">
                         <p className="truncate text-lg font-medium font-handwritten-font">
-                          {displayName(entry)}
+                          {entry.guestA}
+
+                          {entry.guestB && <> {entry.guestB}</>}
                         </p>
                       </div>
                     </div>

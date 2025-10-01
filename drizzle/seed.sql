@@ -1,6 +1,8 @@
 -- i ran this on 9/28/2025  directly into the db 
 -- via the neondb console, this is just for record keeping
 
+--- UPDATE: Gracie for Ryan and add Kami
+
 INSERT INTO invitations (name_on_invitation, is_attending, has_plus_one)
 VALUES
   ('Ken', false, false),
@@ -93,3 +95,14 @@ INSERT INTO invitation_groups (guest_a) VALUES
   ('Sydney'),
   ('Taylor'),
   ('Ryan');
+
+INSERT INTO invitations (name_on_invitation, is_attending, has_plus_one)
+VALUES
+  ('Kami', false, false),
+  ('Gracie', false, false);
+
+INSERT INTO invitation_groups (guest_a) VALUES
+  ('Kami');
+
+-- update Ryan to include Gracie
+UPDATE invitation_groups SET guest_b = 'Gracie' WHERE guest_a = 'Ryan';
