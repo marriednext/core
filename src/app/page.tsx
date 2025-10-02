@@ -1,30 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 
-export default function Home() {
-  const [guestListWithGroups, setGuestListWithGroups] = useState<
-    {
-      guestA: string;
-      guestB: string | null;
-    }[]
-  >([]);
-  const [guestListCount, setGuestListCount] = useState<number>(0);
-  const [guestListWithGroupsCount, setGuestListWithGroupsCount] =
-    useState<number>(0);
-  const [plusOneCount, setPlusOneCount] = useState<number>(0);
+type GuestListData = {
+  displayGuestListWithGroups: {
+    guestA: string;
+    guestB: string | null;
+  }[];
+  guestListCount: number;
+  guestListWithGroupsCount: number;
+  plusOneCount: number;
+};
 
-  useEffect(() => {
-    fetch("/api/guest-list")
-      .then((res) => res.json())
-      .then((data) => {
-        setGuestListWithGroups(data?.displayGuestListWithGroups);
-        setGuestListCount(data?.guestListCount);
-        setGuestListWithGroupsCount(data?.guestListWithGroupsCount);
-        setPlusOneCount(data?.plusOneCount);
-      });
-  }, []);
+export default function Home() {
+  const { data } = useQuery<GuestListData>({
+    queryKey: ["guest-list"],
+    queryFn: async () => {
+      const res = await fetch("/api/guest-list");
+      return res.json();
+    },
+  });
+
+  const guestListWithGroups = data?.displayGuestListWithGroups ?? [];
+  const guestListCount = data?.guestListCount ?? 0;
+  const guestListWithGroupsCount = data?.guestListWithGroupsCount ?? 0;
+  const plusOneCount = data?.plusOneCount ?? 0;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6">

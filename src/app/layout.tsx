@@ -5,6 +5,7 @@ import RollingHillsBackground from "@/components/RollingHillsBackground";
 import { Rubik, Gloria_Hallelujah } from "next/font/google";
 import NavBar from "@/components/NavBar";
 import { Analytics } from "@vercel/analytics/next";
+import { QueryProvider } from "@/providers/QueryProvider";
 
 const rubik = Rubik({
   variable: "--font-rubik",
@@ -33,11 +34,13 @@ export default function RootLayout({
         <body
           className={`${rubik.variable} ${shadowsIntoLight.variable} antialiased bg-transparent`}
         >
-          <RollingHillsBackground />
-          <div>
-            <NavBar />
-          </div>
-          {children}
+          <QueryProvider>
+            <RollingHillsBackground />
+            <div>
+              <NavBar />
+            </div>
+            {children}
+          </QueryProvider>
         </body>
         <Analytics />
       </html>
