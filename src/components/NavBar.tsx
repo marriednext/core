@@ -7,13 +7,23 @@ export default function NavBar() {
   return (
     <nav className="w-full fixed top-0 left-0 z-20">
       <div className="max-w-3xl mx-auto px-6 py-3 flex items-center justify-between gap-6 bg-white/70 backdrop-blur-md border-b border-white/40 rounded-b-2xl shadow-lg">
-        <a
-          className="text-sm text-gray-900 hover:text-violet-700 transition"
-          href="https://yulissaandmatthew.com"
-          target="_blank"
-        >
-          Visit Wedding Website &rarr;
-        </a>
+        <div className="flex items-center gap-4">
+          <a
+            className="text-sm text-gray-900 hover:text-violet-700 transition hover:underline"
+            href="https://yulissaandmatthew.com"
+            target="_blank"
+          >
+            Visit Website &#8599;
+          </a>
+          <SignedIn>
+            <Link
+              href="/registry"
+              className="text-sm text-gray-900 hover:text-violet-700 transition hover:underline"
+            >
+              Registry
+            </Link>
+          </SignedIn>
+        </div>
         <div className="flex items-center gap-6">
           <SignedIn>
             <UserButton />
