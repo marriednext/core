@@ -35,8 +35,7 @@ export default function RootLayout({
           className={`${rubik.variable} ${shadowsIntoLight.variable} antialiased bg-transparent`}
         >
           <QueryProvider>
-            <RollingHillsBackground />
-            <div>
+            <div className="max-w-3xl mx-auto z-10">
               <NavBar />
             </div>
             {children}
