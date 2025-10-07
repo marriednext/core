@@ -2,12 +2,11 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { DbInvitationGroupWithGuests } from "@/database/drizzle";
+import GuestListDisplay from "@/components/GuestListDisplay";
 
 type GuestListData = {
-  displayGuestListWithGroups: {
-    guestA: string;
-    guestB: string | null;
-  }[];
+  guestListWithGroups: DbInvitationGroupWithGuests[];
   guestListCount: number;
   guestListWithGroupsCount: number;
   plusOneCount: number;
@@ -22,7 +21,7 @@ export default function Home() {
     },
   });
 
-  const guestListWithGroups = data?.displayGuestListWithGroups ?? [];
+  const guestListWithGroups = data?.guestListWithGroups ?? [];
   const guestListCount = data?.guestListCount ?? 0;
   const guestListWithGroupsCount = data?.guestListWithGroupsCount ?? 0;
   const plusOneCount = data?.plusOneCount ?? 0;
@@ -60,31 +59,7 @@ export default function Home() {
               </div>
             </div>
 
-            <ul className="divide-y divide-white/10">
-              {guestListWithGroups.map((entry, i) => {
-                return (
-                  <li
-                    key={i}
-                    className="py-3 flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="min-w-0">
-                        <p className="truncate text-lg font-medium font-handwritten-font">
-                          {entry.guestA}
-
-                          {entry.guestB && <> {entry.guestB}</>}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 font-medium">
-                        Pending
-                      </span>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
+            <GuestListDisplay guestListWithGroups={guestListWithGroups} />
           </SignedIn>
           <SignedOut>
             <div className="my-6">
@@ -95,16 +70,6 @@ export default function Home() {
           </SignedOut>
         </div>
       </div>
-
-      <SignedIn>
-        <div className="max-w-2xl w-full mb-[100vh]">
-          <div className="p-6 bg-white/50 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg text-gray-900 flex gap-2">
-            <span className="font-handwritten-font hover:text-violet-800 cursor-default">
-              Our special day, April 23rd, 2026
-            </span>
-          </div>
-        </div>
-      </SignedIn>
     </div>
   );
 }

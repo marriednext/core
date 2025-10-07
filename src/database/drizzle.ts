@@ -8,8 +8,11 @@ import type { InferSelectModel } from "drizzle-orm";
 const db = drizzle(queryClient, { schema: { ...schema, ...relations } });
 
 export type DbInvitation = InferSelectModel<typeof invitations>;
-export type DbInvitationWithGroups = DbInvitation & {
-  invitation_groups: InferSelectModel<typeof invitationGroups>[];
+export type DbInvitationGroup = InferSelectModel<typeof invitationGroups>;
+
+export type DbInvitationGroupWithGuests = DbInvitationGroup & {
+  invitation_guestA: DbInvitation | null;
+  invitation_guestB: DbInvitation | null;
 };
 
 export const getGuestList = async (): Promise<DbInvitation[]> => {
