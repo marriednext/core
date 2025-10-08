@@ -2,8 +2,10 @@
 alwaysApply: true
 ---
 
-you never need to run a build, or lint, unless explicitly stated.
-
-always do the bare minimum, using the path of least resistance to achieve your task.
-
-always use pnpm
+- you never need to run a build, or lint, unless explicitly stated.
+- always do the bare minimum, using the path of least resistance to achieve your task.
+- always use pnpm
+- no comments in code
+- use `clsx` in class names
+- no ternary operators unless they are simple
+- use schadcn/ui

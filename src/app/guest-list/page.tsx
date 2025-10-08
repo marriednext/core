@@ -28,7 +28,7 @@ export default function GuestListPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6">
-      <div className="max-w-2xl w-full mb-4 mt-20">
+      <div className="w-full mb-4 mt-20">
         <div className="p-6 bg-white/50 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg text-gray-900">
           <SignedIn>
             <div className="mb-6">
