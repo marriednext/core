@@ -8,7 +8,7 @@ export default function Home() {
           <div className="mb-8 text-center">
             <h1 className="text-5xl font-bold mb-2">Welcome!</h1>
             <p className="text-stone-700 font-handwritten-font text-2xl">
-              Yulissa & Matthew's Wedding
+              Yulissa &apos;s Wedding
             </p>
             <p className="text-stone-600 text-lg mt-2">
               April 23rd, 2026 • Temecula Wine Country

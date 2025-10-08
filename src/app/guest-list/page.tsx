@@ -3,25 +3,11 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { DbInvitationGroupWithGuests } from "@/database/drizzle";
-import GuestListDisplay from "@/components/GuestListDisplay";
-
-type GuestListData = {
-  guestListWithGroups: DbInvitationGroupWithGuests[];
-  guestListCount: number;
-  guestListWithGroupsCount: number;
-  plusOneCount: number;
-};
-
-interface UpdateGuestPayload {
-  entryId: number;
-  guestA: string;
-  guestAAttending: boolean | null;
-  guestAHasPlusOne: boolean;
-  guestB: string | null;
-  guestBAttending: boolean | null;
-  guestBHasPlusOne: boolean;
-}
+import GuestListDisplay from "@/components/guest-list/GuestListDisplay";
+import {
+  GuestListData,
+  UpdateGuestPayload,
+} from "@/components/guest-list/guestList.types";
 
 export default function GuestListPage() {
   const queryClient = useQueryClient();
@@ -58,7 +44,6 @@ export default function GuestListPage() {
     },
     onError: (error) => {
       console.error("Error updating guest:", error);
-      alert("Failed to update guest. Please try again.");
     },
   });
 
@@ -73,10 +58,7 @@ export default function GuestListPage() {
         <div className="p-6 bg-white/50 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg text-gray-900">
           <SignedIn>
             <div className="mb-6">
-              <h1 className="text-5xl font-bold mb-1">Our Guest List</h1>
-              <p className="text-stone-700 font-handwritten-font text-lg">
-                Temecula Wine Country
-              </p>
+              <h1 className="text-5xl font-bold mb-1">Guest List</h1>
             </div>
 
             <div className="grid grid-cols-3 gap-3 mb-8">
