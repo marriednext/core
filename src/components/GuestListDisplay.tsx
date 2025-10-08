@@ -348,6 +348,8 @@ function InvitationCard({
   );
 }
 
+type SortOption = "alpha-asc" | "alpha-desc" | "date-newest" | "date-oldest";
+
 export default function GuestListDisplay({
   guestListWithGroups,
   onUpdateGuest,
@@ -358,6 +360,7 @@ export default function GuestListDisplay({
   const [viewMode, setViewMode] = useState<"expanded" | "condensed">(
     "expanded"
   );
+  const [sortBy, setSortBy] = useState<SortOption>("alpha-asc");
   const [editForm, setEditForm] = useState<EditFormData | null>(null);
 
   const { trackEvent, trackOnMount } = useDebouncedTelemetry({ delay: 3000 });
@@ -393,47 +396,82 @@ export default function GuestListDisplay({
     });
   };
 
+  const sortedGuestList = [...guestListWithGroups].sort((a, b) => {
+    switch (sortBy) {
+      case "alpha-asc":
+        return a.guestA.localeCompare(b.guestA);
+      case "alpha-desc":
+        return b.guestA.localeCompare(a.guestA);
+      case "date-newest":
+        if (!a.createdAt || !b.createdAt) return 0;
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      case "date-oldest":
+        if (!a.createdAt || !b.createdAt) return 0;
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      default:
+        return 0;
+    }
+  });
+
   return (
     <div>
-      {/* View Toggle */}
-      <div className="flex justify-end gap-2 mb-4">
-        <button
-          onClick={() => {
-            setViewMode("expanded");
-            trackEvent(() => telemetry.trackGuestListViewToggle("expanded"));
-          }}
-          className={clsx(
-            "p-2 rounded-lg transition-colors border",
-            viewMode === "expanded" &&
-              "bg-white text-gray-900 border-gray-300 shadow-sm",
-            viewMode !== "expanded" &&
-              "bg-white/50 text-gray-700 border-gray-200 hover:bg-white hover:border-gray-300"
-          )}
-          aria-label="Expanded view"
+      <div className="flex justify-between items-center gap-2 mb-4">
+        <Select
+          value={sortBy}
+          onValueChange={(value: SortOption) => setSortBy(value)}
         >
-          <LayoutGrid className="w-5 h-5" />
-        </button>
-        <button
-          onClick={() => {
-            setViewMode("condensed");
-            trackEvent(() => telemetry.trackGuestListViewToggle("condensed"));
-          }}
-          className={clsx(
-            "p-2 rounded-lg transition-colors border",
-            viewMode === "condensed" &&
-              "bg-white text-gray-900 border-gray-300 shadow-sm",
-            viewMode !== "condensed" &&
-              "bg-white/50 text-gray-700 border-gray-200 hover:bg-white hover:border-gray-300"
-          )}
-          aria-label="Condensed view"
-        >
-          <List className="w-5 h-5" />
-        </button>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="alpha-asc">A → Z</SelectItem>
+            <SelectItem value="alpha-desc">Z → A</SelectItem>
+            <SelectItem value="date-newest">Newest First</SelectItem>
+            <SelectItem value="date-oldest">Oldest First</SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              setViewMode("expanded");
+              trackEvent(() => telemetry.trackGuestListViewToggle("expanded"));
+            }}
+            className={clsx(
+              "p-2 rounded-lg transition-colors border",
+              viewMode === "expanded" &&
+                "bg-white text-gray-900 border-gray-300 shadow-sm",
+              viewMode !== "expanded" &&
+                "bg-white/50 text-gray-700 border-gray-200 hover:bg-white hover:border-gray-300"
+            )}
+            aria-label="Expanded view"
+          >
+            <LayoutGrid className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => {
+              setViewMode("condensed");
+              trackEvent(() => telemetry.trackGuestListViewToggle("condensed"));
+            }}
+            className={clsx(
+              "p-2 rounded-lg transition-colors border",
+              viewMode === "condensed" &&
+                "bg-white text-gray-900 border-gray-300 shadow-sm",
+              viewMode !== "condensed" &&
+                "bg-white/50 text-gray-700 border-gray-200 hover:bg-white hover:border-gray-300"
+            )}
+            aria-label="Condensed view"
+          >
+            <List className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
-      {/* Guest List */}
       <ul className="space-y-3">
-        {guestListWithGroups.map((entry) => {
+        {sortedGuestList.map((entry) => {
           const attending = entry.attending ?? 0;
           const total = entry.total ?? 0;
 
