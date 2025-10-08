@@ -135,6 +135,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
         .set({
           guestA: validatedData.guestA,
           guestB: validatedData.guestB,
+          lastUpdatedAt: new Date().toISOString(),
         })
         .where(eq(invitationGroups.id, validatedData.entryId));
     });

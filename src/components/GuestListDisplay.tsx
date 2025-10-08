@@ -334,21 +334,38 @@ function InvitationCard({
         )}
       </div>
 
-      {entry.createdAt && (
-        <p className="text-xs text-gray-600 mt-3 font-medium">
-          Created:{" "}
-          {new Date(entry.createdAt).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </p>
-      )}
+      <div className="flex justify-between mt-3 text-xs text-gray-600 font-medium">
+        {entry.createdAt && (
+          <p>
+            Created:{" "}
+            {new Date(entry.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </p>
+        )}
+        {entry.lastUpdatedAt && (
+          <p>
+            Updated:{" "}
+            {new Date(entry.lastUpdatedAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </p>
+        )}
+      </div>
     </li>
   );
 }
 
-type SortOption = "alpha-asc" | "alpha-desc" | "date-newest" | "date-oldest";
+type SortOption =
+  | "alpha-asc"
+  | "alpha-desc"
+  | "date-newest"
+  | "date-oldest"
+  | "updated-newest";
 
 export default function GuestListDisplay({
   guestListWithGroups,
@@ -412,6 +429,12 @@ export default function GuestListDisplay({
         return (
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         );
+      case "updated-newest":
+        if (!a.lastUpdatedAt || !b.lastUpdatedAt) return 0;
+        return (
+          new Date(b.lastUpdatedAt).getTime() -
+          new Date(a.lastUpdatedAt).getTime()
+        );
       default:
         return 0;
     }
@@ -432,6 +455,7 @@ export default function GuestListDisplay({
             <SelectItem value="alpha-desc">Z → A</SelectItem>
             <SelectItem value="date-newest">Newest First</SelectItem>
             <SelectItem value="date-oldest">Oldest First</SelectItem>
+            <SelectItem value="updated-newest">Recently Updated</SelectItem>
           </SelectContent>
         </Select>
         <div className="flex gap-2">

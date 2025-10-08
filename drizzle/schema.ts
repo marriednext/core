@@ -32,6 +32,10 @@ export const invitationGroups = pgTable(
     createdAt: timestamp("created_at", { mode: "string" })
       .defaultNow()
       .notNull(),
+    lastUpdatedAt: timestamp("last_updated_at", { mode: "string" })
+      .defaultNow()
+      .notNull(),
+    inviteGroupName: text("invite_group_name"),
   },
   (table) => [
     foreignKey({
@@ -53,9 +57,9 @@ export const invitationGroups = pgTable(
 
 export const adminTelemetryEvents = pgTable("admin_telemetry_events", {
   id: serial().primaryKey().notNull(),
-  componentName: text("component_name").notNull(), // 'GuestListDisplay', 'GuestAddDialog', 'GuestEditModal', etc.
-  eventType: text("event_type").notNull(), // 'view_mode_toggle', 'guest_add_opened', 'guest_edit_opened', 'guest_delete_confirmed'
-  eventValue: text("event_value"), // 'expanded', 'condensed', guest_id
+  componentName: text("component_name").notNull(),
+  eventType: text("event_type").notNull(),
+  eventValue: text("event_value"),
   timestamp: timestamp("timestamp", { mode: "string" }).defaultNow().notNull(),
   sessionId: text("session_id"),
 });
