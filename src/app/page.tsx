@@ -1,73 +1,51 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { DbInvitationGroupWithGuests } from "@/database/drizzle";
-import GuestListDisplay from "@/components/GuestListDisplay";
-
-type GuestListData = {
-  guestListWithGroups: DbInvitationGroupWithGuests[];
-  guestListCount: number;
-  guestListWithGroupsCount: number;
-  plusOneCount: number;
-};
+import Link from "next/link";
 
 export default function Home() {
-  const { data } = useQuery<GuestListData>({
-    queryKey: ["guest-list"],
-    queryFn: async () => {
-      const res = await fetch("/api/guest-list");
-      return res.json();
-    },
-  });
-
-  const guestListWithGroups = data?.guestListWithGroups ?? [];
-  const guestListCount = data?.guestListCount ?? 0;
-  const guestListWithGroupsCount = data?.guestListWithGroupsCount ?? 0;
-  const plusOneCount = data?.plusOneCount ?? 0;
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6">
       <div className="max-w-2xl w-full mb-4 mt-20">
-        <div className="p-6 bg-white/50 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg text-gray-900">
-          <SignedIn>
-            <div className="mb-6">
-              <h1 className="text-5xl font-bold mb-1">Our Guest List</h1>
-              <p className="text-stone-700 font-handwritten-font text-lg">
-                Temecula Wine Country
-              </p>
-            </div>
+        <div className="p-8 bg-white/50 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg text-gray-900">
+          <div className="mb-8 text-center">
+            <h1 className="text-5xl font-bold mb-2">Welcome!</h1>
+            <p className="text-stone-700 font-handwritten-font text-2xl">
+              Yulissa & Matthew's Wedding
+            </p>
+            <p className="text-stone-600 text-lg mt-2">
+              April 23rd, 2026 • Temecula Wine Country
+            </p>
+          </div>
 
-            <div className="grid grid-cols-3 gap-3 mb-8">
-              <div className="rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-center">
-                <p className="text-2xl font-semibold font-handwritten-font">
-                  {guestListWithGroupsCount}
-                </p>
-                <p className="text-stone-700 text-sm">Invitations</p>
-              </div>
-              <div className="rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-center">
-                <p className="text-2xl font-semibold font-handwritten-font">
-                  {guestListCount}
-                </p>
-                <p className="text-stone-700 text-sm">Expected Guests</p>
-              </div>
-              <div className="rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-center">
-                <p className="text-2xl font-semibold font-handwritten-font">
-                  {plusOneCount}
-                </p>
-                <p className="text-stone-700 text-sm">Plus Ones</p>
-              </div>
-            </div>
-
-            <GuestListDisplay guestListWithGroups={guestListWithGroups} />
-          </SignedIn>
-          <SignedOut>
-            <div className="my-6">
-              <p className="text-stone-700 font-handwritten-font text-2xl text-center">
-                Please sign in to view the guest list.
+          <div className="space-y-4">
+            <Link
+              href="/guest-list"
+              className="block p-4 bg-white/30 hover:bg-white/50 rounded-lg transition-colors text-center"
+            >
+              <h2 className="text-xl font-semibold mb-1">Guest List</h2>
+              <p className="text-sm text-stone-600">
+                View and manage wedding guests
               </p>
-            </div>
-          </SignedOut>
+            </Link>
+
+            <Link
+              href="/registry"
+              className="block p-4 bg-white/30 hover:bg-white/50 rounded-lg transition-colors text-center"
+            >
+              <h2 className="text-xl font-semibold mb-1">Registry</h2>
+              <p className="text-sm text-stone-600">
+                Wedding registry and gift fund
+              </p>
+            </Link>
+
+            <Link
+              href="/documentation"
+              className="block p-4 bg-white/30 hover:bg-white/50 rounded-lg transition-colors text-center"
+            >
+              <h2 className="text-xl font-semibold mb-1">Documentation</h2>
+              <p className="text-sm text-stone-600">
+                Learn more about this application
+              </p>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
