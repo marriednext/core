@@ -1,6 +1,7 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { DbInvitationGroupWithGuests } from "@/database/drizzle";
 import GuestListDisplay from "@/components/GuestListDisplay";
@@ -12,12 +13,52 @@ type GuestListData = {
   plusOneCount: number;
 };
 
+interface UpdateGuestPayload {
+  entryId: number;
+  guestA: string;
+  guestAAttending: boolean | null;
+  guestAHasPlusOne: boolean;
+  guestB: string | null;
+  guestBAttending: boolean | null;
+  guestBHasPlusOne: boolean;
+}
+
 export default function GuestListPage() {
+  const queryClient = useQueryClient();
+  const [editingId, setEditingId] = useState<number | null>(null);
+
   const { data } = useQuery<GuestListData>({
     queryKey: ["guest-list"],
     queryFn: async () => {
       const res = await fetch("/api/guest-list");
       return res.json();
+    },
+  });
+
+  const updateGuestMutation = useMutation({
+    mutationFn: async (payload: UpdateGuestPayload) => {
+      const response = await fetch("/api/guest-list", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to update guest");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      setEditingId(null);
+      queryClient.invalidateQueries({ queryKey: ["guest-list"] });
+    },
+    onError: (error) => {
+      console.error("Error updating guest:", error);
+      alert("Failed to update guest. Please try again.");
     },
   });
 
@@ -59,7 +100,13 @@ export default function GuestListPage() {
               </div>
             </div>
 
-            <GuestListDisplay guestListWithGroups={guestListWithGroups} />
+            <GuestListDisplay
+              guestListWithGroups={guestListWithGroups}
+              onUpdateGuest={(payload) => updateGuestMutation.mutate(payload)}
+              isUpdating={updateGuestMutation.isPending}
+              editingId={editingId}
+              onEditingIdChange={setEditingId}
+            />
           </SignedIn>
           <SignedOut>
             <div className="my-6">

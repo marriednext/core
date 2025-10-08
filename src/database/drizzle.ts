@@ -13,6 +13,8 @@ export type DbInvitationGroup = InferSelectModel<typeof invitationGroups>;
 export type DbInvitationGroupWithGuests = DbInvitationGroup & {
   invitation_guestA: DbInvitation | null;
   invitation_guestB: DbInvitation | null;
+  attending?: number;
+  total?: number;
 };
 
 export const getGuestList = async (): Promise<DbInvitation[]> => {

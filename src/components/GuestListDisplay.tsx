@@ -30,8 +30,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+interface UpdateGuestPayload {
+  entryId: number;
+  guestA: string;
+  guestAAttending: boolean | null;
+  guestAHasPlusOne: boolean;
+  guestB: string | null;
+  guestBAttending: boolean | null;
+  guestBHasPlusOne: boolean;
+}
+
 interface GuestListDisplayProps {
   guestListWithGroups: DbInvitationGroupWithGuests[];
+  onUpdateGuest: (payload: UpdateGuestPayload) => void;
+  isUpdating: boolean;
+  editingId: number | null;
+  onEditingIdChange: (id: number | null) => void;
 }
 
 interface EditFormData {
@@ -52,18 +66,24 @@ interface InvitationCardProps {
   onSave: () => void;
   onCancel: () => void;
   onFormChange: (form: EditFormData) => void;
+  isSaving: boolean;
 }
 
 interface GuestFieldsEditProps {
   editForm: EditFormData;
   onFormChange: (form: EditFormData) => void;
+  disabled?: boolean;
 }
 
 interface GuestFieldsViewProps {
   entry: DbInvitationGroupWithGuests;
 }
 
-function GuestFieldsEdit({ editForm, onFormChange }: GuestFieldsEditProps) {
+function GuestFieldsEdit({
+  editForm,
+  onFormChange,
+  disabled,
+}: GuestFieldsEditProps) {
   return (
     <>
       <div className="flex items-center gap-2 py-2 px-3 rounded-lg bg-gray-50 border border-gray-200">
@@ -74,6 +94,7 @@ function GuestFieldsEdit({ editForm, onFormChange }: GuestFieldsEditProps) {
           }
           placeholder="Guest A Name"
           className="flex-1"
+          disabled={disabled}
         />
         <Select
           value={
@@ -90,6 +111,7 @@ function GuestFieldsEdit({ editForm, onFormChange }: GuestFieldsEditProps) {
                 value === "pending" ? null : value === "attending",
             })
           }
+          disabled={disabled}
         >
           <SelectTrigger className="w-[140px]">
             <SelectValue />
@@ -112,6 +134,7 @@ function GuestFieldsEdit({ editForm, onFormChange }: GuestFieldsEditProps) {
                 guestAHasPlusOne: value === "yes",
               })
             }
+            disabled={disabled}
           >
             <SelectTrigger className="w-[100px]">
               <SelectValue />
@@ -137,6 +160,7 @@ function GuestFieldsEdit({ editForm, onFormChange }: GuestFieldsEditProps) {
               }
               placeholder="Guest B Name"
               className="flex-1"
+              disabled={disabled}
             />
             <Select
               value={
@@ -153,6 +177,7 @@ function GuestFieldsEdit({ editForm, onFormChange }: GuestFieldsEditProps) {
                     value === "pending" ? null : value === "attending",
                 })
               }
+              disabled={disabled}
             >
               <SelectTrigger className="w-[140px]">
                 <SelectValue />
@@ -239,6 +264,7 @@ function InvitationCard({
   onSave,
   onCancel,
   onFormChange,
+  isSaving,
 }: InvitationCardProps) {
   return (
     <li className="rounded-xl bg-white border border-gray-200 p-4 hover:border-gray-300 hover:shadow-sm transition-all">
@@ -259,13 +285,19 @@ function InvitationCard({
               variant="outline"
               onClick={onCancel}
               className="h-8"
+              disabled={isSaving}
             >
               <X className="w-4 h-4 mr-1" />
               Cancel
             </Button>
-            <Button size="sm" onClick={onSave} className="h-8">
+            <Button
+              size="sm"
+              onClick={onSave}
+              className="h-8"
+              disabled={isSaving}
+            >
               <Check className="w-4 h-4 mr-1" />
-              Save
+              {isSaving ? "Saving..." : "Save"}
             </Button>
           </div>
         ) : (
@@ -292,7 +324,11 @@ function InvitationCard({
 
       <div className="space-y-2">
         {isEditing && editForm ? (
-          <GuestFieldsEdit editForm={editForm} onFormChange={onFormChange} />
+          <GuestFieldsEdit
+            editForm={editForm}
+            onFormChange={onFormChange}
+            disabled={isSaving}
+          />
         ) : (
           <GuestFieldsView entry={entry} />
         )}
@@ -314,48 +350,25 @@ function InvitationCard({
 
 export default function GuestListDisplay({
   guestListWithGroups,
+  onUpdateGuest,
+  isUpdating,
+  editingId,
+  onEditingIdChange,
 }: GuestListDisplayProps) {
   const [viewMode, setViewMode] = useState<"expanded" | "condensed">(
     "expanded"
   );
-  const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<EditFormData | null>(null);
 
   const { trackEvent, trackOnMount } = useDebouncedTelemetry({ delay: 3000 });
 
-  // Track component mount after 3 seconds to capture users who stay on default view
   useEffect(() => {
     trackOnMount(() => telemetry.trackGuestListComponentMount());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const calculateAttendance = (entry: DbInvitationGroupWithGuests) => {
-    let attending = 0;
-    let total = 0;
-
-    if (entry.invitation_guestA) {
-      total++;
-      if (entry.invitation_guestA.isAttending) attending++;
-      if (entry.invitation_guestA.hasPlusOne) {
-        total++;
-        if (entry.invitation_guestA.isAttending) attending++;
-      }
-    }
-
-    if (entry.invitation_guestB) {
-      total++;
-      if (entry.invitation_guestB.isAttending) attending++;
-      if (entry.invitation_guestB.hasPlusOne) {
-        total++;
-        if (entry.invitation_guestB.isAttending) attending++;
-      }
-    }
-
-    return { attending, total };
-  };
-
   const handleEdit = (entry: DbInvitationGroupWithGuests) => {
-    setEditingId(entry.id);
+    onEditingIdChange(entry.id);
     setEditForm({
       guestA: entry.guestA,
       guestAAttending: entry.invitation_guestA?.isAttending ?? null,
@@ -367,14 +380,17 @@ export default function GuestListDisplay({
   };
 
   const handleCancelEdit = () => {
-    setEditingId(null);
+    onEditingIdChange(null);
     setEditForm(null);
   };
 
   const handleSubmitEdit = (entryId: number) => {
-    console.log("Submitting changes for entry", entryId, editForm);
-    setEditingId(null);
-    setEditForm(null);
+    if (!editForm) return;
+
+    onUpdateGuest({
+      entryId,
+      ...editForm,
+    });
   };
 
   return (
@@ -418,7 +434,8 @@ export default function GuestListDisplay({
       {/* Guest List */}
       <ul className="space-y-3">
         {guestListWithGroups.map((entry) => {
-          const { attending, total } = calculateAttendance(entry);
+          const attending = entry.attending ?? 0;
+          const total = entry.total ?? 0;
 
           if (viewMode === "condensed") {
             return (
@@ -464,6 +481,7 @@ export default function GuestListDisplay({
               onSave={() => handleSubmitEdit(entry.id)}
               onCancel={handleCancelEdit}
               onFormChange={setEditForm}
+              isSaving={isUpdating && editingId === entry.id}
             />
           );
         })}
