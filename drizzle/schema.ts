@@ -17,8 +17,8 @@ export const invitations = pgTable(
       mode: "string",
     }).defaultNow(),
     nameOnInvitation: text("name_on_invitation").notNull(),
-    isAttending: boolean("is_attending").default(false),
-    hasPlusOne: boolean("has_plus_one").default(false),
+    isAttending: boolean("is_attending"),
+    hasPlusOne: boolean("has_plus_one"),
   },
   (table) => [unique("uq_invitation_name").on(table.nameOnInvitation)]
 );
