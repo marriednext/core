@@ -11,12 +11,15 @@ import {
 import { DbInvitationGroupWithGuests } from "@/database/drizzle";
 import { useDebounce } from "@/hooks/useDebounce";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { AddGuestDialog } from "@/components/guest-list/AddGuestDialog";
+import { Button } from "@/components/ui/button";
 
 export default function GuestListPage() {
   const queryClient = useQueryClient();
   const [editingId, setEditingId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [loadingGuestList, setLoadingGuestList] = useState(true);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   const { data } = useQuery<GuestListData>({
@@ -76,6 +79,32 @@ export default function GuestListPage() {
     },
   });
 
+  const addGuestMutation = useMutation({
+    mutationFn: async (data: { guests: string[]; hasPlusOne: boolean }) => {
+      const response = await fetch("/api/guest-list/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to add guest");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      setIsAddDialogOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["guest-list"] });
+    },
+    onError: (error) => {
+      console.error("Error adding guest:", error);
+    },
+  });
+
   const guestListWithGroups = data?.guestListWithGroups ?? [];
   const guestListCount = data?.guestListCount ?? 0;
   const guestListWithGroupsCount = data?.guestListWithGroupsCount ?? 0;
@@ -118,6 +147,19 @@ export default function GuestListPage() {
                 <p className="text-stone-700 text-sm">Plus Ones</p>
               </div>
             </div>
+
+            <div className="mb-6">
+              <Button onClick={() => setIsAddDialogOpen(true)}>
+                Add Guest
+              </Button>
+            </div>
+
+            <AddGuestDialog
+              open={isAddDialogOpen}
+              onOpenChange={setIsAddDialogOpen}
+              onSubmit={(data) => addGuestMutation.mutate(data)}
+              isSubmitting={addGuestMutation.isPending}
+            />
 
             <GuestListDisplay
               guestListWithGroups={guestListWithGroups}

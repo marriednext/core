@@ -13,6 +13,7 @@ export function DocsCallout({
   title,
   children,
   variant = "neutral",
+  className,
 }: DocsCalloutProps) {
   const variantStyles = {
     info: "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800",
@@ -31,7 +32,9 @@ export function DocsCallout({
   };
 
   return (
-    <div className={`p-6 rounded-xl border ${variantStyles[variant]}`}>
+    <div
+      className={`p-6 rounded-xl border ${variantStyles[variant]} ${className}`}
+    >
       <div className="flex items-start gap-3">
         {Icon && (
           <Icon className={`w-5 h-5 mt-1 shrink-0 ${iconStyles[variant]}`} />

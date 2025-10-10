@@ -101,36 +101,62 @@ export default function InvitationsDocPage() {
         <div className="space-y-4">
           <div className="p-6 rounded-lg border bg-card">
             <h3 className="font-semibold text-lg mb-3">
-              How to Create an Invitation
+              How to Create a New Invitation
             </h3>
             <ol className="space-y-3 text-muted-foreground">
               <li className="flex gap-3">
                 <span className="font-semibold text-primary">1.</span>
                 <span>
-                  Add your first guest - every invitation needs at least one
-                  person
+                  Navigate to the Guest List page and click the{" "}
+                  <InlineCode>Add Guest</InlineCode> button
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="font-semibold text-primary">2.</span>
                 <span>
-                  Add more guests as needed (up to 8 total per invitation)
+                  Enter the first guest&apos;s name in the dialog that appears
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="font-semibold text-primary">3.</span>
                 <span>
-                  Name your invitation group so you can identify it later
+                  If you&apos;re only adding one guest, you can check the{" "}
+                  <InlineCode>Add a Plus One</InlineCode> option to allow them
+                  to bring a guest
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="font-semibold text-primary">4.</span>
                 <span>
-                  All guests in the group will be linked together for RSVP
-                  tracking
+                  Click <InlineCode>Add Another Guest</InlineCode> to add more
+                  people to this invitation (up to 8 total)
+                </span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-semibold text-primary">5.</span>
+                <span>
+                  Remove any guest by clicking the <InlineCode>X</InlineCode>{" "}
+                  button next to their name
+                </span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-semibold text-primary">6.</span>
+                <span>
+                  Click <InlineCode>Complete</InlineCode> when you&apos;re done
+                  adding guests
                 </span>
               </li>
             </ol>
+            <DocsCallout
+              variant="info"
+              title="Pro Tip"
+              icon={Info}
+              className="mt-4"
+            >
+              The Plus One option is only available when adding a single guest.
+              Once you add a second guest, all guests must be named
+              individually.
+            </DocsCallout>
           </div>
 
           <div className="p-6 rounded-lg border bg-card">

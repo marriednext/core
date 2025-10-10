@@ -10,3 +10,5 @@ alwaysApply: true
 - no ternary operators unless they are simple
 - use schadcn/ui
 - always use react-query
+- use Zod to validate api data
+- never pass sensitive info to/from the client.
