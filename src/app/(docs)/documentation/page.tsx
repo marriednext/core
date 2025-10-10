@@ -13,6 +13,7 @@ import {
   Zap,
   ArrowRight,
   Rocket,
+  Users,
 } from "lucide-react";
 
 const documentationSections = [
@@ -27,6 +28,16 @@ const documentationSections = [
     bgColor: "bg-green-50 dark:bg-green-950/30",
   },
   {
+    title: "Invitations",
+    href: "/documentation/invitations",
+    description:
+      "Learn how to manage guest groups and understand invitation capacity limits",
+    icon: Users,
+    category: "Guest Management",
+    color: "text-purple-600 dark:text-purple-400",
+    bgColor: "bg-purple-50 dark:bg-purple-950/30",
+  },
+  {
     title: "Telemetry",
     href: "/documentation/telemetry",
     description:
@@ -36,7 +47,6 @@ const documentationSections = [
     color: "text-blue-600 dark:text-blue-400",
     bgColor: "bg-blue-50 dark:bg-blue-950/30",
   },
-  // Future documentation sections can be added here
 ];
 
 export default function DocumentationPage() {

@@ -7,7 +7,6 @@ import {
   boolean,
   foreignKey,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 export const invitations = pgTable(
   "invitations",
@@ -29,6 +28,13 @@ export const invitationGroups = pgTable(
     id: serial().primaryKey().notNull(),
     guestA: text("guest_a").notNull(),
     guestB: text("guest_b"),
+    guestC: text("guest_c"),
+    guestD: text("guest_d"),
+    guestE: text("guest_e"),
+    guestF: text("guest_f"),
+    guestG: text("guest_g"),
+    guestH: text("guest_h"),
+    guestI: text("guest_i"),
     createdAt: timestamp("created_at", { mode: "string" })
       .defaultNow()
       .notNull(),
@@ -49,6 +55,55 @@ export const invitationGroups = pgTable(
       columns: [table.guestB],
       foreignColumns: [invitations.nameOnInvitation],
       name: "fk_guest_b",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+    foreignKey({
+      columns: [table.guestC],
+      foreignColumns: [invitations.nameOnInvitation],
+      name: "fk_guest_c",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+    foreignKey({
+      columns: [table.guestD],
+      foreignColumns: [invitations.nameOnInvitation],
+      name: "fk_guest_d",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+    foreignKey({
+      columns: [table.guestE],
+      foreignColumns: [invitations.nameOnInvitation],
+      name: "fk_guest_e",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+    foreignKey({
+      columns: [table.guestF],
+      foreignColumns: [invitations.nameOnInvitation],
+      name: "fk_guest_f",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+    foreignKey({
+      columns: [table.guestG],
+      foreignColumns: [invitations.nameOnInvitation],
+      name: "fk_guest_g",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+    foreignKey({
+      columns: [table.guestH],
+      foreignColumns: [invitations.nameOnInvitation],
+      name: "fk_guest_h",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+    foreignKey({
+      columns: [table.guestI],
+      foreignColumns: [invitations.nameOnInvitation],
+      name: "fk_guest_i",
     })
       .onUpdate("cascade")
       .onDelete("cascade"),

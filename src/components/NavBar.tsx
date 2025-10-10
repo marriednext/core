@@ -90,12 +90,19 @@ export default function NavBar() {
               </NavigationMenuItem>
               <SignedIn>
                 <NavigationMenuItem>
-                  <NavigationMenuLink
-                    asChild
-                    className={navigationMenuTriggerStyle()}
-                  >
-                    <Link href="/admin/telemetry">Admin</Link>
-                  </NavigationMenuLink>
+                  <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[200px] gap-4">
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link href="/admin/telemetry">Telemetry</Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link href="/admin/dashboard">Dashboard</Link>
+                        </NavigationMenuLink>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
                 </NavigationMenuItem>
               </SignedIn>
             </NavigationMenuList>
