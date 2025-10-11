@@ -94,7 +94,10 @@ export default function GuestFieldsEdit({
                   }
                   disabled={disabled}
                 >
-                  <SelectTrigger className="w-[140px]">
+                  <SelectTrigger
+                    className="w-[140px]"
+                    aria-label={`Guest ${key} attendance status`}
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -117,7 +120,10 @@ export default function GuestFieldsEdit({
                     }
                     disabled={disabled}
                   >
-                    <SelectTrigger className="w-[100px]">
+                    <SelectTrigger
+                      className="w-[100px]"
+                      aria-label="Guest A plus one status"
+                    >
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

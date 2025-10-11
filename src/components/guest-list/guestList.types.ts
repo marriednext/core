@@ -88,6 +88,7 @@ export interface InvitationCardProps {
   onFormChange: (form: EditFormData) => void;
   isSaving: boolean;
   onCollapse?: () => void;
+  root?: "div" | "li";
 }
 
 export interface GuestFieldsEditProps {

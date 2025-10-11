@@ -35,7 +35,9 @@ export default function InvitationCard({
   onFormChange,
   isSaving,
   onCollapse,
+  root,
 }: InvitationCardProps) {
+  const Root = root || "li";
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const getGuestNames = () => {
@@ -72,7 +74,7 @@ export default function InvitationCard({
   };
 
   return (
-    <li className="rounded-xl bg-white border border-gray-200 p-4 hover:border-gray-300 hover:shadow-sm transition-all">
+    <Root className="rounded-xl bg-white border border-gray-200 p-4 hover:border-gray-300 hover:shadow-sm transition-all">
       <div className="flex items-start justify-between mb-3 gap-2">
         {isEditing && editForm ? (
           <Input
@@ -124,7 +126,10 @@ export default function InvitationCard({
               </button>
             )}
             <DropdownMenu>
-              <DropdownMenuTrigger className="p-1 hover:bg-gray-100 rounded transition-colors">
+              <DropdownMenuTrigger
+                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                aria-label="Open guest menu"
+              >
                 <MoreVertical className="w-4 h-4 text-gray-600" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -200,6 +205,6 @@ export default function InvitationCard({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </li>
+    </Root>
   );
 }

@@ -76,16 +76,19 @@ export function AddGuestForm({ onSubmit, isSubmitting }: AddGuestFormProps) {
                 disabled={isSubmitting}
                 className="flex-1"
               />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => handleRemoveGuest(index)}
-                disabled={isSubmitting}
-                className="shrink-0"
-              >
-                <X className="h-4 w-4" />
-              </Button>
+              {index > 0 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleRemoveGuest(index)}
+                  disabled={isSubmitting}
+                  className="shrink-0"
+                  aria-label={`Remove guest ${index + 1}`}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
             </div>
           </div>
         ))}
