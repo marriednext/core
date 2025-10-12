@@ -6,15 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Activity,
-  BookOpen,
-  Shield,
-  Zap,
-  ArrowRight,
-  Rocket,
-  Users,
-} from "lucide-react";
+import { BookOpen, Shield, Zap, ArrowRight, Rocket, Users } from "lucide-react";
 
 const documentationSections = [
   {
@@ -37,16 +29,6 @@ const documentationSections = [
     color: "text-purple-600 dark:text-purple-400",
     bgColor: "bg-purple-50 dark:bg-purple-950/30",
   },
-  {
-    title: "Telemetry",
-    href: "/documentation/telemetry",
-    description:
-      "Learn how we track and improve user experience while respecting your privacy",
-    icon: Activity,
-    category: "Privacy & Analytics",
-    color: "text-blue-600 dark:text-blue-400",
-    bgColor: "bg-blue-50 dark:bg-blue-950/30",
-  },
 ];
 
 export default function DocumentationPage() {
@@ -63,7 +45,7 @@ export default function DocumentationPage() {
             Documentation
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
-            Everything you need to know about using weddingsbymat.com. Explore
+            Everything you need to know about using weddingcake.studio. Explore
             our guides, learn about our features, and understand how we keep
             your data safe.
           </p>

@@ -1,17 +1,20 @@
 import {
   pgTable,
+  foreignKey,
   unique,
-  serial,
+  uuid,
   timestamp,
   text,
   boolean,
-  foreignKey,
+  jsonb,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
-export const invitations = pgTable(
-  "invitations",
+export const guest = pgTable(
+  "guest",
   {
-    id: serial().primaryKey().notNull(),
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    weddingId: uuid("wedding_id"),
     dateEntrySubmitted: timestamp("date_entry_submitted", {
       mode: "string",
     }).defaultNow(),
@@ -19,13 +22,23 @@ export const invitations = pgTable(
     isAttending: boolean("is_attending"),
     hasPlusOne: boolean("has_plus_one"),
   },
-  (table) => [unique("uq_invitation_name").on(table.nameOnInvitation)]
+  (table) => [
+    foreignKey({
+      columns: [table.weddingId],
+      foreignColumns: [wedding.id],
+      name: "fk_guest_wedding",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+    unique("uq_guest_name").on(table.nameOnInvitation),
+  ]
 );
 
-export const invitationGroups = pgTable(
-  "invitation_groups",
+export const invitation = pgTable(
+  "invitation",
   {
-    id: serial().primaryKey().notNull(),
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    weddingId: uuid("wedding_id"),
     guestA: text("guest_a").notNull(),
     guestB: text("guest_b"),
     guestC: text("guest_c"),
@@ -44,57 +57,64 @@ export const invitationGroups = pgTable(
   },
   (table) => [
     foreignKey({
+      columns: [table.weddingId],
+      foreignColumns: [wedding.id],
+      name: "fk_invitation_wedding",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+    foreignKey({
       columns: [table.guestA],
-      foreignColumns: [invitations.nameOnInvitation],
+      foreignColumns: [guest.nameOnInvitation],
       name: "fk_guest_a",
     })
       .onUpdate("cascade")
       .onDelete("cascade"),
     foreignKey({
       columns: [table.guestB],
-      foreignColumns: [invitations.nameOnInvitation],
+      foreignColumns: [guest.nameOnInvitation],
       name: "fk_guest_b",
     })
       .onUpdate("cascade")
       .onDelete("cascade"),
     foreignKey({
       columns: [table.guestC],
-      foreignColumns: [invitations.nameOnInvitation],
+      foreignColumns: [guest.nameOnInvitation],
       name: "fk_guest_c",
     })
       .onUpdate("cascade")
       .onDelete("cascade"),
     foreignKey({
       columns: [table.guestD],
-      foreignColumns: [invitations.nameOnInvitation],
+      foreignColumns: [guest.nameOnInvitation],
       name: "fk_guest_d",
     })
       .onUpdate("cascade")
       .onDelete("cascade"),
     foreignKey({
       columns: [table.guestE],
-      foreignColumns: [invitations.nameOnInvitation],
+      foreignColumns: [guest.nameOnInvitation],
       name: "fk_guest_e",
     })
       .onUpdate("cascade")
       .onDelete("cascade"),
     foreignKey({
       columns: [table.guestF],
-      foreignColumns: [invitations.nameOnInvitation],
+      foreignColumns: [guest.nameOnInvitation],
       name: "fk_guest_f",
     })
       .onUpdate("cascade")
       .onDelete("cascade"),
     foreignKey({
       columns: [table.guestG],
-      foreignColumns: [invitations.nameOnInvitation],
+      foreignColumns: [guest.nameOnInvitation],
       name: "fk_guest_g",
     })
       .onUpdate("cascade")
       .onDelete("cascade"),
     foreignKey({
       columns: [table.guestH],
-      foreignColumns: [invitations.nameOnInvitation],
+      foreignColumns: [guest.nameOnInvitation],
       name: "fk_guest_h",
     })
       .onUpdate("cascade")
@@ -102,11 +122,23 @@ export const invitationGroups = pgTable(
   ]
 );
 
-export const adminTelemetryEvents = pgTable("admin_telemetry_events", {
-  id: serial().primaryKey().notNull(),
-  componentName: text("component_name").notNull(),
-  eventType: text("event_type").notNull(),
-  eventValue: text("event_value"),
-  timestamp: timestamp("timestamp", { mode: "string" }).defaultNow().notNull(),
-  sessionId: text("session_id"),
-});
+export const wedding = pgTable(
+  "wedding",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    subdomain: text(),
+    customDomain: text("custom_domain"),
+    createdAt: timestamp("created_at", { mode: "string" })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { mode: "string" })
+      .defaultNow()
+      .notNull(),
+    labelsEn: jsonb("labels_en"),
+    labelsEs: jsonb("labels_es"),
+  },
+  (table) => [
+    unique("weddings_subdomain_unique").on(table.subdomain),
+    unique("weddings_custom_domain_unique").on(table.customDomain),
+  ]
+);

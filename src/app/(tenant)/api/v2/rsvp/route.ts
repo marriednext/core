@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { validateGuest, getCompanionName } from "@/lib/tenant/guestList";
 import { GuestType } from "@/lib/tenant/types";
-import { insertInvitation } from "@/database/drizzle";
+import { upsertGuest } from "@/database/drizzle";
 import * as Sentry from "@sentry/nextjs";
 
 const schema = z.object({
@@ -43,16 +43,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Guest not found" }, { status: 404 });
     }
 
-    // Insert primary guest
-    await insertInvitation({
+    // Update primary guest
+    await upsertGuest({
       nameOnInvitation,
       isAttending,
       hasPlusOne: effectiveHasPlusOne,
     });
 
-    // Insert companion guest, if applicable. Never set hasPlusOne for companions.
+    // Update companion guest, if applicable. Never set hasPlusOne for companions.
     if (companionName) {
-      await insertInvitation({
+      await upsertGuest({
         nameOnInvitation: companionName,
         isAttending: companionIsAttending,
         hasPlusOne: false,

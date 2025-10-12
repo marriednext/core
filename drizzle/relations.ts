@@ -1,75 +1,85 @@
 import { relations } from "drizzle-orm/relations";
-import { invitations, invitationGroups } from "./schema";
+import { wedding, guest, invitation } from "./schema";
 
-export const invitationGroupsRelations = relations(
-  invitationGroups,
-  ({ one }) => ({
-    invitation_guestA: one(invitations, {
-      fields: [invitationGroups.guestA],
-      references: [invitations.nameOnInvitation],
-      relationName: "invitationGroups_guestA_invitations_nameOnInvitation",
-    }),
-    invitation_guestB: one(invitations, {
-      fields: [invitationGroups.guestB],
-      references: [invitations.nameOnInvitation],
-      relationName: "invitationGroups_guestB_invitations_nameOnInvitation",
-    }),
-    invitation_guestC: one(invitations, {
-      fields: [invitationGroups.guestC],
-      references: [invitations.nameOnInvitation],
-      relationName: "invitationGroups_guestC_invitations_nameOnInvitation",
-    }),
-    invitation_guestD: one(invitations, {
-      fields: [invitationGroups.guestD],
-      references: [invitations.nameOnInvitation],
-      relationName: "invitationGroups_guestD_invitations_nameOnInvitation",
-    }),
-    invitation_guestE: one(invitations, {
-      fields: [invitationGroups.guestE],
-      references: [invitations.nameOnInvitation],
-      relationName: "invitationGroups_guestE_invitations_nameOnInvitation",
-    }),
-    invitation_guestF: one(invitations, {
-      fields: [invitationGroups.guestF],
-      references: [invitations.nameOnInvitation],
-      relationName: "invitationGroups_guestF_invitations_nameOnInvitation",
-    }),
-    invitation_guestG: one(invitations, {
-      fields: [invitationGroups.guestG],
-      references: [invitations.nameOnInvitation],
-      relationName: "invitationGroups_guestG_invitations_nameOnInvitation",
-    }),
-    invitation_guestH: one(invitations, {
-      fields: [invitationGroups.guestH],
-      references: [invitations.nameOnInvitation],
-      relationName: "invitationGroups_guestH_invitations_nameOnInvitation",
-    }),
-  })
-);
+export const guestRelations = relations(guest, ({one, many}) => ({
+	wedding: one(wedding, {
+		fields: [guest.weddingId],
+		references: [wedding.id]
+	}),
+	invitations_guestA: many(invitation, {
+		relationName: "invitation_guestA_guest_nameOnInvitation"
+	}),
+	invitations_guestB: many(invitation, {
+		relationName: "invitation_guestB_guest_nameOnInvitation"
+	}),
+	invitations_guestC: many(invitation, {
+		relationName: "invitation_guestC_guest_nameOnInvitation"
+	}),
+	invitations_guestD: many(invitation, {
+		relationName: "invitation_guestD_guest_nameOnInvitation"
+	}),
+	invitations_guestE: many(invitation, {
+		relationName: "invitation_guestE_guest_nameOnInvitation"
+	}),
+	invitations_guestF: many(invitation, {
+		relationName: "invitation_guestF_guest_nameOnInvitation"
+	}),
+	invitations_guestG: many(invitation, {
+		relationName: "invitation_guestG_guest_nameOnInvitation"
+	}),
+	invitations_guestH: many(invitation, {
+		relationName: "invitation_guestH_guest_nameOnInvitation"
+	}),
+}));
 
-export const invitationsRelations = relations(invitations, ({ many }) => ({
-  invitationGroups_guestA: many(invitationGroups, {
-    relationName: "invitationGroups_guestA_invitations_nameOnInvitation",
-  }),
-  invitationGroups_guestB: many(invitationGroups, {
-    relationName: "invitationGroups_guestB_invitations_nameOnInvitation",
-  }),
-  invitationGroups_guestC: many(invitationGroups, {
-    relationName: "invitationGroups_guestC_invitations_nameOnInvitation",
-  }),
-  invitationGroups_guestD: many(invitationGroups, {
-    relationName: "invitationGroups_guestD_invitations_nameOnInvitation",
-  }),
-  invitationGroups_guestE: many(invitationGroups, {
-    relationName: "invitationGroups_guestE_invitations_nameOnInvitation",
-  }),
-  invitationGroups_guestF: many(invitationGroups, {
-    relationName: "invitationGroups_guestF_invitations_nameOnInvitation",
-  }),
-  invitationGroups_guestG: many(invitationGroups, {
-    relationName: "invitationGroups_guestG_invitations_nameOnInvitation",
-  }),
-  invitationGroups_guestH: many(invitationGroups, {
-    relationName: "invitationGroups_guestH_invitations_nameOnInvitation",
-  }),
+export const weddingRelations = relations(wedding, ({many}) => ({
+	guests: many(guest),
+	invitations: many(invitation),
+}));
+
+export const invitationRelations = relations(invitation, ({one}) => ({
+	wedding: one(wedding, {
+		fields: [invitation.weddingId],
+		references: [wedding.id]
+	}),
+	guest_guestA: one(guest, {
+		fields: [invitation.guestA],
+		references: [guest.nameOnInvitation],
+		relationName: "invitation_guestA_guest_nameOnInvitation"
+	}),
+	guest_guestB: one(guest, {
+		fields: [invitation.guestB],
+		references: [guest.nameOnInvitation],
+		relationName: "invitation_guestB_guest_nameOnInvitation"
+	}),
+	guest_guestC: one(guest, {
+		fields: [invitation.guestC],
+		references: [guest.nameOnInvitation],
+		relationName: "invitation_guestC_guest_nameOnInvitation"
+	}),
+	guest_guestD: one(guest, {
+		fields: [invitation.guestD],
+		references: [guest.nameOnInvitation],
+		relationName: "invitation_guestD_guest_nameOnInvitation"
+	}),
+	guest_guestE: one(guest, {
+		fields: [invitation.guestE],
+		references: [guest.nameOnInvitation],
+		relationName: "invitation_guestE_guest_nameOnInvitation"
+	}),
+	guest_guestF: one(guest, {
+		fields: [invitation.guestF],
+		references: [guest.nameOnInvitation],
+		relationName: "invitation_guestF_guest_nameOnInvitation"
+	}),
+	guest_guestG: one(guest, {
+		fields: [invitation.guestG],
+		references: [guest.nameOnInvitation],
+		relationName: "invitation_guestG_guest_nameOnInvitation"
+	}),
+	guest_guestH: one(guest, {
+		fields: [invitation.guestH],
+		references: [guest.nameOnInvitation],
+		relationName: "invitation_guestH_guest_nameOnInvitation"
+	}),
 }));

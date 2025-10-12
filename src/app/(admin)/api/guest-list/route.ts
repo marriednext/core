@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
 import {
   getGuestList,
-  getGuestListWithGroups,
-  getGuestListWithGroupsCount,
-  type DbInvitation,
-  type DbInvitationGroupWithGuests,
+  getInvitationsWithGuests,
+  getInvitationsCount,
+  type DbGuest,
+  type DbInvitationWithGuests,
   db,
 } from "@/database/drizzle";
-import { invitations, invitationGroups } from "@/drizzle/schema";
+import { guest, invitation } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-const calculateAttendance = (entry: DbInvitationGroupWithGuests) => {
+const calculateAttendance = (entry: DbInvitationWithGuests) => {
   let attending = 0;
   let total = 0;
 
@@ -42,7 +42,7 @@ const calculateAttendance = (entry: DbInvitationGroupWithGuests) => {
 
 export async function GET(
   request: Request
-): Promise<NextResponse<{ guestList: DbInvitation[] }>> {
+): Promise<NextResponse<{ guestList: DbGuest[] }>> {
   const { searchParams } = new URL(request.url);
   const sortBy = searchParams.get("sortBy") || "alpha-asc";
   const limit = parseInt(searchParams.get("limit") || "25");
@@ -50,41 +50,40 @@ export async function GET(
 
   const guestList = await getGuestList();
 
-  const guestListWithGroups = await getGuestListWithGroups(
+  const invitationsWithGuests = await getInvitationsWithGuests(
     sortBy,
     limit,
     offset
   );
 
-  const totalCount = await getGuestListWithGroupsCount();
+  const totalCount = await getInvitationsCount();
 
-  const guestListWithGroupsAndAttendance = guestListWithGroups.map((group) => {
-    const { attending, total } = calculateAttendance(group);
+  const invitationsWithAttendance = invitationsWithGuests.map((inv) => {
+    const { attending, total } = calculateAttendance(inv);
     return {
-      ...group,
+      ...inv,
       attending,
       total,
     };
   });
 
-  const displayGuestListWithGroups = guestListWithGroups.map((group) => ({
-    guestA: group.guestA,
-    guestB: group.guestB
-      ? "& " + group.guestB
-      : guestList.find((guest) => guest.nameOnInvitation === group.guestA)
-          ?.hasPlusOne
+  const displayInvitations = invitationsWithGuests.map((inv) => ({
+    guestA: inv.guestA,
+    guestB: inv.guestB
+      ? "& " + inv.guestB
+      : guestList.find((g) => g.nameOnInvitation === inv.guestA)?.hasPlusOne
       ? "+ One"
       : null,
   }));
 
-  const plusOneCount = guestList.filter((guest) => guest.hasPlusOne).length;
+  const plusOneCount = guestList.filter((g) => g.hasPlusOne).length;
 
   return NextResponse.json({
-    guestListWithGroups: guestListWithGroupsAndAttendance,
+    invitations: invitationsWithAttendance,
     guestList,
     guestListCount: guestList.length + plusOneCount,
-    guestListWithGroupsCount: totalCount,
-    displayGuestListWithGroups,
+    invitationsCount: totalCount,
+    displayInvitations,
     plusOneCount,
     hasMore: offset + limit < totalCount,
     currentOffset: offset,
@@ -92,8 +91,8 @@ export async function GET(
   });
 }
 
-const updateGuestSchema = z.object({
-  entryId: z.number(),
+const updateInvitationSchema = z.object({
+  invitationId: z.string().uuid(),
   guestA: z.string().min(1),
   guestAAttending: z.boolean().nullable(),
   guestAHasPlusOne: z.boolean(),
@@ -124,10 +123,10 @@ const updateGuestSchema = z.object({
 export async function PUT(request: Request): Promise<NextResponse> {
   try {
     const body = await request.json();
-    const validatedData = updateGuestSchema.parse(body);
+    const validatedData = updateInvitationSchema.parse(body);
 
-    const existingGroup = await db.query.invitationGroups.findFirst({
-      where: eq(invitationGroups.id, validatedData.entryId),
+    const existingInvitation = await db.query.invitation.findFirst({
+      where: eq(invitation.id, validatedData.invitationId),
       with: {
         invitation_guestA: true,
         invitation_guestB: true,
@@ -140,9 +139,9 @@ export async function PUT(request: Request): Promise<NextResponse> {
       },
     });
 
-    if (!existingGroup) {
+    if (!existingInvitation) {
       return NextResponse.json(
-        { error: "Invitation group not found" },
+        { error: "Invitation not found" },
         { status: 404 }
       );
     }
@@ -160,28 +159,26 @@ export async function PUT(request: Request): Promise<NextResponse> {
         const guestHasPlusOne = validatedData[
           `guest${key}HasPlusOne` as keyof typeof validatedData
         ] as boolean;
-        const existingInvitation = existingGroup[
-          `invitation_guest${key}` as keyof typeof existingGroup
-        ] as typeof existingGroup.invitation_guestA;
+        const existingGuest = existingInvitation[
+          `invitation_guest${key}` as keyof typeof existingInvitation
+        ] as typeof existingInvitation.invitation_guestA;
 
-        if (guestName && existingInvitation) {
+        if (guestName && existingGuest) {
           await tx
-            .update(invitations)
+            .update(guest)
             .set({
               nameOnInvitation: guestName,
               isAttending: guestAttending,
               hasPlusOne: guestHasPlusOne,
             })
-            .where(eq(invitations.id, existingInvitation.id));
-        } else if (!guestName && existingInvitation) {
-          await tx
-            .delete(invitations)
-            .where(eq(invitations.id, existingInvitation.id));
+            .where(eq(guest.id, existingGuest.id));
+        } else if (!guestName && existingGuest) {
+          await tx.delete(guest).where(eq(guest.id, existingGuest.id));
         }
       }
 
       await tx
-        .update(invitationGroups)
+        .update(invitation)
         .set({
           guestA: validatedData.guestA,
           guestB: validatedData.guestB,
@@ -194,7 +191,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
           inviteGroupName: validatedData.inviteGroupName,
           lastUpdatedAt: new Date().toISOString(),
         })
-        .where(eq(invitationGroups.id, validatedData.entryId));
+        .where(eq(invitation.id, validatedData.invitationId));
     });
 
     return NextResponse.json({ success: true });
@@ -206,9 +203,9 @@ export async function PUT(request: Request): Promise<NextResponse> {
       );
     }
 
-    console.error("Error updating guest list:", error);
+    console.error("Error updating invitation:", error);
     return NextResponse.json(
-      { error: "Failed to update guest list" },
+      { error: "Failed to update invitation" },
       { status: 500 }
     );
   }

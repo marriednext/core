@@ -1,41 +1,41 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import { eq } from "drizzle-orm";
 import queryClient from "./neon";
-import { invitationGroups, invitations } from "@/drizzle/schema";
+import { invitation, guest } from "@/drizzle/schema";
 import * as schema from "@/drizzle/schema";
 import * as relations from "@/drizzle/relations";
 import type { InferSelectModel } from "drizzle-orm";
 
 export const db = drizzle(queryClient, { schema: { ...schema, ...relations } });
 
-export type DbInvitation = InferSelectModel<typeof invitations>;
-export type DbInvitationGroup = InferSelectModel<typeof invitationGroups>;
+export type DbGuest = InferSelectModel<typeof guest>;
+export type DbInvitation = InferSelectModel<typeof invitation>;
 
-export type DbInvitationGroupWithGuests = DbInvitationGroup & {
-  invitation_guestA: DbInvitation | null;
-  invitation_guestB: DbInvitation | null;
-  invitation_guestC: DbInvitation | null;
-  invitation_guestD: DbInvitation | null;
-  invitation_guestE: DbInvitation | null;
-  invitation_guestF: DbInvitation | null;
-  invitation_guestG: DbInvitation | null;
-  invitation_guestH: DbInvitation | null;
+export type DbInvitationWithGuests = DbInvitation & {
+  invitation_guestA: DbGuest | null;
+  invitation_guestB: DbGuest | null;
+  invitation_guestC: DbGuest | null;
+  invitation_guestD: DbGuest | null;
+  invitation_guestE: DbGuest | null;
+  invitation_guestF: DbGuest | null;
+  invitation_guestG: DbGuest | null;
+  invitation_guestH: DbGuest | null;
   attending?: number;
   total?: number;
 };
 
-export const getGuestList = async (): Promise<DbInvitation[]> => {
-  const guestList = await db.select().from(invitations);
+export const getGuestList = async (): Promise<DbGuest[]> => {
+  const guestList = await db.select().from(guest);
   return guestList;
 };
 
-export const getGuestListWithGroups = async (
+export const getInvitationsWithGuests = async (
   sortBy?: string,
   limit?: number,
   offset?: number
 ) => {
   try {
-    const result = await db.query.invitationGroups.findMany({
+    const result = await db.query.invitation.findMany({
       with: {
         invitation_guestA: true,
         invitation_guestB: true,
@@ -46,25 +46,25 @@ export const getGuestListWithGroups = async (
         invitation_guestG: true,
         invitation_guestH: true,
       },
-      orderBy: (invitationGroups, { asc, desc, sql }) => {
+      orderBy: (invitation, { asc, desc, sql }) => {
         switch (sortBy) {
           case "alpha-desc":
             return [
               desc(
-                sql`COALESCE(${invitationGroups.inviteGroupName}, ${invitationGroups.guestA})`
+                sql`COALESCE(${invitation.inviteGroupName}, ${invitation.guestA})`
               ),
             ];
           case "date-newest":
-            return [desc(invitationGroups.createdAt)];
+            return [desc(invitation.createdAt)];
           case "date-oldest":
-            return [asc(invitationGroups.createdAt)];
+            return [asc(invitation.createdAt)];
           case "updated-newest":
-            return [desc(invitationGroups.lastUpdatedAt)];
+            return [desc(invitation.lastUpdatedAt)];
           case "alpha-asc":
           default:
             return [
               asc(
-                sql`COALESCE(${invitationGroups.inviteGroupName}, ${invitationGroups.guestA})`
+                sql`COALESCE(${invitation.inviteGroupName}, ${invitation.guestA})`
               ),
             ];
         }
@@ -74,24 +74,24 @@ export const getGuestListWithGroups = async (
     });
     return result;
   } catch (error) {
-    console.error("Error getting guest list with groups", error);
+    console.error("Error getting invitations with guests", error);
     return [];
   }
 };
 
-export const getGuestListWithGroupsCount = async () => {
+export const getInvitationsCount = async () => {
   try {
-    const result = await db.select().from(invitationGroups);
+    const result = await db.select().from(invitation);
     return result.length;
   } catch (error) {
-    console.error("Error getting guest list with groups count", error);
+    console.error("Error getting invitations count", error);
     return 0;
   }
 };
 
 export default db;
 
-export const insertInvitation = async ({
+export const upsertGuest = async ({
   nameOnInvitation,
   isAttending,
   hasPlusOne,
@@ -100,13 +100,13 @@ export const insertInvitation = async ({
   isAttending: boolean;
   hasPlusOne: boolean | null | undefined;
 }): Promise<void> => {
-  const invitation = {
+  const guestData = {
     nameOnInvitation,
     isAttending,
     hasPlusOne: hasPlusOne ?? null,
   };
   await db
-    .update(invitations)
-    .set(invitation)
-    .where(eq(invitations.nameOnInvitation, nameOnInvitation));
+    .update(guest)
+    .set(guestData)
+    .where(eq(guest.nameOnInvitation, nameOnInvitation));
 };

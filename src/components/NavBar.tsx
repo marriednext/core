@@ -98,19 +98,12 @@ export default function NavBar() {
               </NavigationMenuItem>
               <SignedIn>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[200px] gap-4">
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link href="/admin/telemetry">Telemetry</Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link href="/admin/dashboard">Dashboard</Link>
-                        </NavigationMenuLink>
-                      </li>
-                    </ul>
-                  </NavigationMenuContent>
+                  <NavigationMenuLink
+                    asChild
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    <Link href="/admin/dashboard">Admin</Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               </SignedIn>
             </NavigationMenuList>
@@ -168,7 +161,7 @@ export default function NavBar() {
                 </Link>
                 <SignedIn>
                   <Link
-                    href="/admin/telemetry"
+                    href="/admin/dashboard"
                     className="text-lg font-medium hover:text-violet-700 transition"
                     onClick={() => setOpen(false)}
                   >

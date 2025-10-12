@@ -69,7 +69,7 @@ Code formatting components.
 {
   /* Inline code */
 }
-<InlineCode>telemetry_session_id</InlineCode>;
+<InlineCode>variable_name</InlineCode>;
 
 {
   /* Code block */

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/database/drizzle";
-import { invitationGroups } from "@/drizzle/schema";
+import { invitation } from "@/drizzle/schema";
 import { or, ilike, asc, desc, sql } from "drizzle-orm";
 import { z } from "zod";
 
@@ -24,11 +24,11 @@ export async function GET(request: Request): Promise<NextResponse> {
     const validatedData = searchSchema.parse({ query });
     const searchPattern = `%${validatedData.query}%`;
 
-    const results = await db.query.invitationGroups.findMany({
+    const results = await db.query.invitation.findMany({
       where: or(
-        ilike(invitationGroups.guestA, searchPattern),
-        ilike(invitationGroups.guestB, searchPattern),
-        ilike(invitationGroups.inviteGroupName, searchPattern)
+        ilike(invitation.guestA, searchPattern),
+        ilike(invitation.guestB, searchPattern),
+        ilike(invitation.inviteGroupName, searchPattern)
       ),
       with: {
         invitation_guestA: true,
@@ -45,54 +45,54 @@ export async function GET(request: Request): Promise<NextResponse> {
           case "alpha-desc":
             return [
               desc(
-                sql`COALESCE(${invitationGroups.inviteGroupName}, ${invitationGroups.guestA})`
+                sql`COALESCE(${invitation.inviteGroupName}, ${invitation.guestA})`
               ),
             ];
           case "date-newest":
-            return [desc(invitationGroups.createdAt)];
+            return [desc(invitation.createdAt)];
           case "date-oldest":
-            return [asc(invitationGroups.createdAt)];
+            return [asc(invitation.createdAt)];
           case "updated-newest":
-            return [desc(invitationGroups.lastUpdatedAt)];
+            return [desc(invitation.lastUpdatedAt)];
           case "alpha-asc":
           default:
             return [
               asc(
-                sql`COALESCE(${invitationGroups.inviteGroupName}, ${invitationGroups.guestA})`
+                sql`COALESCE(${invitation.inviteGroupName}, ${invitation.guestA})`
               ),
             ];
         }
       },
     });
 
-    const resultsWithAttendance = results.map((group) => {
+    const resultsWithAttendance = results.map((inv) => {
       let attending = 0;
       let total = 0;
 
       const allGuests = [
-        group.invitation_guestA,
-        group.invitation_guestB,
-        group.invitation_guestC,
-        group.invitation_guestD,
-        group.invitation_guestE,
-        group.invitation_guestF,
-        group.invitation_guestG,
-        group.invitation_guestH,
+        inv.invitation_guestA,
+        inv.invitation_guestB,
+        inv.invitation_guestC,
+        inv.invitation_guestD,
+        inv.invitation_guestE,
+        inv.invitation_guestF,
+        inv.invitation_guestG,
+        inv.invitation_guestH,
       ];
 
-      allGuests.forEach((guest) => {
-        if (guest) {
+      allGuests.forEach((g) => {
+        if (g) {
           total++;
-          if (guest.isAttending) attending++;
-          if (guest.hasPlusOne) {
+          if (g.isAttending) attending++;
+          if (g.hasPlusOne) {
             total++;
-            if (guest.isAttending) attending++;
+            if (g.isAttending) attending++;
           }
         }
       });
 
       return {
-        ...group,
+        ...inv,
         attending,
         total,
       };
@@ -110,9 +110,9 @@ export async function GET(request: Request): Promise<NextResponse> {
       );
     }
 
-    console.error("Error searching guest list:", error);
+    console.error("Error searching invitations:", error);
     return NextResponse.json(
-      { error: "Failed to search guest list" },
+      { error: "Failed to search invitations" },
       { status: 500 }
     );
   }

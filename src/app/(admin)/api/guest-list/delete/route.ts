@@ -1,50 +1,50 @@
 import { NextResponse } from "next/server";
 import { db } from "@/database/drizzle";
-import { invitations, invitationGroups } from "@/drizzle/schema";
+import { guest, invitation } from "@/drizzle/schema";
 import { eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 
-const deleteGuestSchema = z.object({
-  entryId: z.number(),
+const deleteInvitationSchema = z.object({
+  invitationId: z.string().uuid(),
 });
 
 export async function DELETE(request: Request): Promise<NextResponse> {
   try {
     const body = await request.json();
-    const validatedData = deleteGuestSchema.parse(body);
+    const validatedData = deleteInvitationSchema.parse(body);
 
-    const existingGroup = await db.query.invitationGroups.findFirst({
-      where: eq(invitationGroups.id, validatedData.entryId),
+    const existingInvitation = await db.query.invitation.findFirst({
+      where: eq(invitation.id, validatedData.invitationId),
     });
 
-    if (!existingGroup) {
+    if (!existingInvitation) {
       return NextResponse.json(
-        { error: "Invitation group not found" },
+        { error: "Invitation not found" },
         { status: 404 }
       );
     }
 
     await db.transaction(async (tx) => {
       const guestNames: string[] = [
-        existingGroup.guestA,
-        existingGroup.guestB,
-        existingGroup.guestC,
-        existingGroup.guestD,
-        existingGroup.guestE,
-        existingGroup.guestF,
-        existingGroup.guestG,
-        existingGroup.guestH,
+        existingInvitation.guestA,
+        existingInvitation.guestB,
+        existingInvitation.guestC,
+        existingInvitation.guestD,
+        existingInvitation.guestE,
+        existingInvitation.guestF,
+        existingInvitation.guestG,
+        existingInvitation.guestH,
       ].filter((name): name is string => name !== null);
 
       if (guestNames.length > 0) {
         await tx
-          .delete(invitations)
-          .where(inArray(invitations.nameOnInvitation, guestNames));
+          .delete(guest)
+          .where(inArray(guest.nameOnInvitation, guestNames));
       }
 
       await tx
-        .delete(invitationGroups)
-        .where(eq(invitationGroups.id, validatedData.entryId));
+        .delete(invitation)
+        .where(eq(invitation.id, validatedData.invitationId));
     });
 
     return NextResponse.json({ success: true });
@@ -56,9 +56,9 @@ export async function DELETE(request: Request): Promise<NextResponse> {
       );
     }
 
-    console.error("Error deleting guest:", error);
+    console.error("Error deleting invitation:", error);
     return NextResponse.json(
-      { error: "Failed to delete guest" },
+      { error: "Failed to delete invitation" },
       { status: 500 }
     );
   }

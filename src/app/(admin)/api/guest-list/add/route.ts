@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/database/drizzle";
-import { invitations, invitationGroups } from "@/drizzle/schema";
+import { guest, invitation } from "@/drizzle/schema";
 import { inArray } from "drizzle-orm";
 
 const addGuestSchema = z.object({
@@ -22,8 +22,8 @@ export async function POST(req: NextRequest) {
 
     const existingGuests = await db
       .select()
-      .from(invitations)
-      .where(inArray(invitations.nameOnInvitation, guests));
+      .from(guest)
+      .where(inArray(guest.nameOnInvitation, guests));
 
     if (existingGuests.length > 0) {
       const duplicateNames = existingGuests
@@ -38,17 +38,17 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await db.transaction(async (tx) => {
-      const createdInvitations = [];
+      const createdGuests = [];
       for (const guestName of guests) {
-        const [invitation] = await tx
-          .insert(invitations)
+        const [createdGuest] = await tx
+          .insert(guest)
           .values({
             nameOnInvitation: guestName,
             hasPlusOne: guests.length === 1 ? hasPlusOne : false,
             isAttending: null,
           })
           .returning();
-        createdInvitations.push(invitation);
+        createdGuests.push(createdGuest);
       }
 
       const guestFields: {
@@ -88,8 +88,8 @@ export async function POST(req: NextRequest) {
         }
       });
 
-      const [invitationGroup] = await tx
-        .insert(invitationGroups)
+      const [createdInvitation] = await tx
+        .insert(invitation)
         .values({
           ...guestFields,
           inviteGroupName: inviteGroupName || null,
@@ -97,8 +97,8 @@ export async function POST(req: NextRequest) {
         .returning();
 
       return {
-        invitationGroup,
-        invitations: createdInvitations,
+        invitation: createdInvitation,
+        guests: createdGuests,
       };
     });
 

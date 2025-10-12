@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { DbInvitationGroupWithGuests } from "@/database/drizzle";
 import { LayoutGrid, List, Search } from "lucide-react";
-import { telemetry } from "@/lib/telemetry";
-import { useTelemetry } from "@/hooks/useTelemetry";
 import clsx from "clsx";
 import {
   Select,
@@ -47,15 +45,6 @@ export default function GuestListDisplay({
   );
   const [editForm, setEditForm] = useState<EditFormData | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
-
-  const { track } = useTelemetry();
-
-  useEffect(() => {
-    track(() => telemetry.trackGuestListComponentMount());
-    track(() => telemetry.trackGuestListSortDefault(sortBy));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     setExpandedId(null);
@@ -140,7 +129,6 @@ export default function GuestListDisplay({
           value={sortBy}
           onValueChange={(value: SortOption) => {
             onSortChange(value);
-            track(() => telemetry.trackGuestListSortOption(value));
           }}
         >
           <SelectTrigger className="w-[200px]">
@@ -158,7 +146,6 @@ export default function GuestListDisplay({
           <button
             onClick={() => {
               setViewMode("expanded");
-              track(() => telemetry.trackGuestListViewToggle("expanded"));
             }}
             className={clsx(
               "p-2 rounded-lg transition-colors border",
@@ -174,7 +161,6 @@ export default function GuestListDisplay({
           <button
             onClick={() => {
               setViewMode("condensed");
-              track(() => telemetry.trackGuestListViewToggle("condensed"));
             }}
             className={clsx(
               "p-2 rounded-lg transition-colors border",

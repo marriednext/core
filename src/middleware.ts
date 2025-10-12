@@ -1,6 +1,81 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
+import { decideMultiTenantRouting } from "./lib/rewrites/multitenancy";
+import { edgeDb } from "./database/edge";
+import { wedding } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
 
-export default clerkMiddleware();
+function isWelcomeRoute(req: NextRequest): boolean {
+  return req.nextUrl.pathname.startsWith("/welcome");
+}
+
+export default clerkMiddleware(async (auth, req) => {
+  // console.log("clerkMiddleware", auth, req);
+  const multiTenantResponse = await applyMultiTenantRewrite(req);
+  console.log("multiTenantResponse", multiTenantResponse);
+  if (multiTenantResponse) {
+    return multiTenantResponse;
+  }
+});
+
+async function applyMultiTenantRewrite(req: NextRequest) {
+  const requestUrl = req.nextUrl;
+  const pathname = requestUrl.pathname;
+  const hostHeader = req.headers.get("host") || "";
+
+  const decision = await decideMultiTenantRouting(
+    {
+      hostHeader,
+      pathname,
+      isApiRoute: requestUrl.pathname.startsWith("/api"),
+      isWelcomeRoute: isWelcomeRoute(req as NextRequest),
+    },
+    {
+      findWeddingIdByApexDomain: async (apexDomain) => {
+        try {
+          const rows = await edgeDb
+            .select({ id: wedding.id })
+            .from(wedding)
+            .where(eq(wedding.customDomain, apexDomain))
+            .limit(1);
+          const matchedWeddingId = rows?.[0]?.id as string | undefined;
+          return matchedWeddingId ? matchedWeddingId : undefined;
+        } catch (error) {
+          console.log("custom domain lookup error", error);
+          return undefined;
+        }
+      },
+      findWeddingIdBySubdomain: async (subdomain) => {
+        try {
+          const rows = await edgeDb
+            .select({ id: wedding.id })
+            .from(wedding)
+            .where(eq(wedding.subdomain, subdomain))
+            .limit(1);
+
+          // console.log("subdomain lookup rows", rows);
+          const matchedWeddingId = rows?.[0]?.id as string | undefined;
+
+          return matchedWeddingId ? matchedWeddingId : undefined;
+        } catch (error) {
+          console.log("subdomain lookup error", error);
+          return undefined;
+        }
+      },
+    }
+  );
+
+  if (decision.action === "none") {
+    return undefined;
+  }
+  if (decision.action === "rewrite") {
+    return NextResponse.rewrite(new URL(decision.path, requestUrl));
+  }
+  if (decision.action === "redirect") {
+    return NextResponse.redirect(new URL(decision.path, requestUrl));
+  }
+  return undefined;
+}
 
 export const config = {
   matcher: [
