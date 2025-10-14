@@ -102,7 +102,7 @@ export default function NavBar() {
                     asChild
                     className={navigationMenuTriggerStyle()}
                   >
-                    <Link href="/admin/dashboard">Admin</Link>
+                    <Link href="/admin/website-builder">Website Builder</Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               </SignedIn>
@@ -161,11 +161,11 @@ export default function NavBar() {
                 </Link>
                 <SignedIn>
                   <Link
-                    href="/admin/dashboard"
+                    href="/admin/website-builder"
                     className="text-lg font-medium hover:text-violet-700 transition"
                     onClick={() => setOpen(false)}
                   >
-                    Admin
+                    Website Builder
                   </Link>
                 </SignedIn>
                 <div className="border-t pt-4 mt-2">
