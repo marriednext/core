@@ -1,0 +1,15 @@
+---
+description: If asked for a Bug Report, use this format every time
+alwaysApply: false
+---
+
+If asked for a a Bug Report, use this format every time:
+
+<BugReportFormat>
+
+THIS REPORT WAS AI GENERATED
+
+Bug Report: [2-3 sentences describing the bug]
+Fix: [1-5 bullet points]
+
+</BugReportFormat>
