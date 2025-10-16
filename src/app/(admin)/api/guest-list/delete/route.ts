@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { db } from "@/database/drizzle";
 import { guest, invitation } from "@/drizzle/schema";
-import { eq, inArray } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 const deleteInvitationSchema = z.object({
-  invitationId: z.string().uuid(),
+  entryId: z.string().uuid(),
 });
 
 export async function DELETE(request: Request): Promise<NextResponse> {
@@ -14,7 +15,7 @@ export async function DELETE(request: Request): Promise<NextResponse> {
     const validatedData = deleteInvitationSchema.parse(body);
 
     const existingInvitation = await db.query.invitation.findFirst({
-      where: eq(invitation.id, validatedData.invitationId),
+      where: eq(invitation.id, validatedData.entryId),
     });
 
     if (!existingInvitation) {
@@ -24,28 +25,28 @@ export async function DELETE(request: Request): Promise<NextResponse> {
       );
     }
 
-    await db.transaction(async (tx) => {
-      const guestNames: string[] = [
-        existingInvitation.guestA,
-        existingInvitation.guestB,
-        existingInvitation.guestC,
-        existingInvitation.guestD,
-        existingInvitation.guestE,
-        existingInvitation.guestF,
-        existingInvitation.guestG,
-        existingInvitation.guestH,
-      ].filter((name): name is string => name !== null);
+    const guestNames: string[] = [
+      existingInvitation.guestA,
+      existingInvitation.guestB,
+      existingInvitation.guestC,
+      existingInvitation.guestD,
+      existingInvitation.guestE,
+      existingInvitation.guestF,
+      existingInvitation.guestG,
+      existingInvitation.guestH,
+    ].filter((name): name is string => name !== null);
 
-      if (guestNames.length > 0) {
-        await tx
-          .delete(guest)
-          .where(inArray(guest.nameOnInvitation, guestNames));
+    if (guestNames.length > 0) {
+      await db.delete(guest).where(eq(guest.nameOnInvitation, guestNames[0]));
+
+      for (let i = 1; i < guestNames.length; i++) {
+        await db.delete(guest).where(eq(guest.nameOnInvitation, guestNames[i]));
       }
+    }
 
-      await tx
-        .delete(invitation)
-        .where(eq(invitation.id, validatedData.invitationId));
-    });
+    await db.delete(invitation).where(eq(invitation.id, validatedData.entryId));
+
+    revalidatePath("/guest-list");
 
     return NextResponse.json({ success: true });
   } catch (error) {
