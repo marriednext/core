@@ -16,14 +16,14 @@ const calculateAttendance = (entry: DbInvitationWithGuests) => {
   let total = 0;
 
   const allGuests = [
-    entry.invitation_guestA,
-    entry.invitation_guestB,
-    entry.invitation_guestC,
-    entry.invitation_guestD,
-    entry.invitation_guestE,
-    entry.invitation_guestF,
-    entry.invitation_guestG,
-    entry.invitation_guestH,
+    entry.guest_guestA,
+    entry.guest_guestB,
+    entry.guest_guestC,
+    entry.guest_guestD,
+    entry.guest_guestE,
+    entry.guest_guestF,
+    entry.guest_guestG,
+    entry.guest_guestH,
   ];
 
   allGuests.forEach((guest) => {
@@ -128,14 +128,14 @@ export async function PUT(request: Request): Promise<NextResponse> {
     const existingInvitation = await db.query.invitation.findFirst({
       where: eq(invitation.id, validatedData.invitationId),
       with: {
-        invitation_guestA: true,
-        invitation_guestB: true,
-        invitation_guestC: true,
-        invitation_guestD: true,
-        invitation_guestE: true,
-        invitation_guestF: true,
-        invitation_guestG: true,
-        invitation_guestH: true,
+        guest_guestA: true,
+        guest_guestB: true,
+        guest_guestC: true,
+        guest_guestD: true,
+        guest_guestE: true,
+        guest_guestF: true,
+        guest_guestG: true,
+        guest_guestH: true,
       },
     });
 
@@ -160,8 +160,8 @@ export async function PUT(request: Request): Promise<NextResponse> {
           `guest${key}HasPlusOne` as keyof typeof validatedData
         ] as boolean;
         const existingGuest = existingInvitation[
-          `invitation_guest${key}` as keyof typeof existingInvitation
-        ] as typeof existingInvitation.invitation_guestA;
+          `guest_guest${key}` as keyof typeof existingInvitation
+        ] as typeof existingInvitation.guest_guestA;
 
         if (guestName && existingGuest) {
           await tx
