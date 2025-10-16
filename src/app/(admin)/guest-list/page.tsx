@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import GuestListDisplay from "@/components/guest-list/GuestListDisplay";
@@ -19,7 +19,6 @@ export default function GuestListPage() {
   const queryClient = useQueryClient();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [loadingGuestList, setLoadingGuestList] = useState(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>("alpha-asc");
   const [offset, setOffset] = useState(0);
@@ -30,27 +29,36 @@ export default function GuestListPage() {
 
   const limit = 25;
 
-  const { data, isFetching: isFetchingGuestList } = useQuery<GuestListData>({
+  const {
+    data,
+    isFetching: isFetchingGuestList,
+    isLoading: isLoadingGuestList,
+  } = useQuery<GuestListData>({
     queryKey: ["guest-list", sortBy, offset],
     queryFn: async () => {
       const res = await fetch(
         `/api/guest-list?sortBy=${sortBy}&limit=${limit}&offset=${offset}`
       );
-      setLoadingGuestList(false);
       const result = await res.json();
-
-      if (offset === 0) {
-        setAccumulatedGuests(result.guestListWithGroups);
-      } else {
-        setAccumulatedGuests((prev) => [
-          ...prev,
-          ...result.guestListWithGroups,
-        ]);
-      }
-
       return result;
     },
   });
+
+  useEffect(() => {
+    if (data?.guestListWithGroups) {
+      if (offset === 0) {
+        setAccumulatedGuests(data.guestListWithGroups);
+      } else {
+        setAccumulatedGuests((prev) => {
+          const existingIds = new Set(prev.map((g) => g.id));
+          const newGuests = data.guestListWithGroups.filter(
+            (g) => !existingIds.has(g.id)
+          );
+          return [...prev, ...newGuests];
+        });
+      }
+    }
+  }, [data, offset]);
 
   const { data: searchData, isLoading: isSearching } = useQuery<{
     results: DbInvitationGroupWithGuests[];
@@ -174,7 +182,8 @@ export default function GuestListPage() {
   };
 
   const isInitialLoading =
-    loadingGuestList || (isFetchingGuestList && accumulatedGuests.length === 0);
+    isLoadingGuestList ||
+    (isFetchingGuestList && accumulatedGuests.length === 0);
 
   if (isInitialLoading) {
     return <LoadingSpinner message="Loading guest list..." />;
