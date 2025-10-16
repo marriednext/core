@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test-storybook": "test-storybook --coverage"
+    "test-storybook": "test-storybook --coverage",
+    "db:seed": "tsx drizzle/seed.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "6.31.3",
