@@ -1,96 +1,24 @@
 import { NextResponse } from "next/server";
-import {
-  getGuestList,
-  getInvitationsWithGuests,
-  getInvitationsCount,
-  type DbGuest,
-  type DbInvitationWithGuests,
-  db,
-} from "@/database/drizzle";
+import { db } from "@/database/drizzle";
 import { guest, invitation } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-
-const calculateAttendance = (entry: DbInvitationWithGuests) => {
-  let attending = 0;
-  let total = 0;
-
-  const allGuests = [
-    entry.guest_guestA,
-    entry.guest_guestB,
-    entry.guest_guestC,
-    entry.guest_guestD,
-    entry.guest_guestE,
-    entry.guest_guestF,
-    entry.guest_guestG,
-    entry.guest_guestH,
-  ];
-
-  allGuests.forEach((guest) => {
-    if (guest) {
-      total++;
-      if (guest.isAttending) attending++;
-      if (guest.hasPlusOne) {
-        total++;
-        if (guest.isAttending) attending++;
-      }
-    }
-  });
-
-  return { attending, total };
-};
+import {
+  getGuestListData,
+  type GuestListResponse,
+} from "@/lib/admin/guestListService";
 
 export async function GET(
   request: Request
-): Promise<NextResponse<{ guestList: DbGuest[] }>> {
+): Promise<NextResponse<GuestListResponse>> {
   const { searchParams } = new URL(request.url);
   const sortBy = searchParams.get("sortBy") || "alpha-asc";
   const limit = parseInt(searchParams.get("limit") || "25");
   const offset = parseInt(searchParams.get("offset") || "0");
 
-  const guestList = await getGuestList();
+  const data = await getGuestListData({ sortBy, limit, offset });
 
-  const invitationsWithGuests = await getInvitationsWithGuests(
-    sortBy,
-    limit,
-    offset
-  );
-
-  const totalCount = await getInvitationsCount();
-
-  const invitationsWithAttendance = invitationsWithGuests.map((inv) => {
-    const { attending, total } = calculateAttendance(inv);
-    return {
-      ...inv,
-      attending,
-      total,
-    };
-  });
-
-  const displayInvitations = invitationsWithGuests.map((inv) => ({
-    guestA: inv.guestA,
-    guestB: inv.guestB
-      ? "& " + inv.guestB
-      : guestList.find((g) => g.nameOnInvitation === inv.guestA)?.hasPlusOne
-      ? "+ One"
-      : null,
-  }));
-
-  const plusOneCount = guestList.filter((g) => g.hasPlusOne).length;
-
-  return NextResponse.json({
-    invitations: invitationsWithAttendance,
-    guestListWithGroups: invitationsWithAttendance,
-    guestList,
-    guestListCount: guestList.length + plusOneCount,
-    guestListWithGroupsCount: totalCount,
-    invitationsCount: totalCount,
-    displayInvitations,
-    plusOneCount,
-    hasMore: offset + limit < totalCount,
-    currentOffset: offset,
-    currentLimit: limit,
-  });
+  return NextResponse.json(data);
 }
 
 const updateInvitationSchema = z.object({
