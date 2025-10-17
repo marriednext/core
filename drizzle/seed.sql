@@ -1,9 +1,8 @@
--- i ran this on 9/28/2025  directly into the db 
--- via the neondb console, this is just for record keeping
+INSERT INTO wedding (id, subdomain)
+VALUES
+  ('6b17d847-2262-4a78-87c3-2aa4090e483d','demo');
 
---- UPDATE: Gracie for Ryan and add Kami
-
-INSERT INTO invitations (name_on_invitation, is_attending, has_plus_one)
+INSERT INTO guest (name_on_invitation, is_attending, has_plus_one)
 VALUES
   ('Ken', false, false),
   ('Terri', false, false),
@@ -53,56 +52,64 @@ VALUES
   ('Chuck', false, false),
   ('Ricky', false, false),
   ('Granny', false, false),
-  ('Poppy', false, false);
-
-
-
-INSERT INTO invitation_groups (guest_a, guest_b) VALUES
-  ('Ken', 'Terri'),
-  ('Jordan', 'Harlie'),
-  ('Johnny', 'Alyssa'),
-  ('Daniel', 'Daisy'),
-  ('Ezequiel', 'Shayna'),
-  ('Elia', 'Ofe'),  
-  ('Josh', 'Nicole'),
-  ('Hannah', 'Isaac'),
-  ('David', 'Vickie'),
-  ('Lauren', 'Cody'),
-  ('Tim', 'Denise'),
-  ('Mike', 'Judy'),
-  ('Chuck', 'Ricky'),
-  ('Granny', 'Poppy');
-
-INSERT INTO invitation_groups (guest_a) VALUES
-  ('Letty'),
-  ('Brandy'),
-  ('Thomas'),
-  ('Liam'),
-  ('Alex'),
-  ('Javier'),
-  ('Hunter'),
-  ('Zach'),
-  ('Tyler'),
-  ('Jessica'),
-  ('Barbara'),
-  ('Jim'),
-  ('Evelynn'),
-  ('John'),
-  ('Kathleen'),
-  ('Dulce'),
-  ('Lisa'),
-  ('Teri'),
-  ('Sydney'),
-  ('Taylor'),
-  ('Ryan');
-
-INSERT INTO invitations (name_on_invitation, is_attending, has_plus_one)
-VALUES
+  ('Poppy', false, false),
   ('Kami', false, false),
-  ('Gracie', false, false);
+  ('Gracie', false, false),
+  ('Tanner', false, false),
+  ('Cindy', false, false),
+  ('Aubrey', false, false),
+  ('Chris', false, false);
 
-INSERT INTO invitation_groups (guest_a) VALUES
-  ('Kami');
 
--- update Ryan to include Gracie
-UPDATE invitation_groups SET guest_b = 'Gracie' WHERE guest_a = 'Ryan';
+UPDATE guest
+   SET wedding_id = '6b17d847-2262-4a78-87c3-2aa4090e483d'
+   WHERE wedding_id IS NULL;
+
+-- Couple invitations
+INSERT INTO invitation (guest_a, guest_b, invite_group_name)
+VALUES
+  ('Ken', 'Terri', 'Ken & Terri'),
+  ('Jordan', 'Harlie', 'Jordan & Harlie'),
+  ('Johnny', 'Alyssa', 'Johnny & Alyssa'),
+  ('Daniel', 'Daisy', 'Daniel & Daisy'),
+  ('Ezequiel', 'Shayna', 'Ezequiel & Shayna'),
+  ('Elia', 'Ofe', 'Elia & Ofe'),
+  ('Josh', 'Nicole', 'Josh & Nicole'),
+  ('Hannah', 'Isaac', 'Hannah & Isaac'),
+  ('David', 'Vickie', 'David & Vickie'),
+  ('Lauren', 'Cody', 'Lauren & Cody'),
+  ('Tim', 'Denise', 'Tim & Denise'),
+  ('Mike', 'Judy', 'Mike & Judy'),
+  ('Chuck', 'Ricky', 'Chuck & Ricky'),
+  ('Granny', 'Poppy', 'Granny & Poppy'),
+  ('Ryan', 'Gracie', 'Ryan & Gracie');
+
+-- Single invitations
+INSERT INTO invitation (guest_a, invite_group_name)
+VALUES
+  ('Letty', 'Letty'),
+  ('Brandy', 'Brandy'),
+  ('Thomas', 'Thomas'),
+  ('Liam', 'Liam'),
+  ('Alex', 'Alex'),
+  ('Javier', 'Javier'),
+  ('Hunter', 'Hunter'),
+  ('Zach', 'Zach'),
+  ('Tyler', 'Tyler'),
+  ('Jessica', 'Jessica'),
+  ('Barbara', 'Barbara'),
+  ('Jim', 'Jim'),
+  ('Evelynn', 'Evelynn'),
+  ('John', 'John'),
+  ('Kathleen', 'Kathleen'),
+  ('Dulce', 'Dulce'),
+  ('Lisa', 'Lisa'),
+  ('Teri', 'Teri'),
+  ('Sydney', 'Sydney'),
+  ('Taylor', 'Taylor'),
+  ('Kami', 'Kami');
+
+UPDATE invitation
+   SET wedding_id = '6b17d847-2262-4a78-87c3-2aa4090e483d'
+   WHERE wedding_id IS NULL;
+
