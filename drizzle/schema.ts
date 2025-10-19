@@ -8,7 +8,6 @@ import {
   boolean,
   jsonb,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 export const guest = pgTable(
   "guest",
@@ -134,8 +133,16 @@ export const wedding = pgTable(
     updatedAt: timestamp("updated_at", { mode: "string" })
       .defaultNow()
       .notNull(),
-    labelsEn: jsonb("labels_en"),
-    labelsEs: jsonb("labels_es"),
+
+    fieldDisplayName: text("field_display_name"),
+    fieldLocationName: text("field_location_name"),
+    fieldLocationAddress: text("field_location_address"),
+    fieldEventDate: timestamp("field_event_date", { mode: "string" }),
+    fieldEventTime: text("field_event_time"),
+    fieldMapsEmbedUrl: text("field_maps_embed_url"),
+    fieldMapsShareUrl: text("field_maps_share_url"),
+    fieldQuestionsAndAnswers: jsonb("field_questions_and_answers"),
+    fieldOurStory: jsonb("field_our_story"),
   },
   (table) => [
     unique("weddings_subdomain_unique").on(table.subdomain),
