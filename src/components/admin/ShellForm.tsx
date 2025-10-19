@@ -204,6 +204,9 @@ export default function ShellForm({
                   mode="single"
                   selected={formData.eventDate}
                   captionLayout="dropdown"
+                  defaultMonth={formData.eventDate || new Date()}
+                  startMonth={new Date()}
+                  endMonth={new Date(new Date().getFullYear() + 10, 11)}
                   onSelect={(date) => {
                     setFormData((prev) => ({ ...prev, eventDate: date }));
                     setDatePickerOpen(false);
