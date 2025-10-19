@@ -12,23 +12,16 @@ interface StoryItem {
   photoUrl: string;
 }
 
-export default function OurStoryForm() {
-  const [stories, setStories] = useState<StoryItem[]>([
-    {
-      id: "1",
-      heading: "How we met",
-      text: "Our love story began on a beautiful summer evening when fate brought us together...",
-      photoUrl:
-        "https://q8a0jhjw1u.ufs.sh/f/3POoQHRcbaUOOm0SDIkSueNsdT9DrfVivQ14LYJKZnXP5HgB",
-    },
-    {
-      id: "2",
-      heading: "The Proposal",
-      text: "He got down on one knee under the stars, and in that moment, everything felt perfect...",
-      photoUrl:
-        "https://q8a0jhjw1u.ufs.sh/f/3POoQHRcbaUORJSHeavG80gS6BkbOVwITDxorXjumJAtLCFe",
-    },
-  ]);
+interface OurStoryFormProps {
+  defaultStories?: StoryItem[];
+  onSubmit: (stories: StoryItem[]) => void;
+}
+
+export default function OurStoryForm({
+  defaultStories = [],
+  onSubmit,
+}: OurStoryFormProps) {
+  const [stories, setStories] = useState<StoryItem[]>(defaultStories);
 
   const handleAddStory = () => {
     const newId = Math.max(...stories.map((s) => Number.parseInt(s.id)), 0) + 1;
@@ -60,7 +53,7 @@ export default function OurStoryForm() {
   };
 
   const handleSaveStories = () => {
-    console.log("Saving stories:", stories);
+    onSubmit(stories);
   };
 
   return (

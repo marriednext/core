@@ -14,16 +14,46 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export default function SettingsForm() {
-  const [formData, setFormData] = useState({
-    displayName: "Yulissa & Matthew",
-    locationName: "Bel Vino Winery",
-    locationAddress: "33515 Rancho California Rd, Temecula, CA 92591",
-    eventDate: undefined as Date | undefined,
-    eventTime: "10:30:00",
-    mapsEmbedUrl:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3326.1364642096!2d-117.07380260000001!3d33.523837449999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80db78d42b9f8551%3A0xc3c29d516cbb69bc!2s33515%20Rancho%20California%20Rd%2C%20Temecula%2C%20CA%2092591!5e0!3m2!1sen!2sus!4v1760768625387!5m2!1sen!2sus",
-    mapsShareUrl: "https://maps.app.goo.gl/hr2JG9hxUjb6QeQ58",
+interface ShellFormData {
+  displayName: string;
+  locationName: string;
+  locationAddress: string;
+  eventDate: Date | undefined;
+  eventTime: string;
+  mapsEmbedUrl: string;
+  mapsShareUrl: string;
+}
+
+interface ShellFormProps {
+  defaultValues?: Partial<ShellFormData>;
+  onSubmitBasicInfo: (
+    data: Pick<
+      ShellFormData,
+      "displayName" | "locationName" | "locationAddress"
+    >
+  ) => void;
+  onSubmitDateTime: (
+    data: Pick<ShellFormData, "eventDate" | "eventTime">
+  ) => void;
+  onSubmitMaps: (
+    data: Pick<ShellFormData, "mapsEmbedUrl" | "mapsShareUrl">
+  ) => void;
+}
+
+export default function ShellForm({
+  defaultValues = {},
+  onSubmitBasicInfo,
+  onSubmitDateTime,
+  onSubmitMaps,
+}: ShellFormProps) {
+  const [formData, setFormData] = useState<ShellFormData>({
+    displayName: defaultValues.displayName || "",
+    locationName: defaultValues.locationName || "",
+    locationAddress: defaultValues.locationAddress || "",
+    eventDate: defaultValues.eventDate,
+    eventTime: defaultValues.eventTime || "",
+    mapsEmbedUrl: defaultValues.mapsEmbedUrl || "",
+    mapsShareUrl: defaultValues.mapsShareUrl || "",
   });
 
   const [datePickerOpen, setDatePickerOpen] = useState(false);
@@ -37,7 +67,7 @@ export default function SettingsForm() {
   };
 
   const handleSaveBasicInfo = () => {
-    console.log("Saving basic info:", {
+    onSubmitBasicInfo({
       displayName: formData.displayName,
       locationName: formData.locationName,
       locationAddress: formData.locationAddress,
@@ -45,14 +75,14 @@ export default function SettingsForm() {
   };
 
   const handleSaveDateTime = () => {
-    console.log("Saving date/time:", {
+    onSubmitDateTime({
       eventDate: formData.eventDate,
       eventTime: formData.eventTime,
     });
   };
 
   const handleSaveMaps = () => {
-    console.log("Saving maps:", {
+    onSubmitMaps({
       mapsEmbedUrl: formData.mapsEmbedUrl,
       mapsShareUrl: formData.mapsShareUrl,
     });

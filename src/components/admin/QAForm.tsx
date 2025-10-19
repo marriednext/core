@@ -11,19 +11,13 @@ interface QAItem {
   answer: string;
 }
 
-export default function QAForm() {
-  const [qaItems, setQaItems] = useState<QAItem[]>([
-    {
-      id: "1",
-      question: "What time does the venue open?",
-      answer: "The venue opens at 10:00 AM for setup and guest arrival.",
-    },
-    {
-      id: "2",
-      question: "What is the parking situation?",
-      answer: "We have ample free parking available on-site for all guests.",
-    },
-  ]);
+interface QAFormProps {
+  defaultQAItems?: QAItem[];
+  onSubmit: (qaItems: QAItem[]) => void;
+}
+
+export default function QAForm({ defaultQAItems = [], onSubmit }: QAFormProps) {
+  const [qaItems, setQaItems] = useState<QAItem[]>(defaultQAItems);
 
   const updateItem = (
     id: string,
@@ -51,7 +45,7 @@ export default function QAForm() {
   };
 
   const handleSaveQA = () => {
-    console.log("Saving Q&A:", qaItems);
+    onSubmit(qaItems);
   };
 
   return (
