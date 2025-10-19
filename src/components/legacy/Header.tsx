@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { usePathname } from "next/navigation";
 import { getLocale } from "@/lib/tenant/locales/en-US";
-import MobileSidenav from "./MobileSidenav";
-import Countdown from "./Countdown";
+import MobileSidenav from "@/components/tenant/MobileSidenav";
+import Countdown from "@/components/tenant/Countdown";
 
 export default function Header() {
   const t = getLocale();
@@ -67,7 +67,7 @@ export default function Header() {
       />
 
       {/* Desktop nav */}
-      <ul className="hidden md:flex flex-row flex-wrap items-center gap-4 md:gap-6 text-[20px] font-bold mt-20 tracking-wider justify-center sticky top-0 w-full bg-background z-10 py-4">
+      <ul className="hidden md:flex flex-row flex-wrap items-center gap-4 md:gap-6 text-[20px] font-bold mt-20 tracking-wider justify-center">
         {navLinks.map((link, index) => (
           <Fragment key={link.href}>
             <li className={getNavItemClass(link.href)}>
