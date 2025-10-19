@@ -215,7 +215,6 @@ describe("getGuestListData", () => {
         (inv) => inv.guestA === "John" && inv.guestB === "Jane"
       );
       expect(johnJaneInvite).toBeDefined();
-      // TODO this should fail
       expect(johnJaneInvite).toMatchObject({
         guestA: "John",
         guestB: "Jane",
