@@ -1,19 +1,40 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { decideMultiTenantRouting } from "./lib/rewrites/multitenancy";
 import { edgeDb } from "./database/edge";
 import { wedding } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
+const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
+const isOnboardingApiRoute = createRouteMatcher(["/api/onboarding/(.*)"]);
+const isPublicRoute = createRouteMatcher(["/welcome"]);
+
 function isWelcomeRoute(req: NextRequest): boolean {
   return req.nextUrl.pathname.startsWith("/welcome");
 }
 
-export default clerkMiddleware(async (auth, req) => {
-  // console.log("clerkMiddleware", auth, req);
+export default clerkMiddleware(async (auth, req: NextRequest) => {
+  const { isAuthenticated, sessionClaims, redirectToSignIn } = await auth();
+
+  if (
+    isAuthenticated &&
+    (isOnboardingRoute(req) || isOnboardingApiRoute(req))
+  ) {
+    return NextResponse.next();
+  }
+
+  if (!isAuthenticated && !isPublicRoute(req)) {
+    return redirectToSignIn({ returnBackUrl: req.url });
+  }
+
+  if (isAuthenticated && !sessionClaims?.metadata?.onboardingComplete) {
+    const onboardingUrl = new URL("/onboarding", req.url);
+    return NextResponse.redirect(onboardingUrl);
+  }
+
   const multiTenantResponse = await applyMultiTenantRewrite(req);
-  console.log("multiTenantResponse", multiTenantResponse);
   if (multiTenantResponse) {
+    console.log("multiTenantResponse", multiTenantResponse);
     return multiTenantResponse;
   }
 });

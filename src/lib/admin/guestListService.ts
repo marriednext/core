@@ -70,28 +70,31 @@ export type GuestListResponse = {
 };
 
 export type GuestListParams = {
+  weddingId: string;
   sortBy?: string;
   limit?: number;
   offset?: number;
 };
 
 export async function getGuestListData(
-  params: GuestListParams = {}
+  params: GuestListParams
 ): Promise<GuestListResponse> {
   try {
+    const { weddingId } = params;
     const sortBy = params.sortBy || "alpha-asc";
     const limit = params.limit || 25;
     const offset = params.offset || 0;
 
-    const guestList = await getGuestList();
+    const guestList = await getGuestList(weddingId);
 
     const invitationsWithGuests = await getInvitationsWithGuests(
+      weddingId,
       sortBy,
       limit,
       offset
     );
 
-    const totalCount = await getInvitationsCount();
+    const totalCount = await getInvitationsCount(weddingId);
 
     const invitationsWithAttendance = invitationsWithGuests.map((inv) => {
       const { attending, total } = calculateAttendance(inv);

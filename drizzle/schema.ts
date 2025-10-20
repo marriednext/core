@@ -125,6 +125,7 @@ export const wedding = pgTable(
   "wedding",
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
+    clerkUserId: text("clerk_user_id"),
     subdomain: text(),
     customDomain: text("custom_domain"),
     createdAt: timestamp("created_at", { mode: "string" })
@@ -147,5 +148,6 @@ export const wedding = pgTable(
   (table) => [
     unique("weddings_subdomain_unique").on(table.subdomain),
     unique("weddings_custom_domain_unique").on(table.customDomain),
+    unique("weddings_clerk_user_id_unique").on(table.clerkUserId),
   ]
 );

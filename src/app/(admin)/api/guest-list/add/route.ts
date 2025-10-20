@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/database/drizzle";
 import { guest, invitation } from "@/drizzle/schema";
-import { inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
+import { getCurrentWedding } from "@/lib/admin/getCurrentWedding";
 
 const addGuestSchema = z.object({
   guests: z
@@ -15,6 +16,12 @@ const addGuestSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    const wedding = await getCurrentWedding();
+
+    if (!wedding) {
+      return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
+    }
+
     const body = await req.json();
     const validatedData = addGuestSchema.parse(body);
 
@@ -23,7 +30,12 @@ export async function POST(req: NextRequest) {
     const existingGuests = await db
       .select()
       .from(guest)
-      .where(inArray(guest.nameOnInvitation, guests));
+      .where(
+        and(
+          eq(guest.weddingId, wedding.id),
+          inArray(guest.nameOnInvitation, guests)
+        )
+      );
 
     if (existingGuests.length > 0) {
       const duplicateNames = existingGuests
@@ -43,6 +55,7 @@ export async function POST(req: NextRequest) {
         const [createdGuest] = await tx
           .insert(guest)
           .values({
+            weddingId: wedding.id,
             nameOnInvitation: guestName,
             hasPlusOne: guests.length === 1 ? hasPlusOne : false,
             isAttending: null,
@@ -91,6 +104,7 @@ export async function POST(req: NextRequest) {
       const [createdInvitation] = await tx
         .insert(invitation)
         .values({
+          weddingId: wedding.id,
           ...guestFields,
           inviteGroupName: inviteGroupName || null,
         })

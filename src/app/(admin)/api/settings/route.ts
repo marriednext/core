@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/database/drizzle";
 import { wedding } from "@/drizzle/schema";
+import { eq } from "drizzle-orm";
+import { getCurrentWedding } from "@/lib/admin/getCurrentWedding";
 
 const qaItemSchema = z.object({
   id: z.string(),
@@ -32,9 +34,7 @@ const weddingSettingsSchema = z
 
 export async function GET() {
   try {
-    // TODO: Get wedding ID from Clerk user
-    const [weddingData] = await db.select().from(wedding).limit(1);
-    console.log("weddingData", weddingData);
+    const weddingData = await getCurrentWedding();
 
     if (!weddingData) {
       return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
@@ -103,11 +103,18 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
+    const currentWedding = await getCurrentWedding();
+
+    if (!currentWedding) {
+      return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
+    }
+
     updateData.updatedAt = new Date().toISOString();
 
     const [updatedWedding] = await db
       .update(wedding)
       .set(updateData)
+      .where(eq(wedding.id, currentWedding.id))
       .returning();
 
     if (!updatedWedding) {

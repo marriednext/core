@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { db } from "@/database/drizzle";
 import { invitation } from "@/drizzle/schema";
-import { or, ilike, asc, desc, sql } from "drizzle-orm";
+import { and, or, eq, ilike, asc, desc, sql } from "drizzle-orm";
 import { z } from "zod";
+import { getCurrentWedding } from "@/lib/admin/getCurrentWedding";
 
 const searchSchema = z.object({
   query: z.string().min(1),
@@ -10,6 +11,12 @@ const searchSchema = z.object({
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {
+    const wedding = await getCurrentWedding();
+
+    if (!wedding) {
+      return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
+    }
+
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("query");
     const sortBy = searchParams.get("sortBy") || "alpha-asc";
@@ -25,10 +32,13 @@ export async function GET(request: Request): Promise<NextResponse> {
     const searchPattern = `%${validatedData.query}%`;
 
     const results = await db.query.invitation.findMany({
-      where: or(
-        ilike(invitation.guestA, searchPattern),
-        ilike(invitation.guestB, searchPattern),
-        ilike(invitation.inviteGroupName, searchPattern)
+      where: and(
+        eq(invitation.weddingId, wedding.id),
+        or(
+          ilike(invitation.guestA, searchPattern),
+          ilike(invitation.guestB, searchPattern),
+          ilike(invitation.inviteGroupName, searchPattern)
+        )
       ),
       with: {
         guest_guestA: true,

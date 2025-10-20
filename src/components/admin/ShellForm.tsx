@@ -188,7 +188,7 @@ export default function ShellForm({
                 <Button
                   variant="outline"
                   id="event-date-picker"
-                  className="w-40 justify-between font-normal text-base py-6"
+                  className="w-40 justify-between font-normal text-base py-3 px-3 border-input rounded-md outline-none h-[52px]"
                 >
                   {formData.eventDate
                     ? formData.eventDate.toLocaleDateString()
@@ -229,7 +229,7 @@ export default function ShellForm({
               step="1"
               value={formData.eventTime}
               onChange={handleChange}
-              className="text-base py-6 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+              className="text-base py-6 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none h-[52px]"
             />
           </div>
         </div>

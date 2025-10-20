@@ -27,18 +27,23 @@ export type DbInvitationWithGuests = DbInvitation & {
 export type DbInvitationGroupWithGuests = DbInvitationWithGuests;
 export type DbInvitationGroup = DbInvitation;
 
-export const getGuestList = async (): Promise<DbGuest[]> => {
-  const guestList = await db.select().from(guest);
+export const getGuestList = async (weddingId: string): Promise<DbGuest[]> => {
+  const guestList = await db
+    .select()
+    .from(guest)
+    .where(eq(guest.weddingId, weddingId));
   return guestList;
 };
 
 export const getInvitationsWithGuests = async (
+  weddingId: string,
   sortBy?: string,
   limit?: number,
   offset?: number
 ) => {
   try {
     const result = await db.query.invitation.findMany({
+      where: eq(invitation.weddingId, weddingId),
       with: {
         guest_guestA: true,
         guest_guestB: true,
@@ -74,9 +79,12 @@ export const getInvitationsWithGuests = async (
   }
 };
 
-export const getInvitationsCount = async () => {
+export const getInvitationsCount = async (weddingId: string) => {
   try {
-    const result = await db.select().from(invitation);
+    const result = await db
+      .select()
+      .from(invitation)
+      .where(eq(invitation.weddingId, weddingId));
     return result.length;
   } catch (error) {
     console.error("Error getting invitations count", error);

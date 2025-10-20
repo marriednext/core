@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { db } from "@/database/drizzle";
 import { guest, invitation } from "@/drizzle/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
+import { getCurrentWedding } from "@/lib/admin/getCurrentWedding";
 
 const deleteInvitationSchema = z.object({
   entryId: z.string().uuid(),
@@ -11,11 +12,20 @@ const deleteInvitationSchema = z.object({
 
 export async function DELETE(request: Request): Promise<NextResponse> {
   try {
+    const wedding = await getCurrentWedding();
+
+    if (!wedding) {
+      return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
+    }
+
     const body = await request.json();
     const validatedData = deleteInvitationSchema.parse(body);
 
     const existingInvitation = await db.query.invitation.findFirst({
-      where: eq(invitation.id, validatedData.entryId),
+      where: and(
+        eq(invitation.id, validatedData.entryId),
+        eq(invitation.weddingId, wedding.id)
+      ),
     });
 
     if (!existingInvitation) {

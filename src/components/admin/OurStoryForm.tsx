@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import { Trash2, Plus } from "lucide-react";
 
 interface StoryItem {
@@ -152,21 +153,13 @@ export default function OurStoryForm({
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 pt-4">
-        <button
-          type="button"
-          onClick={handleSaveStories}
-          className="inline-block border-2 border-black px-8 py-3 uppercase tracking-wider hover:bg-black hover:text-white transition-colors text-base"
-        >
+        <Button type="button" onClick={handleSaveStories} variant="primary">
           Save Stories
-        </button>
-        <button
-          type="button"
-          onClick={handleAddStory}
-          className="border-2 border-gray-400 px-8 py-3 uppercase tracking-wider hover:bg-gray-100 transition-colors text-base flex items-center justify-center gap-2"
-        >
+        </Button>
+        <Button type="button" onClick={handleAddStory} variant="secondary">
           <Plus className="w-5 h-5" />
           Add Story
-        </button>
+        </Button>
       </div>
     </div>
   );

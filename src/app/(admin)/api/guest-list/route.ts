@@ -9,6 +9,7 @@ import {
   type GuestListResponse,
   DatabaseError,
 } from "@/lib/admin/guestListService";
+import { getCurrentWedding } from "@/lib/admin/getCurrentWedding";
 
 const getGuestListSchema = z.object({
   sortBy: z.string().default("alpha-asc"),
@@ -20,6 +21,12 @@ export async function GET(
   request: Request
 ): Promise<NextResponse<GuestListResponse | { error: string }>> {
   try {
+    const wedding = await getCurrentWedding();
+
+    if (!wedding) {
+      return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
+    }
+
     const { searchParams } = new URL(request.url);
     const validatedParams = getGuestListSchema.parse({
       sortBy: searchParams.get("sortBy"),
@@ -27,7 +34,10 @@ export async function GET(
       offset: searchParams.get("offset"),
     });
 
-    const data = await getGuestListData(validatedParams);
+    const data = await getGuestListData({
+      ...validatedParams,
+      weddingId: wedding.id,
+    });
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching guest list:", error);
