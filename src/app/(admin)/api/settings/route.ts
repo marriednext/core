@@ -29,6 +29,10 @@ const weddingSettingsSchema = z
     mapsShareUrl: z.string().optional(),
     questionsAndAnswers: z.array(qaItemSchema).optional(),
     ourStory: z.array(storyItemSchema).optional(),
+    subdomain: z.string().optional(),
+    domain: z.string().optional(),
+    nameA: z.string().optional(),
+    nameB: z.string().optional(),
   })
   .strict();
 
@@ -51,6 +55,10 @@ export async function GET() {
       questionsAndAnswers:
         (weddingData.fieldQuestionsAndAnswers as unknown[]) || [],
       ourStory: (weddingData.fieldOurStory as unknown[]) || [],
+      subdomain: weddingData.subdomain || "",
+      domain: weddingData.customDomain || "",
+      nameA: weddingData.fieldNameA || "",
+      nameB: weddingData.fieldNameB || "",
     });
   } catch (error) {
     console.error("Error fetching wedding settings:", error);
@@ -95,6 +103,18 @@ export async function PATCH(req: NextRequest) {
     if (validatedData.ourStory !== undefined) {
       updateData.fieldOurStory = validatedData.ourStory;
     }
+    if (validatedData.subdomain !== undefined) {
+      updateData.subdomain = validatedData.subdomain;
+    }
+    if (validatedData.domain !== undefined) {
+      updateData.customDomain = validatedData.domain;
+    }
+    if (validatedData.nameA !== undefined) {
+      updateData.fieldNameA = validatedData.nameA;
+    }
+    if (validatedData.nameB !== undefined) {
+      updateData.fieldNameB = validatedData.nameB;
+    }
 
     if (Object.keys(updateData).length === 0) {
       return NextResponse.json(
@@ -135,6 +155,10 @@ export async function PATCH(req: NextRequest) {
           questionsAndAnswers:
             (updatedWedding.fieldQuestionsAndAnswers as unknown[]) || [],
           ourStory: (updatedWedding.fieldOurStory as unknown[]) || [],
+          subdomain: updatedWedding.subdomain || "",
+          domain: updatedWedding.customDomain || "",
+          nameA: updatedWedding.fieldNameA || "",
+          nameB: updatedWedding.fieldNameB || "",
         },
       },
       { status: 200 }

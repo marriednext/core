@@ -144,6 +144,8 @@ export const wedding = pgTable(
     fieldMapsShareUrl: text("field_maps_share_url"),
     fieldQuestionsAndAnswers: jsonb("field_questions_and_answers"),
     fieldOurStory: jsonb("field_our_story"),
+    fieldNameA: text("field_name_a"),
+    fieldNameB: text("field_name_b"),
   },
   (table) => [
     unique("weddings_subdomain_unique").on(table.subdomain),

@@ -4,6 +4,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ShellForm from "@/components/admin/ShellForm";
 import OurStoryForm from "@/components/admin/OurStoryForm";
 import QAForm from "@/components/admin/QAForm";
+import DomainForm from "@/components/admin/DomainForm";
+import NamesForm from "@/components/admin/NamesForm";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 interface StoryItem {
   id: string;
@@ -28,6 +31,10 @@ interface SettingsData {
   mapsShareUrl: string;
   questionsAndAnswers: QAItem[];
   ourStory: StoryItem[];
+  subdomain: string;
+  domain: string;
+  nameA: string;
+  nameB: string;
 }
 
 async function fetchSettings(): Promise<SettingsData> {
@@ -52,9 +59,16 @@ async function updateSettings(data: Partial<SettingsData>): Promise<void> {
 export default function SettingsPage() {
   const queryClient = useQueryClient();
 
-  const { data: settings, isLoading } = useQuery({
+  const {
+    data: settings,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["settings"],
     queryFn: fetchSettings,
+    retry: 1,
   });
 
   const mutation = useMutation({
@@ -65,9 +79,28 @@ export default function SettingsPage() {
   });
 
   if (isLoading) {
+    return <LoadingSpinner message="Loading settings..." />;
+  }
+
+  if (isError) {
     return (
       <div className="p-6 max-w-5xl mx-auto">
-        <div className="text-center py-12">Loading settings...</div>
+        <div className="text-center py-12 space-y-4">
+          <div className="text-red-600 text-lg font-medium">
+            Error loading settings
+          </div>
+          <div className="text-gray-600">
+            {error instanceof Error
+              ? error.message
+              : "An unexpected error occurred"}
+          </div>
+          <button
+            onClick={() => refetch()}
+            className="inline-block border-2 border-black px-8 py-3 uppercase tracking-wider hover:bg-black hover:text-white transition-colors text-base"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
@@ -111,6 +144,30 @@ export default function SettingsPage() {
             mutation.mutate({
               mapsEmbedUrl: data.mapsEmbedUrl,
               mapsShareUrl: data.mapsShareUrl,
+            });
+          }}
+        />
+        <DomainForm
+          defaultValues={{
+            subdomain: settings?.subdomain || "",
+            domain: settings?.domain || "",
+          }}
+          onSubmit={(data) => {
+            mutation.mutate({
+              subdomain: data.subdomain,
+              domain: data.domain,
+            });
+          }}
+        />
+        <NamesForm
+          defaultValues={{
+            nameA: settings?.nameA || "",
+            nameB: settings?.nameB || "",
+          }}
+          onSubmit={(data) => {
+            mutation.mutate({
+              nameA: data.nameA,
+              nameB: data.nameB,
             });
           }}
         />

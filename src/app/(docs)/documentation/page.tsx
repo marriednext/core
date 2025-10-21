@@ -45,9 +45,9 @@ export default function DocumentationPage() {
             Documentation
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
-            Everything you need to know about using weddingcake.studio. Explore
-            our guides, learn about our features, and understand how we keep
-            your data safe.
+            Everything you need to know about using marriednext.com. Explore our
+            guides, learn about our features, and understand how we keep your
+            data safe.
           </p>
         </div>
 
