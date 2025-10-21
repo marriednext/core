@@ -5,6 +5,7 @@ import { Rubik, Gloria_Hallelujah } from "next/font/google";
 import NavBar from "@/components/NavBar";
 import { Analytics } from "@vercel/analytics/next";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const rubik = Rubik({
   variable: "--font-rubik",
@@ -39,6 +40,7 @@ export default function RootLayout({
             </div>
             <div className="max-w-7xl mx-auto">{children}</div>
           </QueryProvider>
+          <Toaster />
         </body>
         <Analytics />
       </html>

@@ -7,6 +7,7 @@ import QAForm from "@/components/admin/QAForm";
 import DomainForm from "@/components/admin/DomainForm";
 import NamesForm from "@/components/admin/NamesForm";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { toast } from "sonner";
 
 interface StoryItem {
   id: string;
@@ -75,6 +76,12 @@ export default function SettingsPage() {
     mutationFn: updateSettings,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
+      toast.success("Settings saved");
+    },
+    onError: (err) => {
+      const message =
+        err instanceof Error ? err.message : "Failed to save settings";
+      toast.error(message);
     },
   });
 
