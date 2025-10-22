@@ -7,7 +7,13 @@ import {
   text,
   boolean,
   jsonb,
+  pgEnum,
 } from "drizzle-orm/pg-core";
+
+export const rsvpNameFormatEnum = pgEnum("rsvp_name_format", [
+  "FIRST_NAME_ONLY",
+  "FULL_NAME",
+]);
 
 export const guest = pgTable(
   "guest",
@@ -53,6 +59,7 @@ export const invitation = pgTable(
       .defaultNow()
       .notNull(),
     inviteGroupName: text("invite_group_name"),
+    email: text("email"),
   },
   (table) => [
     foreignKey({
@@ -146,6 +153,9 @@ export const wedding = pgTable(
     fieldOurStory: jsonb("field_our_story"),
     fieldNameA: text("field_name_a"),
     fieldNameB: text("field_name_b"),
+    controlRsvpNameFormat: rsvpNameFormatEnum("control_rsvp_name_format")
+      .default("FULL_NAME")
+      .notNull(),
   },
   (table) => [
     unique("weddings_subdomain_unique").on(table.subdomain),

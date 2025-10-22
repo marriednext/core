@@ -14,6 +14,13 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { AddGuestDialog } from "@/components/guest-list/AddGuestDialog";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function GuestListPage() {
   const queryClient = useQueryClient();
@@ -26,6 +33,9 @@ export default function GuestListPage() {
     DbInvitationGroupWithGuests[]
   >([]);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
+  const [nameFormat, setNameFormat] = useState<"FIRST_NAME_ONLY" | "FULL_NAME">(
+    "FULL_NAME"
+  );
 
   const limit = 25;
 
@@ -34,7 +44,6 @@ export default function GuestListPage() {
     isFetching: isFetchingGuestList,
     isLoading: isLoadingGuestList,
     isError: isErrorGuestList,
-    error: errorGuestList,
   } = useQuery<GuestListData>({
     queryKey: ["guest-list", sortBy, offset],
     queryFn: async () => {
@@ -85,6 +94,50 @@ export default function GuestListPage() {
       return res.json();
     },
     enabled: debouncedSearchQuery.length > 0,
+  });
+
+  const { data: nameFormatData } = useQuery<{
+    nameFormat: "FIRST_NAME_ONLY" | "FULL_NAME";
+  }>({
+    queryKey: ["rsvp-name-format"],
+    queryFn: async () => {
+      const res = await fetch("/api/settings/rsvp-name-format");
+      if (!res.ok) {
+        throw new Error("Failed to fetch name format");
+      }
+      return res.json();
+    },
+  });
+
+  useEffect(() => {
+    if (nameFormatData?.nameFormat) {
+      setNameFormat(nameFormatData.nameFormat);
+    }
+  }, [nameFormatData]);
+
+  const updateNameFormatMutation = useMutation({
+    mutationFn: async (newFormat: "FIRST_NAME_ONLY" | "FULL_NAME") => {
+      const response = await fetch("/api/settings/rsvp-name-format", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nameFormat: newFormat }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to update name format");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["rsvp-name-format"] });
+    },
+    onError: (error) => {
+      console.error("Error updating name format:", error);
+    },
   });
 
   const updateGuestMutation = useMutation({
@@ -186,6 +239,12 @@ export default function GuestListPage() {
     setAccumulatedGuests([]);
   };
 
+  const handleNameFormatChange = (newFormat: string) => {
+    const format = newFormat as "FIRST_NAME_ONLY" | "FULL_NAME";
+    setNameFormat(format);
+    updateNameFormatMutation.mutate(format);
+  };
+
   const isInitialLoading =
     isLoadingGuestList ||
     (isFetchingGuestList && accumulatedGuests.length === 0);
@@ -244,10 +303,33 @@ export default function GuestListPage() {
           <SignedIn>
             <div className="mb-6">
               <h1 className="text-5xl font-bold mb-1">Guest List</h1>
-              <p className="text-stone-700 text-sm">
+              <p className="text-stone-700 text-sm mb-3">
                 Guests may RSVP by entering the name entered on their
                 invitation.
               </p>
+              <div className="flex items-center gap-2">
+                <label
+                  htmlFor="name-format"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  RSVP Name Format:
+                </label>
+                <Select
+                  value={nameFormat}
+                  onValueChange={handleNameFormatChange}
+                  disabled={updateNameFormatMutation.isPending}
+                >
+                  <SelectTrigger id="name-format" className="w-48">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="FULL_NAME">Full Name</SelectItem>
+                    <SelectItem value="FIRST_NAME_ONLY">
+                      First Name Only
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="grid grid-cols-3 gap-3 mb-8">

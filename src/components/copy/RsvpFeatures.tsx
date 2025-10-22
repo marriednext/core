@@ -57,7 +57,7 @@ export default function RsvpFeatures() {
             </div>
           </div>
           <div className="flex items-start justify-end lg:order-first">
-            <Image
+            {/* <Image
               alt="Wedding RSVP dashboard screenshot"
               src="https://tailwindcss.com/plus-assets/img/component-images/project-app-screenshot.png"
               width={2432}
@@ -70,7 +70,7 @@ export default function RsvpFeatures() {
               width={2432}
               height={1442}
               className="w-3xl max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 not-dark:hidden sm:w-228 dark:ring-white/10"
-            />
+            /> */}
           </div>
         </div>
       </div>
