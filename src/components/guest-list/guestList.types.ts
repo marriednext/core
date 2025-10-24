@@ -1,31 +1,15 @@
-import { DbInvitationGroupWithGuests } from "@/database/drizzle";
+import { DbInvitationGroupWithGuests, DbGuest } from "@/database/drizzle";
+
+export interface GuestFormData {
+  id?: string;
+  nameOnInvitation: string;
+  isAttending: boolean | null;
+  hasPlusOne: boolean;
+}
 
 export interface UpdateGuestPayload {
   entryId: string;
-  guestA: string;
-  guestAAttending: boolean | null;
-  guestAHasPlusOne: boolean;
-  guestB: string | null;
-  guestBAttending: boolean | null;
-  guestBHasPlusOne: boolean;
-  guestC: string | null;
-  guestCAttending: boolean | null;
-  guestCHasPlusOne: boolean;
-  guestD: string | null;
-  guestDAttending: boolean | null;
-  guestDHasPlusOne: boolean;
-  guestE: string | null;
-  guestEAttending: boolean | null;
-  guestEHasPlusOne: boolean;
-  guestF: string | null;
-  guestFAttending: boolean | null;
-  guestFHasPlusOne: boolean;
-  guestG: string | null;
-  guestGAttending: boolean | null;
-  guestGHasPlusOne: boolean;
-  guestH: string | null;
-  guestHAttending: boolean | null;
-  guestHHasPlusOne: boolean;
+  guests: GuestFormData[];
   inviteGroupName: string | null;
 }
 
@@ -50,30 +34,7 @@ export interface GuestListDisplayProps {
 }
 
 export interface EditFormData {
-  guestA: string;
-  guestAAttending: boolean | null;
-  guestAHasPlusOne: boolean;
-  guestB: string | null;
-  guestBAttending: boolean | null;
-  guestBHasPlusOne: boolean;
-  guestC: string | null;
-  guestCAttending: boolean | null;
-  guestCHasPlusOne: boolean;
-  guestD: string | null;
-  guestDAttending: boolean | null;
-  guestDHasPlusOne: boolean;
-  guestE: string | null;
-  guestEAttending: boolean | null;
-  guestEHasPlusOne: boolean;
-  guestF: string | null;
-  guestFAttending: boolean | null;
-  guestFHasPlusOne: boolean;
-  guestG: string | null;
-  guestGAttending: boolean | null;
-  guestGHasPlusOne: boolean;
-  guestH: string | null;
-  guestHAttending: boolean | null;
-  guestHHasPlusOne: boolean;
+  guests: GuestFormData[];
   inviteGroupName: string | null;
 }
 

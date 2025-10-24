@@ -12,31 +12,13 @@ export async function findInvitationByGuestName(
   const invitations = await db.query.invitation.findMany({
     where: eq(invitation.weddingId, weddingId),
     with: {
-      guest_guestA: true,
-      guest_guestB: true,
-      guest_guestC: true,
-      guest_guestD: true,
-      guest_guestE: true,
-      guest_guestF: true,
-      guest_guestG: true,
-      guest_guestH: true,
+      guests: true,
     },
   });
 
   for (const inv of invitations) {
-    const guestSlots = [
-      inv.guestA,
-      inv.guestB,
-      inv.guestC,
-      inv.guestD,
-      inv.guestE,
-      inv.guestF,
-      inv.guestG,
-      inv.guestH,
-    ];
-
-    for (const guestName of guestSlots) {
-      if (guestName && matchGuestName(name, guestName, nameFormat)) {
+    for (const guest of inv.guests) {
+      if (guest && matchGuestName(name, guest.nameOnInvitation, nameFormat)) {
         return inv;
       }
     }

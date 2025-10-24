@@ -69,32 +69,16 @@ export async function GET(
   }
 }
 
+const guestSchema = z.object({
+  id: z.string().uuid().optional(),
+  nameOnInvitation: z.string().min(1),
+  isAttending: z.boolean().nullable(),
+  hasPlusOne: z.boolean(),
+});
+
 const updateInvitationSchema = z.object({
   invitationId: z.string().uuid(),
-  guestA: z.string().min(1),
-  guestAAttending: z.boolean().nullable(),
-  guestAHasPlusOne: z.boolean(),
-  guestB: z.string().nullable(),
-  guestBAttending: z.boolean().nullable(),
-  guestBHasPlusOne: z.boolean(),
-  guestC: z.string().nullable(),
-  guestCAttending: z.boolean().nullable(),
-  guestCHasPlusOne: z.boolean(),
-  guestD: z.string().nullable(),
-  guestDAttending: z.boolean().nullable(),
-  guestDHasPlusOne: z.boolean(),
-  guestE: z.string().nullable(),
-  guestEAttending: z.boolean().nullable(),
-  guestEHasPlusOne: z.boolean(),
-  guestF: z.string().nullable(),
-  guestFAttending: z.boolean().nullable(),
-  guestFHasPlusOne: z.boolean(),
-  guestG: z.string().nullable(),
-  guestGAttending: z.boolean().nullable(),
-  guestGHasPlusOne: z.boolean(),
-  guestH: z.string().nullable(),
-  guestHAttending: z.boolean().nullable(),
-  guestHHasPlusOne: z.boolean(),
+  guests: z.array(guestSchema).min(1),
   inviteGroupName: z.string().nullable(),
 });
 
@@ -106,14 +90,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
     const existingInvitation = await db.query.invitation.findFirst({
       where: eq(invitation.id, validatedData.invitationId),
       with: {
-        guest_guestA: true,
-        guest_guestB: true,
-        guest_guestC: true,
-        guest_guestD: true,
-        guest_guestE: true,
-        guest_guestF: true,
-        guest_guestG: true,
-        guest_guestH: true,
+        guests: true,
       },
     });
 
@@ -124,48 +101,48 @@ export async function PUT(request: Request): Promise<NextResponse> {
       );
     }
 
+    const wedding = await getCurrentWedding();
+    if (!wedding) {
+      return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
+    }
+
     await db.transaction(async (tx) => {
-      const guestKeys = ["A", "B", "C", "D", "E", "F", "G", "H"] as const;
+      const existingGuestIds = existingInvitation.guests.map((g) => g.id);
+      const updatedGuestIds = validatedData.guests
+        .filter((g) => g.id)
+        .map((g) => g.id!);
 
-      for (const key of guestKeys) {
-        const guestName = validatedData[
-          `guest${key}` as keyof typeof validatedData
-        ] as string | null;
-        const guestAttending = validatedData[
-          `guest${key}Attending` as keyof typeof validatedData
-        ] as boolean | null;
-        const guestHasPlusOne = validatedData[
-          `guest${key}HasPlusOne` as keyof typeof validatedData
-        ] as boolean;
-        const existingGuest = existingInvitation[
-          `guest_guest${key}` as keyof typeof existingInvitation
-        ] as typeof existingInvitation.guest_guestA;
+      const guestsToDelete = existingGuestIds.filter(
+        (id) => !updatedGuestIds.includes(id)
+      );
+      for (const guestId of guestsToDelete) {
+        await tx.delete(guest).where(eq(guest.id, guestId));
+      }
 
-        if (guestName && existingGuest) {
+      for (const guestData of validatedData.guests) {
+        if (guestData.id) {
           await tx
             .update(guest)
             .set({
-              nameOnInvitation: guestName,
-              isAttending: guestAttending,
-              hasPlusOne: guestHasPlusOne,
+              nameOnInvitation: guestData.nameOnInvitation,
+              isAttending: guestData.isAttending,
+              hasPlusOne: guestData.hasPlusOne,
             })
-            .where(eq(guest.id, existingGuest.id));
-        } else if (!guestName && existingGuest) {
-          await tx.delete(guest).where(eq(guest.id, existingGuest.id));
+            .where(eq(guest.id, guestData.id));
+        } else {
+          await tx.insert(guest).values({
+            weddingId: wedding.id,
+            invitationId: validatedData.invitationId,
+            nameOnInvitation: guestData.nameOnInvitation,
+            isAttending: guestData.isAttending,
+            hasPlusOne: guestData.hasPlusOne,
+          });
         }
       }
 
       await tx
         .update(invitation)
         .set({
-          guestA: validatedData.guestA,
-          guestB: validatedData.guestB,
-          guestC: validatedData.guestC,
-          guestD: validatedData.guestD,
-          guestE: validatedData.guestE,
-          guestF: validatedData.guestF,
-          guestG: validatedData.guestG,
-          guestH: validatedData.guestH,
           inviteGroupName: validatedData.inviteGroupName,
           lastUpdatedAt: new Date().toISOString(),
         })

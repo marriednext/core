@@ -4,54 +4,45 @@ import clsx from "clsx";
 import { GuestFieldsViewProps } from "@/components/guest-list/guestList.types";
 
 export default function GuestFieldsView({ entry }: GuestFieldsViewProps) {
-  const guests = [
-    { name: entry.guestA, invitation: entry.guest_guestA },
-    { name: entry.guestB, invitation: entry.guest_guestB },
-    { name: entry.guestC, invitation: entry.guest_guestC },
-    { name: entry.guestD, invitation: entry.guest_guestD },
-    { name: entry.guestE, invitation: entry.guest_guestE },
-    { name: entry.guestF, invitation: entry.guest_guestF },
-    { name: entry.guestG, invitation: entry.guest_guestG },
-    { name: entry.guestH, invitation: entry.guest_guestH },
-  ].filter((guest) => guest.name && guest.invitation);
-
-  const guestAHasPlusOne = entry.guest_guestA?.hasPlusOne;
-  const guestAAttending = entry.guest_guestA?.isAttending;
+  const guests = entry.guests;
+  const firstGuest = guests[0];
   const hasOnlyOneGuest = guests.length === 1;
 
   return (
     <>
       {guests.map((guest, index) => (
         <div
-          key={index}
+          key={guest.id || index}
           className="flex items-center justify-between py-2 px-3 rounded-lg bg-gray-50 border border-gray-200"
         >
-          <span className="font-semibold text-gray-900">{guest.name}</span>
+          <span className="font-semibold text-gray-900">
+            {guest.nameOnInvitation}
+          </span>
           <span
             className={clsx(
               "text-sm font-bold",
-              guest.invitation?.isAttending && "text-green-700",
-              !guest.invitation?.isAttending && "text-gray-600"
+              guest.isAttending && "text-green-700",
+              !guest.isAttending && "text-gray-600"
             )}
           >
-            {guest.invitation?.isAttending ? "✓ Attending" : "Pending"}
+            {guest.isAttending ? "✓ Attending" : "Pending"}
           </span>
         </div>
       ))}
 
-      {hasOnlyOneGuest && guestAHasPlusOne && (
+      {hasOnlyOneGuest && firstGuest?.hasPlusOne && (
         <div className="flex items-center justify-between py-2 px-3 rounded-lg bg-gray-50 border border-gray-200 ml-4">
           <span className="font-medium text-gray-800 italic">
-            {entry.guestA}&apos;s Plus One
+            {firstGuest.nameOnInvitation}&apos;s Plus One
           </span>
           <span
             className={clsx(
               "text-sm font-bold",
-              guestAAttending && "text-green-700",
-              !guestAAttending && "text-gray-600"
+              firstGuest.isAttending && "text-green-700",
+              !firstGuest.isAttending && "text-gray-600"
             )}
           >
-            {guestAAttending ? "✓ Attending" : "Pending"}
+            {firstGuest.isAttending ? "✓ Attending" : "Pending"}
           </span>
         </div>
       )}

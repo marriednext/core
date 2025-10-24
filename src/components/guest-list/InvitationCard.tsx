@@ -40,23 +40,11 @@ export default function InvitationCard({
   const Root = root || "li";
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const getGuestNames = () => {
-    const names = [];
-    if (entry.guestA) names.push(entry.guestA);
-    if (entry.guestB) names.push(entry.guestB);
-    if (entry.guestC) names.push(entry.guestC);
-    if (entry.guestD) names.push(entry.guestD);
-    if (entry.guestE) names.push(entry.guestE);
-    if (entry.guestF) names.push(entry.guestF);
-    if (entry.guestG) names.push(entry.guestG);
-    if (entry.guestH) names.push(entry.guestH);
-    return names;
-  };
-
-  const guestNames = getGuestNames();
+  const guestNames = entry.guests.map((g) => g.nameOnInvitation);
   const guestCount = guestNames.length;
 
   const getDefaultDisplayName = () => {
+    if (guestCount === 0) return "Unnamed Group";
     if (guestCount === 1) return guestNames[0];
     if (guestCount === 2) return `${guestNames[0]} & ${guestNames[1]}`;
     return `${guestNames[0]} Group`;

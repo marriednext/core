@@ -24,18 +24,7 @@ const calculateAttendance = (entry: DbInvitationWithGuests) => {
   let attending = 0;
   let total = 0;
 
-  const allGuests = [
-    entry.guest_guestA,
-    entry.guest_guestB,
-    entry.guest_guestC,
-    entry.guest_guestD,
-    entry.guest_guestE,
-    entry.guest_guestF,
-    entry.guest_guestG,
-    entry.guest_guestH,
-  ];
-
-  allGuests.forEach((guest) => {
+  entry.guests.forEach((guest) => {
     if (guest) {
       total++;
       if (guest.isAttending) attending++;
@@ -62,7 +51,7 @@ export type GuestListResponse = {
   guestListCount: number;
   guestListWithGroupsCount: number;
   invitationsCount: number;
-  displayInvitations: { guestA: string; guestB: string | null }[];
+  displayInvitations: { primaryGuest: string; secondaryGuest: string | null }[];
   plusOneCount: number;
   hasMore: boolean;
   currentOffset: number;
@@ -105,14 +94,18 @@ export async function getGuestListData(
       };
     });
 
-    const displayInvitations = invitationsWithGuests.map((inv) => ({
-      guestA: inv.guestA,
-      guestB: inv.guestB
-        ? "& " + inv.guestB
-        : guestList.find((g) => g.nameOnInvitation === inv.guestA)?.hasPlusOne
+    const displayInvitations = invitationsWithGuests.map((inv) => {
+      const primaryGuest = inv.guests[0]?.nameOnInvitation || "";
+      const secondaryGuest = inv.guests[1]
+        ? "& " + inv.guests[1].nameOnInvitation
+        : inv.guests[0]?.hasPlusOne
         ? "+ One"
-        : null,
-    }));
+        : null;
+      return {
+        primaryGuest,
+        secondaryGuest,
+      };
+    });
 
     const plusOneCount = guestList.filter((g) => g.hasPlusOne).length;
 

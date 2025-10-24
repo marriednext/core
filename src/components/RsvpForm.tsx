@@ -1,60 +1,36 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import clsx from "clsx";
-
-type RsvpStep =
-  | "name-input"
-  | "guest-selection"
-  | "email-collection"
-  | "success"
-  | "error";
-
-export interface GuestSelection {
-  name: string;
-  isAttending: boolean;
-}
-
-export interface InvitationData {
-  id: string;
-  guests: GuestSelection[];
-}
+import { useRsvpStore } from "@/stores/rsvpStore";
 
 interface RsvpFormProps {
   className?: string;
   variant?: "tenant" | "legacy";
-  step: RsvpStep;
-  invitation: InvitationData | null;
-  selectedGuests: GuestSelection[];
-  email: string;
-  nameFormat: "FULL_NAME" | "FIRST_NAME_ONLY";
-  isLoading: boolean;
-  errorMessage: string | null;
-  onNameSubmit: (name: string) => void;
-  onGuestToggle: (guestName: string) => void;
-  onEmailSubmit: (email: string) => void;
-  onStepChange: (step: RsvpStep) => void;
-  onReset: () => void;
 }
 
 export default function RsvpForm({
   className,
   variant = "tenant",
-  step,
-  invitation,
-  selectedGuests,
-  email,
-  nameFormat,
-  isLoading,
-  errorMessage,
-  onNameSubmit,
-  onGuestToggle,
-  onEmailSubmit,
-  onStepChange,
-  onReset,
 }: RsvpFormProps) {
+  const {
+    step,
+    invitation,
+    selectedGuests,
+    email,
+    nameFormat,
+    isLoading,
+    errorMessage,
+    setInputName,
+    setStep,
+    toggleGuest,
+    setEmail,
+    reset,
+  } = useRsvpStore();
+
   const {
     register: registerName,
     handleSubmit: handleSubmitName,
@@ -65,26 +41,33 @@ export default function RsvpForm({
     register: registerEmail,
     handleSubmit: handleSubmitEmail,
     formState: { errors: emailErrors },
+    setValue: setEmailValue,
   } = useForm<{ email: string }>({
     defaultValues: { email },
   });
 
+  useEffect(() => {
+    if (email) {
+      setEmailValue("email", email);
+    }
+  }, [email, setEmailValue]);
+
   const isLegacy = variant === "legacy";
 
   const handleNameSubmit = (data: { name: string }) => {
-    onNameSubmit(data.name);
+    setInputName(data.name);
   };
 
   const handleGuestSelectionNext = () => {
-    onStepChange("email-collection");
+    setStep("email-collection");
   };
 
   const handleEmailSubmit = (data: { email: string }) => {
-    onEmailSubmit(data.email);
+    setEmail(data.email);
   };
 
   const baseStyles = clsx(
-    "w-full flex flex-col items-center justify-center px-4",
+    "w-full flex flex-col items-center justify-center px-4 pb-12",
     className
   );
 
@@ -202,7 +185,7 @@ export default function RsvpForm({
                   <Checkbox
                     id={`guest-${index}`}
                     checked={guest.isAttending}
-                    onCheckedChange={() => onGuestToggle(guest.name)}
+                    onCheckedChange={() => toggleGuest(guest.name)}
                     className="h-6 w-6"
                   />
                 </div>
@@ -226,7 +209,7 @@ export default function RsvpForm({
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
               <button
-                onClick={() => onStepChange("name-input")}
+                onClick={() => setStep("name-input")}
                 disabled={isLoading}
                 className="text-gray-600 hover:text-gray-800 underline text-base md:text-lg"
               >
@@ -289,7 +272,7 @@ export default function RsvpForm({
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
                 <button
                   type="button"
-                  onClick={() => onStepChange("guest-selection")}
+                  onClick={() => setStep("guest-selection")}
                   disabled={isLoading}
                   className="text-gray-600 hover:text-gray-800 underline text-base md:text-lg"
                 >
@@ -325,7 +308,7 @@ export default function RsvpForm({
                 <span className="block mt-2">We'll miss you! 💝</span>
               )}
             </div>
-            <button onClick={onReset} className={clsx(buttonStyles, "mt-6")}>
+            <button onClick={reset} className={clsx(buttonStyles, "mt-6")}>
               <span className="text-lg md:text-xl">RSVP Another Guest</span>
             </button>
           </>
@@ -340,7 +323,7 @@ export default function RsvpForm({
               {errorMessage || "Something went wrong. Please try again."}
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-              <button onClick={onReset} className={buttonStyles}>
+              <button onClick={reset} className={buttonStyles}>
                 <span className="text-lg md:text-xl">Try Again</span>
               </button>
             </div>

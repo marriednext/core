@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { getLocale } from "@/lib/tenant/locales/en-US";
-import RsvpForm from "@/components/RsvpForm";
+import RsvpFormContainer from "@/components/RsvpFormContainer";
 
 export default function Home() {
   const t = getLocale();
@@ -19,7 +19,7 @@ export default function Home() {
       </div>
 
       <div id="rsvp">
-        <RsvpForm variant="tenant" />
+        <RsvpFormContainer variant="tenant" />
       </div>
 
       <div className="flex flex-col items-center justify-center mt-20">

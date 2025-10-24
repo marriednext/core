@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/database/drizzle";
-import { wedding } from "@/drizzle/schema";
+import { wedding, weddingUsers } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 
 const SUBDOMAIN_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -36,9 +36,9 @@ export async function POST(req: NextRequest) {
       validatedData;
 
     const [existingByUserId] = await db
-      .select({ id: wedding.id })
-      .from(wedding)
-      .where(eq(wedding.clerkUserId, userId))
+      .select({ id: weddingUsers.id })
+      .from(weddingUsers)
+      .where(eq(weddingUsers.clerkUserId, userId))
       .limit(1);
 
     if (existingByUserId) {
@@ -66,12 +66,16 @@ export async function POST(req: NextRequest) {
     const [newWedding] = await db
       .insert(wedding)
       .values({
-        clerkUserId: userId,
         subdomain,
         fieldDisplayName: displayName,
         fieldEventDate: weddingDate,
       })
       .returning();
+
+    await db.insert(weddingUsers).values({
+      weddingId: newWedding.id,
+      clerkUserId: userId,
+    });
 
     const client = await clerkClient();
     await client.users.updateUserMetadata(userId, {

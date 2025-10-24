@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import { eq, sql } from "drizzle-orm";
 import queryClient from "./neon";
-import { invitation, guest } from "@/drizzle/schema";
+import { invitation, guest, weddingUsers } from "@/drizzle/schema";
 import * as schema from "@/drizzle/schema";
 import * as relations from "@/drizzle/relations";
 import type { InferSelectModel } from "drizzle-orm";
@@ -10,16 +10,10 @@ export const db = drizzle(queryClient, { schema: { ...schema, ...relations } });
 
 export type DbGuest = InferSelectModel<typeof guest>;
 export type DbInvitation = InferSelectModel<typeof invitation>;
+export type DbWeddingUser = InferSelectModel<typeof weddingUsers>;
 
 export type DbInvitationWithGuests = DbInvitation & {
-  guest_guestA: DbGuest | null;
-  guest_guestB: DbGuest | null;
-  guest_guestC: DbGuest | null;
-  guest_guestD: DbGuest | null;
-  guest_guestE: DbGuest | null;
-  guest_guestF: DbGuest | null;
-  guest_guestG: DbGuest | null;
-  guest_guestH: DbGuest | null;
+  guests: DbGuest[];
   attending?: number;
   total?: number;
 };
@@ -45,19 +39,12 @@ export const getInvitationsWithGuests = async (
     const result = await db.query.invitation.findMany({
       where: eq(invitation.weddingId, weddingId),
       with: {
-        guest_guestA: true,
-        guest_guestB: true,
-        guest_guestC: true,
-        guest_guestD: true,
-        guest_guestE: true,
-        guest_guestF: true,
-        guest_guestG: true,
-        guest_guestH: true,
+        guests: true,
       },
       orderBy: (i, { asc, desc }) => {
         switch (sortBy) {
           case "alpha-desc":
-            return [desc(sql`COALESCE(${i.inviteGroupName}, ${i.guestA})`)];
+            return [desc(i.inviteGroupName)];
           case "date-newest":
             return [desc(i.createdAt)];
           case "date-oldest":
@@ -66,7 +53,7 @@ export const getInvitationsWithGuests = async (
             return [desc(i.lastUpdatedAt)];
           case "alpha-asc":
           default:
-            return [asc(sql`COALESCE(${i.inviteGroupName}, ${i.guestA})`)];
+            return [asc(i.inviteGroupName)];
         }
       },
       limit: limit,

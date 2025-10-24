@@ -53,30 +53,12 @@ export default function GuestListDisplay({
   const handleEdit = (entry: DbInvitationGroupWithGuests) => {
     onEditingIdChange(entry.id);
     setEditForm({
-      guestA: entry.guestA,
-      guestAAttending: entry.guest_guestA?.isAttending ?? null,
-      guestAHasPlusOne: entry.guest_guestA?.hasPlusOne ?? false,
-      guestB: entry.guestB ?? null,
-      guestBAttending: entry.guest_guestB?.isAttending ?? null,
-      guestBHasPlusOne: entry.guest_guestB?.hasPlusOne ?? false,
-      guestC: entry.guestC ?? null,
-      guestCAttending: entry.guest_guestC?.isAttending ?? null,
-      guestCHasPlusOne: entry.guest_guestC?.hasPlusOne ?? false,
-      guestD: entry.guestD ?? null,
-      guestDAttending: entry.guest_guestD?.isAttending ?? null,
-      guestDHasPlusOne: entry.guest_guestD?.hasPlusOne ?? false,
-      guestE: entry.guestE ?? null,
-      guestEAttending: entry.guest_guestE?.isAttending ?? null,
-      guestEHasPlusOne: entry.guest_guestE?.hasPlusOne ?? false,
-      guestF: entry.guestF ?? null,
-      guestFAttending: entry.guest_guestF?.isAttending ?? null,
-      guestFHasPlusOne: entry.guest_guestF?.hasPlusOne ?? false,
-      guestG: entry.guestG ?? null,
-      guestGAttending: entry.guest_guestG?.isAttending ?? null,
-      guestGHasPlusOne: entry.guest_guestG?.hasPlusOne ?? false,
-      guestH: entry.guestH ?? null,
-      guestHAttending: entry.guest_guestH?.isAttending ?? null,
-      guestHHasPlusOne: entry.guest_guestH?.hasPlusOne ?? false,
+      guests: entry.guests.map((g) => ({
+        id: g.id,
+        nameOnInvitation: g.nameOnInvitation,
+        isAttending: g.isAttending,
+        hasPlusOne: g.hasPlusOne,
+      })),
       inviteGroupName: entry.inviteGroupName ?? null,
     });
   };
@@ -99,21 +81,13 @@ export default function GuestListDisplay({
     searchQuery && searchResults ? searchResults : guestListWithGroups ?? [];
 
   const getGuestNames = (entry: DbInvitationGroupWithGuests) => {
-    const names = [];
-    if (entry.guestA) names.push(entry.guestA);
-    if (entry.guestB) names.push(entry.guestB);
-    if (entry.guestC) names.push(entry.guestC);
-    if (entry.guestD) names.push(entry.guestD);
-    if (entry.guestE) names.push(entry.guestE);
-    if (entry.guestF) names.push(entry.guestF);
-    if (entry.guestG) names.push(entry.guestG);
-    if (entry.guestH) names.push(entry.guestH);
-    return names;
+    return entry.guests.map((g) => g.nameOnInvitation);
   };
 
   const getDefaultDisplayName = (entry: DbInvitationGroupWithGuests) => {
     const guestNames = getGuestNames(entry);
     const guestCount = guestNames.length;
+    if (guestCount === 0) return "Unnamed Group";
     if (guestCount === 1) return guestNames[0];
     if (guestCount === 2) return `${guestNames[0]} & ${guestNames[1]}`;
     return `${guestNames[0]} Group`;
