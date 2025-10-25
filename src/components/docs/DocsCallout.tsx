@@ -34,7 +34,7 @@ export function DocsCallout({
 
   return (
     <div
-      className={`p-6 rounded-xl border ${variantStyles[variant]} ${className}`}
+      className={`p-6 rounded-xl border mb-4 ${variantStyles[variant]} ${className}`}
     >
       <div className="flex items-start gap-3">
         {Icon && (

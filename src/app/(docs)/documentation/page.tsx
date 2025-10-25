@@ -6,7 +6,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { BookOpen, Shield, Zap, ArrowRight, Rocket, Users } from "lucide-react";
+import {
+  BookOpen,
+  Shield,
+  Zap,
+  ArrowRight,
+  Rocket,
+  Users,
+  Code2,
+} from "lucide-react";
 
 const documentationSections = [
   {
@@ -28,6 +36,16 @@ const documentationSections = [
     category: "Guest Management",
     color: "text-purple-600 dark:text-purple-400",
     bgColor: "bg-purple-50 dark:bg-purple-950/30",
+  },
+  {
+    title: "Onboarding (The feature)",
+    href: "/documentation/developer/onboarding",
+    description:
+      "Technical overview of the onboarding feature, tech stack, and implementation details",
+    icon: Code2,
+    category: "Developer",
+    color: "text-blue-600 dark:text-blue-400",
+    bgColor: "bg-blue-50 dark:bg-blue-950/30",
   },
 ];
 
