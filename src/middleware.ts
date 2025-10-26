@@ -10,7 +10,7 @@ const isOnboardingApiRoute = createRouteMatcher(["/api/onboarding(.*)"]);
 const isPublicRoute = createRouteMatcher([
   "/",
   "/welcome",
-  "/api/v3/rsvp/(.*)",
+  "/api/tenant/rsvp/(.*)",
   "/documentation",
   "/documentation/(.*)",
 ]);

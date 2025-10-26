@@ -31,7 +31,7 @@ export default function RsvpFormContainer({
 
   const lookupMutation = useMutation({
     mutationFn: async (name: string) => {
-      const res = await fetch("/api/v3/rsvp/lookup", {
+      const res = await fetch("/api/tenant/rsvp/lookup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name }),
@@ -62,7 +62,7 @@ export default function RsvpFormContainer({
     mutationFn: async () => {
       if (!invitation) throw new Error("No invitation found");
 
-      const res = await fetch("/api/v3/rsvp", {
+      const res = await fetch("/api/tenant/rsvp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
