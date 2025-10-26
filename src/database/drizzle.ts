@@ -1,6 +1,5 @@
 import { drizzle } from "drizzle-orm/postgres-js";
-import { eq, sql } from "drizzle-orm";
-import queryClient from "./neon";
+import { eq } from "drizzle-orm";
 import { invitation, guest, weddingUsers } from "@/drizzle/schema";
 import * as schema from "@/drizzle/schema";
 import {
@@ -10,7 +9,15 @@ import {
   weddingUsersRelations,
 } from "@/drizzle/relations";
 import type { InferSelectModel } from "drizzle-orm";
+import postgres from "postgres";
 
+const { DATABASE_URL } = process.env;
+
+if (!DATABASE_URL) {
+  throw new Error("DATABASE_URL is not set");
+}
+
+const queryClient = postgres(DATABASE_URL, { ssl: "require" });
 export const db = drizzle(queryClient, {
   schema: {
     ...schema,
@@ -92,8 +99,6 @@ export const getInvitationsCount = async (weddingId: string) => {
     return 0;
   }
 };
-
-export default db;
 
 export const upsertGuest = async ({
   nameOnInvitation,
