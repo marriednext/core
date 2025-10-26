@@ -154,6 +154,10 @@ export async function PUT(request: Request): Promise<NextResponse> {
     return NextResponse.json({ success: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
+      Sentry.captureException(error, {
+        level: "error",
+        tags: { route: "guest-list-put" },
+      });
       return NextResponse.json(
         { error: "Invalid request data", details: error.issues },
         { status: 400 }
@@ -161,6 +165,10 @@ export async function PUT(request: Request): Promise<NextResponse> {
     }
 
     console.error("Error updating invitation:", error);
+    Sentry.captureException(error, {
+      level: "error",
+      tags: { route: "guest-list-put" },
+    });
     return NextResponse.json(
       { error: "Failed to update invitation" },
       { status: 500 }

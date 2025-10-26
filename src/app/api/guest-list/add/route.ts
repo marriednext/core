@@ -5,6 +5,7 @@ import { guest, invitation } from "@/drizzle/schema";
 import { and, eq, inArray } from "drizzle-orm";
 import { auth } from "@clerk/nextjs/server";
 import { extractWeddingId } from "@/lib/extractWeddingId";
+import * as Sentry from "@sentry/nextjs";
 
 const addGuestSchema = z.object({
   guests: z
@@ -90,6 +91,10 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
+      Sentry.captureException(error, {
+        level: "error",
+        tags: { route: "guest-list-add" },
+      });
       return NextResponse.json(
         { error: "Invalid request data", details: error.issues },
         { status: 400 }
@@ -97,6 +102,10 @@ export async function POST(req: NextRequest) {
     }
 
     console.error("Error processing add guest request:", error);
+    Sentry.captureException(error, {
+      level: "error",
+      tags: { route: "guest-list-add" },
+    });
     return NextResponse.json(
       { error: "Failed to process request" },
       { status: 500 }
