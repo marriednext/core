@@ -1,177 +1,100 @@
-import { describe, it, expect } from "vitest";
-import { decideMultiTenantRouting } from "./multitenancy";
+import { expect, test } from "vitest";
+import { getHostType } from "./multitenancy";
 
-function helpers({
-  apexId,
-  subId,
-  throwApex,
-  throwSub,
-}: {
-  apexId?: number;
-  subId?: number;
-  throwApex?: boolean;
-  throwSub?: boolean;
-}) {
-  return {
-    findWeddingIdByApexDomain: async () => {
-      if (throwApex) {
-        throw new Error("apex error");
-      }
-      return apexId;
-    },
-    findWeddingIdBySubdomain: async () => {
-      if (throwSub) {
-        throw new Error("sub error");
-      }
-      return subId;
-    },
-  };
-}
+const domains = {
+  "www.marriednext.com": { isTenantHost: false, firstLabel: "www" },
+  "marriednext.com": { isTenantHost: false, firstLabel: "marriednext" },
+  "yulissaandmatthew.com": {
+    isTenantHost: false,
+    firstLabel: "yulissaandmatthew",
+  },
+  "www.yulissaandmatthew.com": { isTenantHost: false, firstLabel: "www" },
+  localhost: { isTenantHost: false, firstLabel: "localhost" },
+  "localhost:3000": { isTenantHost: false, firstLabel: "localhost" },
+  "emilyandjack.localhost:3000": {
+    isTenantHost: true,
+    firstLabel: "emilyandjack",
+  },
+  "sarahandliam.localhost:3000": {
+    isTenantHost: true,
+    firstLabel: "sarahandliam",
+  },
+  "oliviaandnoah.localhost:3000": {
+    isTenantHost: true,
+    firstLabel: "oliviaandnoah",
+  },
+  "avaandjames.localhost:3000": {
+    isTenantHost: true,
+    firstLabel: "avaandjames",
+  },
+  "miaandlucas.localhost:3000": {
+    isTenantHost: true,
+    firstLabel: "miaandlucas",
+  },
+  "harperandmason.localhost:3000": {
+    isTenantHost: true,
+    firstLabel: "harperandmason",
+  },
+  "isabellaandlogan.localhost:3000": {
+    isTenantHost: true,
+    firstLabel: "isabellaandlogan",
+  },
+  "ameliaandlevi.localhost:3000": {
+    isTenantHost: true,
+    firstLabel: "ameliaandlevi",
+  },
+  "graceandhenry.localhost:3000": {
+    isTenantHost: true,
+    firstLabel: "graceandhenry",
+  },
+  "scarlettandowen.marriednext.com": {
+    isTenantHost: true,
+    firstLabel: "scarlettandowen",
+  },
+  "ellaanthomas.marriednext.com": {
+    isTenantHost: true,
+    firstLabel: "ellaanthomas",
+  },
+  "chloe-and-william.marriednext.com": {
+    isTenantHost: true,
+    firstLabel: "chloe-and-william",
+  },
+  "zoeandtheo.marriednext.com": {
+    isTenantHost: true,
+    firstLabel: "zoeandtheo",
+  },
+  "lilyandben.marriednext.com": {
+    isTenantHost: true,
+    firstLabel: "lilyandben",
+  },
+  "noraandjackson.marriednext.com": {
+    isTenantHost: true,
+    firstLabel: "noraandjackson",
+  },
+  "aurora-and-miles.marriednext.com": {
+    isTenantHost: true,
+    firstLabel: "aurora-and-miles",
+  },
+  "violetandcarter.marriednext.com": {
+    isTenantHost: true,
+    firstLabel: "violetandcarter",
+  },
+  "hannahandwyatt.marriednext.com": {
+    isTenantHost: true,
+    firstLabel: "hannahandwyatt",
+  },
+  "ellieanddaniel.marriednext.com": {
+    isTenantHost: true,
+    firstLabel: "ellieanddaniel",
+  },
+  "ruby-and-arthur.marriednext.com": {
+    isTenantHost: true,
+    firstLabel: "ruby-and-arthur",
+  },
+};
 
-describe("decideMultiTenantRouting", () => {
-  it("passes through API routes", async () => {
-    const res = await decideMultiTenantRouting(
-      {
-        hostHeader: "admin.example.com",
-        pathname: "/api/test",
-        isApiRoute: true,
-        isWelcomeRoute: false,
-      },
-      helpers({})
-    );
-    expect(res).toEqual({ action: "none" });
-  });
-
-  it("passes through welcome route", async () => {
-    const res = await decideMultiTenantRouting(
-      {
-        hostHeader: "admin.example.com",
-        pathname: "/welcome",
-        isApiRoute: false,
-        isWelcomeRoute: true,
-      },
-      helpers({})
-    );
-    expect(res).toEqual({ action: "none" });
-  });
-
-  it("base host blocks /site paths with 404 rewrite", async () => {
-    const res = await decideMultiTenantRouting(
-      {
-        hostHeader: "admin.example.com",
-        pathname: "/site/foo",
-        isApiRoute: false,
-        isWelcomeRoute: false,
-      },
-      helpers({})
-    );
-    expect(res).toEqual({ action: "rewrite", path: "/404" });
-  });
-
-  it("base host resolves apex domain and rewrites to tenant site root", async () => {
-    const res = await decideMultiTenantRouting(
-      {
-        hostHeader: "www.example.com",
-        pathname: "/",
-        isApiRoute: false,
-        isWelcomeRoute: false,
-      },
-      helpers({ apexId: 1 })
-    );
-    expect(res).toEqual({ action: "rewrite", path: "/site/example.com" });
-  });
-
-  it("base host resolves apex domain and rewrites to nested path", async () => {
-    const res = await decideMultiTenantRouting(
-      {
-        hostHeader: "example.com",
-        pathname: "/photos",
-        isApiRoute: false,
-        isWelcomeRoute: false,
-      },
-      helpers({ apexId: 1 })
-    );
-    expect(res).toEqual({
-      action: "rewrite",
-      path: "/site/example.com/photos",
-    });
-  });
-
-  it("base host apex lookup error rewrites to 404", async () => {
-    const res = await decideMultiTenantRouting(
-      {
-        hostHeader: "example.com",
-        pathname: "/",
-        isApiRoute: false,
-        isWelcomeRoute: false,
-      },
-      helpers({ throwApex: true })
-    );
-    expect(res).toEqual({ action: "rewrite", path: "/404" });
-  });
-
-  it("tenant host blocks /dashboard with 404 rewrite", async () => {
-    const res = await decideMultiTenantRouting(
-      {
-        hostHeader: "acme.example.com",
-        pathname: "/dashboard",
-        isApiRoute: false,
-        isWelcomeRoute: false,
-      },
-      helpers({ subId: 2 })
-    );
-    expect(res).toEqual({ action: "rewrite", path: "/404" });
-  });
-
-  it("tenant host redirects duplicate /site to /", async () => {
-    const res = await decideMultiTenantRouting(
-      {
-        hostHeader: "acme.example.com",
-        pathname: "/site/foo",
-        isApiRoute: false,
-        isWelcomeRoute: false,
-      },
-      helpers({ subId: 2 })
-    );
-    expect(res).toEqual({ action: "redirect", path: "/" });
-  });
-
-  it("tenant host with valid subdomain rewrites root to site", async () => {
-    const res = await decideMultiTenantRouting(
-      {
-        hostHeader: "acme.example.com",
-        pathname: "/",
-        isApiRoute: false,
-        isWelcomeRoute: false,
-      },
-      helpers({ subId: 2 })
-    );
-    expect(res).toEqual({ action: "rewrite", path: "/tenant/acme" });
-  });
-
-  it("tenant host with valid subdomain rewrites nested path to site", async () => {
-    const res = await decideMultiTenantRouting(
-      {
-        hostHeader: "acme.example.com",
-        pathname: "/photos",
-        isApiRoute: false,
-        isWelcomeRoute: false,
-      },
-      helpers({ subId: 2 })
-    );
-    expect(res).toEqual({ action: "rewrite", path: "/tenant/acme/photos" });
-  });
-
-  it("tenant host with unknown subdomain rewrites to 404", async () => {
-    const res = await decideMultiTenantRouting(
-      {
-        hostHeader: "unknown.example.com",
-        pathname: "/",
-        isApiRoute: false,
-        isWelcomeRoute: false,
-      },
-      helpers({ subId: undefined })
-    );
-    expect(res).toEqual({ action: "rewrite", path: "/404" });
+test("getHostType should return the correct host type", () => {
+  Object.entries(domains).forEach(([domain, expected]) => {
+    expect(getHostType(domain)).toEqual(expected);
   });
 });
