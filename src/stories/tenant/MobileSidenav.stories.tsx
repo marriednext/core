@@ -96,13 +96,3 @@ export const WithActiveRoute: Story = {
     },
   },
 };
-
-export const Animation: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: "Test the GSAP animation when opening/closing the mobile menu.",
-      },
-    },
-  },
-};

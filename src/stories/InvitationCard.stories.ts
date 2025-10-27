@@ -93,7 +93,7 @@ const createEditForm = (entry: DbInvitationGroupWithGuests): EditFormData => {
 };
 
 const meta = {
-  title: "GuestList/InvitationCard",
+  title: "Engaged/InvitationCard",
   component: InvitationCard,
   parameters: {
     layout: "centered",

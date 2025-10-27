@@ -5,7 +5,7 @@ import { expect, fn, within } from "storybook/test";
 import { AddGuestForm } from "@/components/guest-list/AddGuestForm";
 
 const meta = {
-  title: "GuestList/AddGuestForm",
+  title: "Engaged/AddGuestForm",
   component: AddGuestForm,
   parameters: {
     layout: "centered",

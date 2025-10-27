@@ -1,71 +1,157 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import Rsvp from "@/components/tenant/Rsvp";
+import RsvpForm from "@/components/RsvpForm";
+import { useRsvpStore } from "@/stores/rsvpStore";
+import { useEffect } from "react";
 
 const meta = {
   title: "Tenant/Rsvp",
-  component: Rsvp,
+  component: RsvpForm,
   parameters: {
-    layout: "centered",
+    layout: "fullscreen",
     nextjs: {
       appDirectory: true,
     },
   },
   decorators: [
     (Story) => (
-      <div className="min-h-screen w-full max-w-4xl mx-auto py-8">
+      <div className="min-h-screen w-full bg-gray-50">
         <Story />
       </div>
     ),
   ],
-} satisfies Meta<typeof Rsvp>;
+} satisfies Meta<typeof RsvpForm>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const NameInput: Story = {
+  render: () => {
+    const StoryComponent = () => {
+      useEffect(() => {
+        useRsvpStore.getState().reset();
+      }, []);
+      return <RsvpForm />;
+    };
+    return <StoryComponent />;
+  },
   parameters: {
     docs: {
       description: {
         story:
-          "Initial state where user enters their first name to find their invitation.",
+          "Initial state where user enters their name to find their invitation.",
       },
     },
   },
 };
 
-export const AttendanceQuestion: Story = {
+export const GuestSelection: Story = {
+  render: () => {
+    const StoryComponent = () => {
+      useEffect(() => {
+        const store = useRsvpStore.getState();
+        store.reset();
+        store.setInvitation(
+          {
+            id: "inv-123",
+            weddingId: "wedding-123",
+            inviteGroupName: "Smith Family",
+            email: null,
+            createdAt: new Date().toISOString(),
+            lastUpdatedAt: new Date().toISOString(),
+            guests: [
+              {
+                id: "guest-1",
+                weddingId: "wedding-123",
+                invitationId: "inv-123",
+                nameOnInvitation: "John Smith",
+                isAttending: null,
+                hasPlusOne: null,
+                dateEntrySubmitted: null,
+              },
+              {
+                id: "guest-2",
+                weddingId: "wedding-123",
+                invitationId: "inv-123",
+                nameOnInvitation: "Jane Smith",
+                isAttending: null,
+                hasPlusOne: null,
+                dateEntrySubmitted: null,
+              },
+            ],
+          },
+          "FULL_NAME"
+        );
+        store.setStep("guest-selection");
+      }, []);
+      return <RsvpForm />;
+    };
+    return <StoryComponent />;
+  },
   parameters: {
     docs: {
       description: {
-        story: "State after name is validated, asking if the guest can attend.",
+        story:
+          "State after name is validated, showing guest selection checkboxes.",
       },
     },
   },
 };
 
-export const PlusOneQuestion: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "State for guests with a plus one invitation, asking if they're bringing someone.",
-      },
-    },
+export const EmailCollection: Story = {
+  render: () => {
+    const StoryComponent = () => {
+      useEffect(() => {
+        const store = useRsvpStore.getState();
+        store.reset();
+        store.setInvitation(
+          {
+            id: "inv-123",
+            weddingId: "wedding-123",
+            inviteGroupName: "John Smith",
+            email: null,
+            createdAt: new Date().toISOString(),
+            lastUpdatedAt: new Date().toISOString(),
+            guests: [
+              {
+                id: "guest-1",
+                weddingId: "wedding-123",
+                invitationId: "inv-123",
+                nameOnInvitation: "John Smith",
+                isAttending: true,
+                hasPlusOne: null,
+                dateEntrySubmitted: null,
+              },
+            ],
+          },
+          "FULL_NAME"
+        );
+        store.setStep("email-collection");
+      }, []);
+      return <RsvpForm />;
+    };
+    return <StoryComponent />;
   },
-};
-
-export const KnownCompanionQuestion: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          "State for guests with a known companion, asking if the companion is attending.",
+        story: "State where the user is asked to provide their email address.",
       },
     },
   },
 };
 
 export const LoadingState: Story = {
+  render: () => {
+    const StoryComponent = () => {
+      useEffect(() => {
+        const store = useRsvpStore.getState();
+        store.reset();
+        store.setLoading(true);
+      }, []);
+      return <RsvpForm />;
+    };
+    return <StoryComponent />;
+  },
   parameters: {
     docs: {
       description: {
@@ -76,6 +162,19 @@ export const LoadingState: Story = {
 };
 
 export const ErrorState: Story = {
+  render: () => {
+    const StoryComponent = () => {
+      useEffect(() => {
+        const store = useRsvpStore.getState();
+        store.reset();
+        store.setError(
+          "We couldn't find your invitation. Please check your name and try again."
+        );
+      }, []);
+      return <RsvpForm />;
+    };
+    return <StoryComponent />;
+  },
   parameters: {
     docs: {
       description: {
@@ -86,6 +185,39 @@ export const ErrorState: Story = {
 };
 
 export const SuccessState: Story = {
+  render: () => {
+    const StoryComponent = () => {
+      useEffect(() => {
+        const store = useRsvpStore.getState();
+        store.reset();
+        store.setInvitation(
+          {
+            id: "inv-123",
+            weddingId: "wedding-123",
+            inviteGroupName: "John Smith",
+            email: "john@example.com",
+            createdAt: new Date().toISOString(),
+            lastUpdatedAt: new Date().toISOString(),
+            guests: [
+              {
+                id: "guest-1",
+                weddingId: "wedding-123",
+                invitationId: "inv-123",
+                nameOnInvitation: "John Smith",
+                isAttending: true,
+                hasPlusOne: null,
+                dateEntrySubmitted: new Date().toISOString(),
+              },
+            ],
+          },
+          "FULL_NAME"
+        );
+        store.setStep("success");
+      }, []);
+      return <RsvpForm />;
+    };
+    return <StoryComponent />;
+  },
   parameters: {
     docs: {
       description: {

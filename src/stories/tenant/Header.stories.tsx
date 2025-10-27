@@ -35,54 +35,6 @@ export const HomePage: Story = {
   },
 };
 
-export const OurStoryPage: Story = {
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-      navigation: {
-        pathname: "/our-story",
-      },
-    },
-    docs: {
-      description: {
-        story: "Header with 'Our Story' navigation item active.",
-      },
-    },
-  },
-};
-
-export const PhotosPage: Story = {
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-      navigation: {
-        pathname: "/photos",
-      },
-    },
-    docs: {
-      description: {
-        story: "Header with 'Photos' navigation item active.",
-      },
-    },
-  },
-};
-
-export const RegistryPage: Story = {
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-      navigation: {
-        pathname: "/registry",
-      },
-    },
-    docs: {
-      description: {
-        story: "Header with 'Registry' navigation item active.",
-      },
-    },
-  },
-};
-
 export const MobileView: Story = {
   parameters: {
     viewport: {

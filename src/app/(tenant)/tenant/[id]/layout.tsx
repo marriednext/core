@@ -5,7 +5,6 @@ import Header from "@/components/tenant/Header";
 import Footer from "@/components/tenant/Footer";
 import "./globals.css";
 import Swipeable from "@/components/tenant/Swipeable";
-import { NextIntlClientProvider } from "next-intl";
 
 const cormorantInfant = Cormorant_Infant({
   variable: "--font-cormorant-infant",
@@ -29,13 +28,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${cormorantInfant.variable} antialiased`}>
-        <NextIntlClientProvider>
-          <Swipeable>
-            <Header />
-            <div className="px-4 md:px-0 mx-auto">{children}</div>
-            <Footer />
-          </Swipeable>
-        </NextIntlClientProvider>
+        <Swipeable>
+          <Header />
+          <div className="px-4 md:px-0 mx-auto">{children}</div>
+          <Footer />
+        </Swipeable>
         <Analytics />
       </body>
     </html>

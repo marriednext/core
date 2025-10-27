@@ -40,36 +40,10 @@ export const useRsvpStore = create<RsvpStore>((set) => ({
   setInputName: (inputName) => set({ inputName }),
 
   setInvitation: (invitation, nameFormat) => {
-    const guests: GuestSelection[] = [];
-    const guestSlots = [
-      invitation.guestA,
-      invitation.guestB,
-      invitation.guestC,
-      invitation.guestD,
-      invitation.guestE,
-      invitation.guestF,
-      invitation.guestG,
-      invitation.guestH,
-    ];
-    const guestData = [
-      invitation.guest_guestA,
-      invitation.guest_guestB,
-      invitation.guest_guestC,
-      invitation.guest_guestD,
-      invitation.guest_guestE,
-      invitation.guest_guestF,
-      invitation.guest_guestG,
-      invitation.guest_guestH,
-    ];
-
-    guestSlots.forEach((guestName, index) => {
-      if (guestName) {
-        guests.push({
-          name: guestName,
-          isAttending: guestData[index]?.isAttending ?? true,
-        });
-      }
-    });
+    const guests: GuestSelection[] = invitation.guests.map((guest) => ({
+      name: guest.nameOnInvitation,
+      isAttending: guest.isAttending ?? true,
+    }));
 
     set({
       invitation,
