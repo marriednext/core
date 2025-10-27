@@ -21,12 +21,6 @@ export default function Swipeable({
   const pathname = usePathname();
   const router = useRouter();
   const swipeableHandlers = useSwipeable({
-    onSwiped: () => {
-      // alert("swiped");
-    },
-    // onSwiping: () => {
-    //   alert("swiping");
-    // },
     onSwipedLeft: () => {
       const currentIndex = navItems.indexOf(pathname);
       if (currentIndex === navItems.length - 1) {

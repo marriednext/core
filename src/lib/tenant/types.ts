@@ -143,7 +143,3 @@ export interface ComingSoonProps {
   backHref?: string;
   className?: string;
 }
-
-export type LocaleEnUS = typeof import("./locales/en-US").enUS;
-
-export type SupportedLocale = "en-US";
