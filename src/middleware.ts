@@ -51,7 +51,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       // preserve legacy app for now
       return rewriteThatShit(req, "/legacy/yulissaandmatthew.com");
     } else if (isTenantHost) {
-      return rewriteThatShit(req, `/tenant/${firstLabel}`);
+      return rewriteThatShit(req, `/tenant/${hostHeader}`);
     }
   }
 });

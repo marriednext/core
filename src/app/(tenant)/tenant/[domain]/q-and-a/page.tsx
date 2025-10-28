@@ -1,6 +1,13 @@
 import Link from "next/link";
+import { getWeddingByDomain } from "@/lib/tenant/getWeddingByDomain";
+import { notFound } from "next/navigation";
+import { QA } from "@/lib/tenant/weddingData.types";
 
-const faqs = [
+type PageProps = {
+  params: Promise<{ domain: string }>;
+};
+
+const defaultFaqs = [
   {
     question: "When and where is the wedding?",
     answer:
@@ -71,7 +78,17 @@ const faqs = [
   },
 ];
 
-export default function QAndA() {
+export default async function QAndA({ params }: PageProps) {
+  const { domain } = await params;
+  const weddingData = await getWeddingByDomain(domain);
+
+  if (!weddingData) {
+    notFound();
+  }
+
+  const faqs =
+    (weddingData.fieldQuestionsAndAnswers as QA[] | null) || defaultFaqs;
+
   return (
     <div className="w-full flex flex-col items-center justify-center px-4">
       <div className="max-w-4xl mx-auto">

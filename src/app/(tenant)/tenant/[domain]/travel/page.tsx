@@ -1,11 +1,17 @@
 import Link from "next/link";
 import { getWeddingByDomain } from "@/lib/tenant/getWeddingByDomain";
+import { notFound } from "next/navigation";
 
-export default async function Travel() {
-  const weddingData = await getWeddingByDomain("yulissaandmatthew");
+type PageProps = {
+  params: Promise<{ domain: string }>;
+};
+
+export default async function Travel({ params }: PageProps) {
+  const { domain } = await params;
+  const weddingData = await getWeddingByDomain(domain);
 
   if (!weddingData) {
-    return null;
+    notFound();
   }
 
   return (

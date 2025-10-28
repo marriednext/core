@@ -1,17 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getWeddingByDomain } from "@/lib/tenant/getWeddingByDomain";
+import { notFound } from "next/navigation";
 import { OurStorySection } from "@/lib/tenant/weddingData.types";
 import clsx from "clsx";
 
-export default async function OurStory() {
-  const weddingData = await getWeddingByDomain("yulissaandmatthew");
+type PageProps = {
+  params: Promise<{ domain: string }>;
+};
+
+export default async function OurStory({ params }: PageProps) {
+  const { domain } = await params;
+  const weddingData = await getWeddingByDomain(domain);
 
   if (!weddingData) {
-    return null;
+    notFound();
   }
 
   const ourStory = weddingData.fieldOurStory as OurStorySection[] | null;
+
   return (
     <div className="w-full flex flex-col items-center justify-center px-4">
       <div className="max-w-4xl mx-auto">

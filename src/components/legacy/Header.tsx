@@ -5,8 +5,13 @@ import { Fragment } from "react";
 import { usePathname } from "next/navigation";
 import MobileSidenav from "@/components/tenant/MobileSidenav";
 import Countdown from "@/components/tenant/Countdown";
+import { WeddingData } from "@/lib/tenant/weddingData.types";
 
-export default function Header() {
+type HeaderProps = {
+  weddingData: WeddingData;
+};
+
+export default function Header({ weddingData }: HeaderProps) {
   const pathname = usePathname();
 
   const getNavItemClass = (href: string) =>
@@ -34,7 +39,6 @@ export default function Header() {
         ariaLabel="Toggle navigation"
       />
 
-      {/* Hero heading */}
       <span className="text-4xl md:text-5xl font-bold md:font-normal mb-18 md:mb-24 uppercase mt-20 md:mt-40 flex flex-col md:flex-row items-center justify-center gap-4">
         The{" "}
         <span className="abramo-script text-[124px] font-normal inline-block px-2 normal-case tracking-wider">
@@ -43,26 +47,35 @@ export default function Header() {
         of
       </span>
       <h1 className="text-6xl mb-8 uppercase tracking-[8px] text-center">
-        <span className="md:block hidden">Yulissa and Matthew</span>
-        <span className="md:hidden block text-4xl">Yulissa</span>
+        <span className="md:block hidden">
+          {weddingData.fieldNameA} and {weddingData.fieldNameB}
+        </span>
+        <span className="md:hidden block text-4xl">
+          {weddingData.fieldNameA}
+        </span>
         <span className="md:hidden block text-4xl">&</span>
-        <span className="md:hidden block text-4xl">Matthew</span>
+        <span className="md:hidden block text-4xl">
+          {weddingData.fieldNameB}
+        </span>
       </h1>
 
-      {/* Date and location title line */}
-      <h2 className="text-2xl inline-block mt-10 uppercase text-center">
-        July 26, 2026 • Temecula, CA
-      </h2>
+      {weddingData.fieldDisplayName && (
+        <h2 className="text-2xl inline-block mt-10 uppercase text-center">
+          {weddingData.fieldDisplayName}
+        </h2>
+      )}
 
-      <Countdown
-        targetUtcIso="2026-07-26T00:00:00Z"
-        labels={{
-          days: "Days",
-          hours: "Hours",
-          minutes: "Minutes",
-          seconds: "Seconds",
-        }}
-      />
+      {weddingData.fieldEventDate && (
+        <Countdown
+          targetUtcIso={weddingData.fieldEventDate}
+          labels={{
+            days: "Days",
+            hours: "Hours",
+            minutes: "Minutes",
+            seconds: "Seconds",
+          }}
+        />
+      )}
 
       {/* Desktop nav */}
       <ul className="hidden md:flex flex-row flex-wrap items-center gap-4 md:gap-6 text-[20px] font-bold mt-20 tracking-wider justify-center">

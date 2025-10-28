@@ -1,12 +1,18 @@
 import Image from "next/image";
 import RsvpFormContainer from "@/components/RsvpFormContainer";
 import { getWeddingByDomain } from "@/lib/tenant/getWeddingByDomain";
+import { notFound } from "next/navigation";
 
-export default async function Home() {
-  const weddingData = await getWeddingByDomain("yulissaandmatthew");
+type PageProps = {
+  params: Promise<{ domain: string }>;
+};
+
+export default async function Home({ params }: PageProps) {
+  const { domain } = await params;
+  const weddingData = await getWeddingByDomain(domain);
 
   if (!weddingData) {
-    return null;
+    notFound();
   }
 
   return (
@@ -22,7 +28,7 @@ export default async function Home() {
       </div>
 
       <div id="rsvp">
-        <RsvpFormContainer variant="legacy" />
+        <RsvpFormContainer variant="tenant" />
       </div>
 
       {weddingData.fieldLocationName && (

@@ -1,6 +1,6 @@
 import { db } from "@/database/drizzle";
 import { wedding } from "@/drizzle/schema";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { getHostType } from "../rewrites/multitenancy";
 
 export async function getWeddingFromRequest(request: Request): Promise<{
@@ -19,7 +19,10 @@ export async function getWeddingFromRequest(request: Request): Promise<{
       })
       .from(wedding)
       .where(
-        eq(wedding.subdomain, subdomain) || eq(wedding.customDomain, hostHeader)
+        or(
+          eq(wedding.subdomain, subdomain),
+          eq(wedding.customDomain, hostHeader)
+        )
       )
       .limit(1);
 
