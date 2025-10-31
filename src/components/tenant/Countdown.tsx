@@ -42,6 +42,17 @@ export default function Countdown({
     return () => clearInterval(intervalId);
   }, [targetTimeMs]);
 
+  const isExpired =
+    timeLeft.days === 0 &&
+    timeLeft.hours === 0 &&
+    timeLeft.minutes === 0 &&
+    timeLeft.seconds === 0;
+
+  const formatValue = (value: number) => {
+    if (isExpired) return "∞";
+    return String(value).padStart(2, "0");
+  };
+
   return (
     <div
       className="mt-1 mb-6 w-full flex items-center justify-center px-4"
@@ -53,7 +64,7 @@ export default function Countdown({
             className="text-4xl md:text-6xl font-semibold leading-none"
             style={{ fontVariantNumeric: "tabular-nums" }}
           >
-            {timeLeft.days}
+            {isExpired ? "∞" : timeLeft.days}
           </div>
           <div className="mt-2 text-[10px] md:text-xs uppercase tracking-[0.25em] text-gray-700">
             {labels.days}
@@ -65,7 +76,7 @@ export default function Countdown({
             className="text-4xl md:text-6xl font-semibold leading-none"
             style={{ fontVariantNumeric: "tabular-nums" }}
           >
-            {String(timeLeft.hours).padStart(2, "0")}
+            {formatValue(timeLeft.hours)}
           </div>
           <div className="mt-2 text-[10px] md:text-xs uppercase tracking-[0.25em] text-gray-700">
             {labels.hours}
@@ -77,7 +88,7 @@ export default function Countdown({
             className="text-4xl md:text-6xl font-semibold leading-none"
             style={{ fontVariantNumeric: "tabular-nums" }}
           >
-            {String(timeLeft.minutes).padStart(2, "0")}
+            {formatValue(timeLeft.minutes)}
           </div>
           <div className="mt-2 text-[10px] md:text-xs uppercase tracking-[0.25em] text-gray-700">
             {labels.minutes}
@@ -89,7 +100,7 @@ export default function Countdown({
             className="text-4xl md:text-6xl font-semibold leading-none"
             style={{ fontVariantNumeric: "tabular-nums" }}
           >
-            {String(timeLeft.seconds).padStart(2, "0")}
+            {formatValue(timeLeft.seconds)}
           </div>
           <div className="mt-2 text-[10px] md:text-xs uppercase tracking-[0.25em] text-gray-700">
             {labels.seconds}
