@@ -1,9 +1,31 @@
-import { unstable_cache } from "next/cache";
 import { db } from "@/database/drizzle";
+import { redis } from "@/database/redis";
 import { wedding } from "@/drizzle/schema";
 import { eq, or } from "drizzle-orm";
 
-async function getWeddingByDomainUncached(domain: string) {
+type WeddingData = {
+  id: string;
+  subdomain: string | null;
+  customDomain: string | null;
+  createdAt: string;
+  updatedAt: string;
+  fieldDisplayName: string | null;
+  fieldLocationName: string | null;
+  fieldLocationAddress: string | null;
+  fieldEventDate: string | null;
+  fieldEventTime: string | null;
+  fieldMapsEmbedUrl: string | null;
+  fieldMapsShareUrl: string | null;
+  fieldQuestionsAndAnswers: unknown;
+  fieldOurStory: unknown;
+  fieldNameA: string | null;
+  fieldNameB: string | null;
+  controlRsvpNameFormat: string | null;
+};
+
+async function getWeddingFromDatabase(
+  domain: string
+): Promise<WeddingData | null> {
   const [result] = await db
     .select({
       id: wedding.id,
@@ -31,11 +53,22 @@ async function getWeddingByDomainUncached(domain: string) {
   return result || null;
 }
 
-export const getWeddingByDomain = unstable_cache(
-  getWeddingByDomainUncached,
-  ["wedding-by-domain"],
-  {
-    tags: ["wedding"],
-    revalidate: 3600,
+export async function getWeddingByDomain(
+  domain: string
+): Promise<WeddingData | null> {
+  const cacheKey = `wedding:domain:${domain}`;
+
+  const cached = await redis.get<WeddingData>(cacheKey);
+  if (cached) {
+    return cached;
   }
-);
+
+  const weddingData = await getWeddingFromDatabase(domain);
+
+  if (weddingData) {
+    // expires in 1 day
+    await redis.set(cacheKey, weddingData, { ex: 60 * 60 * 24 });
+  }
+
+  return weddingData;
+}
