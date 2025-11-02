@@ -15,6 +15,14 @@ export const rsvpNameFormat = pgEnum("rsvp_name_format", [
   "FULL_NAME",
 ]);
 
+export const userRole = pgEnum("user_role", ["spouse", "family", "planner"]);
+
+export const invitationStatus = pgEnum("invitation_status", [
+  "pending",
+  "accepted",
+  "declined",
+]);
+
 export const invitation = pgTable(
   "invitation",
   {
@@ -76,8 +84,8 @@ export const wedding = pgTable(
   "wedding",
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
-    subdomain: text(),
-    customDomain: text("custom_domain"),
+    subdomain: text().unique(),
+    customDomain: text("custom_domain").unique(),
     createdAt: timestamp("created_at", { mode: "string" })
       .defaultNow()
       .notNull(),
@@ -127,5 +135,29 @@ export const weddingUsers = pgTable(
       table.weddingId,
       table.clerkUserId
     ),
+  ]
+);
+
+export const collaboratorInvitations = pgTable(
+  "collaborator_invitations",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    weddingId: uuid("wedding_id").notNull(),
+    invitedEmail: text("invited_email").notNull(),
+    invitedByName: text("invited_by_name").notNull(),
+    role: userRole("role").notNull(),
+    status: invitationStatus("status").default("pending").notNull(),
+    message: text("message"),
+    sentAt: timestamp("sent_at", { mode: "string" }).defaultNow().notNull(),
+    respondedAt: timestamp("responded_at", { mode: "string" }),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.weddingId],
+      foreignColumns: [wedding.id],
+      name: "fk_collaborator_invitations_wedding",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
   ]
 );
