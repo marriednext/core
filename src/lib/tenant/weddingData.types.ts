@@ -25,7 +25,8 @@ export type QA = {
 };
 
 export type OurStorySection = {
-  title: string;
-  content: string;
-  imageUrl?: string;
+  heading: string;
+  id: string;
+  photoUrl: string;
+  text: string;
 };

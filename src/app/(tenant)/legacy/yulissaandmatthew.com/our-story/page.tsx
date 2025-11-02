@@ -6,7 +6,6 @@ import clsx from "clsx";
 
 export default async function OurStory() {
   const weddingData = await getWeddingByDomain("yulissaandmatthew");
-
   if (!weddingData) {
     return null;
   }
@@ -23,19 +22,17 @@ export default async function OurStory() {
           <>
             {ourStory.map((section, index) => (
               <div
-                key={index}
+                key={section.id}
                 className={clsx(
                   "grid md:grid-cols-2 gap-12 items-center mb-16",
                   index % 2 === 1 && "md:grid-flow-dense"
                 )}
               >
                 <div className={index % 2 === 1 ? "md:order-2" : ""}>
-                  <h2 className="text-3xl mb-6">{section.title}</h2>
-                  <p className="text-lg leading-relaxed mb-4">
-                    {section.content}
-                  </p>
+                  <h2 className="text-3xl mb-6">{section.heading}</h2>
+                  <p className="text-lg leading-relaxed mb-4">{section.text}</p>
                 </div>
-                {section.imageUrl && (
+                {section.photoUrl && (
                   <div
                     className={clsx(
                       "flex justify-center",
@@ -43,8 +40,8 @@ export default async function OurStory() {
                     )}
                   >
                     <Image
-                      src={section.imageUrl}
-                      alt={section.title}
+                      src={section.photoUrl}
+                      alt={section.heading}
                       width={400}
                       height={500}
                     />

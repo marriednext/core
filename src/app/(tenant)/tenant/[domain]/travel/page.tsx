@@ -33,7 +33,7 @@ export default async function Travel({ params }: PageProps) {
           <div className="mb-20">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
               {weddingData.fieldMapsEmbedUrl && (
-                <div className="flex items-center justify-center h-full w-full">
+                <div className="flex items-center justify-center w-[402px] h-[302px]">
                   <div className="rounded-lg overflow-hidden border border-gray-300 h-full w-fit">
                     <iframe
                       src={weddingData.fieldMapsEmbedUrl}
@@ -48,26 +48,29 @@ export default async function Travel({ params }: PageProps) {
                 </div>
               )}
               <div className="flex items-center justify-center h-full">
-                <div className="text-center md:text-left">
-                  {weddingData.fieldLocationName && (
-                    <h3 className="text-2xl font-semibold mb-2">
-                      {weddingData.fieldLocationName}
-                    </h3>
-                  )}
-                  {weddingData.fieldLocationAddress && (
+                <div>
+                  <h3 className="text-center md:text-left text-2xl font-semibold mb-3">
+                    Venue Location
+                  </h3>
+                  <div className="text-center md:text-left">
                     <div className="space-y-1">
+                      {weddingData.fieldLocationName && (
+                        <h3 className="font-semibold">
+                          {weddingData.fieldLocationName}
+                        </h3>
+                      )}
                       <p className="text-gray-700">
                         {weddingData.fieldLocationAddress}
                       </p>
                     </div>
-                  )}
+                  </div>
                   {weddingData.fieldMapsShareUrl && (
                     <div className="mt-4">
                       <a
                         href={weddingData.fieldMapsShareUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block border-2 border-black px-6 py-2 uppercase tracking-wider hover:bg-black hover:text-white transition-colors"
+                        className="text-center md:text-left inline-block border-2 border-black px-6 py-2 uppercase tracking-wider hover:bg-black hover:text-white transition-colors"
                       >
                         Open in Google Maps
                       </a>

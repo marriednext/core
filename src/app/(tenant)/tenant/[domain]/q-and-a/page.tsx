@@ -86,8 +86,7 @@ export default async function QAndA({ params }: PageProps) {
     notFound();
   }
 
-  const faqs =
-    (weddingData.fieldQuestionsAndAnswers as QA[] | null) || defaultFaqs;
+  const faqs = (weddingData.fieldQuestionsAndAnswers as QA[]) || [];
 
   return (
     <div className="w-full flex flex-col items-center justify-center px-4">
@@ -105,24 +104,26 @@ export default async function QAndA({ params }: PageProps) {
         </div>
 
         <div className="space-y-8 mb-20">
-          {faqs.map((faq, index) => (
-            <div key={index} className="border-b border-gray-300 pb-6">
-              <h3 className="text-2xl font-semibold mb-4">{faq.question}</h3>
+          {faqs &&
+            faqs.length > 0 &&
+            faqs.map((faq, index) => (
+              <div key={index} className="border-b border-gray-300 pb-6">
+                <h3 className="text-2xl font-semibold mb-4">{faq.question}</h3>
 
-              {faq.answer && (
-                <p className="text-lg leading-relaxed text-gray-700">
-                  {faq.answer}
-                </p>
-              )}
+                {faq.answer && (
+                  <p className="text-lg leading-relaxed text-gray-700">
+                    {faq.answer}
+                  </p>
+                )}
 
-              {faq.html && (
-                <p
-                  className="text-lg leading-relaxed text-gray-700"
-                  dangerouslySetInnerHTML={{ __html: faq.html }}
-                />
-              )}
-            </div>
-          ))}
+                {faq?.html && (
+                  <p
+                    className="text-lg leading-relaxed text-gray-700"
+                    dangerouslySetInnerHTML={{ __html: faq.html }}
+                  />
+                )}
+              </div>
+            ))}
         </div>
 
         <div className="text-center">
