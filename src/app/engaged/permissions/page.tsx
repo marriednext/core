@@ -33,6 +33,29 @@ export default function PermissionsPage() {
     },
   });
 
+  const inviteUserMutation = useMutation({
+    mutationFn: async (formData: InviteUserFormData) => {
+      const res = await fetch("/api/permissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to send invitation");
+      }
+      return res.json();
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["permissions"] });
+      setIsDialogOpen(false);
+      toast.success(`Invitation sent to ${variables.email}`);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
   const updatePermissionsMutation = useMutation({
     mutationFn: async (updatedData: Partial<PermissionsData>) => {
       const res = await fetch("/api/permissions", {
@@ -48,22 +71,7 @@ export default function PermissionsPage() {
   });
 
   const handleInviteUser = (formData: InviteUserFormData) => {
-    const newInvitation: CollaboratorInvitation = {
-      id: Date.now().toString(),
-      email: formData.email,
-      role: formData.role,
-      status: "pending",
-      message: formData.message || undefined,
-      sentAt: new Date().toISOString(),
-    };
-
-    if (data) {
-      updatePermissionsMutation.mutate({
-        invitations: [newInvitation, ...data.invitations],
-      });
-    }
-    setIsDialogOpen(false);
-    toast.success(`Invitation sent to ${formData.email}`);
+    inviteUserMutation.mutate(formData);
   };
 
   const handleRemoveInvitation = (id: string) => {
@@ -162,6 +170,7 @@ export default function PermissionsPage() {
             open={isDialogOpen}
             onOpenChange={setIsDialogOpen}
             onSubmit={handleInviteUser}
+            isSubmitting={inviteUserMutation.isPending}
           />
 
           <div className="mb-6">

@@ -1,52 +1,133 @@
+import { db } from "@/database/drizzle";
+import { collaboratorInvitations, weddingUsers } from "@/drizzle/schema";
+import { extractWeddingId } from "@/lib/extractWeddingId";
+import { auth, currentUser } from "@clerk/nextjs/server";
+import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
-const mockPermissionsData = {
-  currentUser: {
-    email: "you@example.com",
-    role: "spouse" as const,
-  },
-  invitations: [
-    {
-      id: "1",
-      email: "partner@example.com",
-      role: "spouse" as const,
-      status: "accepted" as const,
-      message: "Can't wait to plan together!",
-      sentAt: "2024-10-15T10:00:00Z",
-      acceptedAt: "2024-10-15T14:30:00Z",
-    },
-    {
-      id: "2",
-      email: "mom@example.com",
-      role: "family" as const,
-      status: "accepted" as const,
-      sentAt: "2024-10-18T09:15:00Z",
-      acceptedAt: "2024-10-18T11:45:00Z",
-    },
-    {
-      id: "3",
-      email: "planner@weddings.com",
-      role: "planner" as const,
-      status: "pending" as const,
-      message: "Looking forward to working with you",
-      sentAt: "2024-10-25T16:20:00Z",
-    },
-    {
-      id: "4",
-      email: "sibling@example.com",
-      role: "family" as const,
-      status: "declined" as const,
-      sentAt: "2024-10-20T13:00:00Z",
-      declinedAt: "2024-10-21T08:15:00Z",
-    },
-  ],
-};
-
 export async function GET() {
-  return NextResponse.json(mockPermissionsData);
+  const user = await currentUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const { sessionClaims } = await auth();
+  const weddingId = extractWeddingId(sessionClaims as CustomJwtSessionClaims);
+  if (!weddingId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const userEmail = user.emailAddresses[0]?.emailAddress;
+
+  const [permissions, invitations] = await Promise.all([
+    // get all the collaborators that are part of the wedding
+    db.query.weddingUsers.findMany({
+      where: and(eq(weddingUsers.weddingId, weddingId)),
+    }),
+    // get all the invitations that are part of the wedding
+    db.query.collaboratorInvitations.findMany({
+      where: and(eq(collaboratorInvitations.weddingId, weddingId)),
+    }),
+  ]);
+
+  const currentUserPermission = permissions.find(
+    (p) => p.clerkUserId === user.id
+  );
+
+  return NextResponse.json({
+    currentUser: {
+      email: userEmail,
+      role: currentUserPermission?.role,
+    },
+    invitations: invitations.map((p) => ({
+      id: p.id,
+      email: p.invitedEmail,
+      role: p.role,
+      status: p.status,
+      message: p.message,
+      sentAt: p.sentAt,
+    })),
+  });
+}
+
+export async function POST(request: Request) {
+  const user = await currentUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { sessionClaims } = await auth();
+  const weddingId = extractWeddingId(sessionClaims as CustomJwtSessionClaims);
+  if (!weddingId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = await request.json();
+  const { email, role, message } = body;
+
+  if (!email || !role) {
+    return NextResponse.json(
+      { error: "Email and role are required" },
+      { status: 400 }
+    );
+  }
+
+  const validRoles = ["spouse", "family", "planner"];
+  if (!validRoles.includes(role)) {
+    return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+  }
+
+  const existingInvitation = await db.query.collaboratorInvitations.findFirst({
+    where: and(
+      eq(collaboratorInvitations.weddingId, weddingId),
+      eq(collaboratorInvitations.invitedEmail, email)
+    ),
+  });
+
+  if (existingInvitation) {
+    return NextResponse.json(
+      { error: "An invitation already exists for this email" },
+      { status: 409 }
+    );
+  }
+
+  const userName =
+    user.firstName || user.emailAddresses[0]?.emailAddress || "Someone";
+
+  const [newInvitation] = await db
+    .insert(collaboratorInvitations)
+    .values({
+      weddingId,
+      invitedEmail: email,
+      invitedByName: userName,
+      role,
+      message: message || null,
+      status: "pending",
+    })
+    .returning();
+
+  return NextResponse.json(
+    {
+      success: true,
+      invitation: {
+        id: newInvitation.id,
+        email: newInvitation.invitedEmail,
+        role: newInvitation.role,
+        status: newInvitation.status,
+        message: newInvitation.message,
+        sentAt: newInvitation.sentAt,
+      },
+    },
+    { status: 201 }
+  );
 }
 
 export async function PUT(request: Request) {
   const body = await request.json();
-  return NextResponse.json({ success: true, data: body });
+  return NextResponse.json({
+    success: true,
+    data: {
+      message: "TODO",
+      ...body,
+    },
+  });
 }
