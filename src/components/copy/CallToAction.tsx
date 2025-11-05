@@ -11,13 +11,14 @@ export default function CallToAction() {
             Start planning smarter today
           </h2>
           <p className="mt-6 max-w-xl text-lg/8 text-orange-100">
-            Join couples who are managing their guest lists without the stress. Free to start, no credit card required, and built with transparency you can trust.
+            Join couples who are managing their guest lists without the stress.
+            Free to start, no credit card required, and built with transparency
+            you can trust.
           </p>
           <div className="mt-10 flex items-center gap-x-6">
             <Button asChild>
               <Link href="/sign-up">
-                Get started free{" "}
-                <ArrowRightIcon className="size-4 ml-2" />
+                Get started free <ArrowRightIcon className="size-4 ml-2" />
               </Link>
             </Button>
           </div>
