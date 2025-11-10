@@ -174,7 +174,7 @@ export default function RsvpForm({
               Please select who will be attending:
             </p>
 
-            <div className="mt-8 md:mt-10 space-y-3 max-w-md mx-auto">
+            <div className="mt-8 md:mt-10 space-y-3 w-md mx-auto">
               {selectedGuests.map((guest, index) => (
                 <div
                   key={index}
