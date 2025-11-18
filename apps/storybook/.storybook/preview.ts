@@ -19,6 +19,9 @@ const preview: Preview = {
     viewport: {
       options: MINIMAL_VIEWPORTS,
     },
+    controls: {
+      disableSaveFromUI: true,
+    },
   },
   initialGlobals: {
     viewport: { value: "desktop" },
