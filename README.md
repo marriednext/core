@@ -15,22 +15,33 @@ pnpm run test-storybook # storybook interaction & a11y tests
 
 ## Development
 
+**Prerequisites**
+
+We're using https://turborepo.com/, you should install turbo globally if you haven't already.
+
+```bash
+pnpm add turbo --global
+```
+
 To run the application locally, you'll need the environment variables below properly configured. After that it's a simple matter of running the dev server via pnpm.
 
 ```bash
-# run dev server
+# run all dev servers (Webapp, Storybook)
 pnpm run dev
 ```
 
-Once the app is running locally, there's alot of technical documentation in the /documentation route. e.g. http://localhost:3000/documentation or https://marriednext.com/documentation (sorry its not in markdown, there isn't really a need for these to be living documents so i just had AI convert them into markup that looks nice instead of going through the hassle of configuring a markdown parser)
+Alternatively you can filter out specific apps with the `--filter` flag
+
+```bash
+pnpm turbo dev --filter=webapp
+```
+
+Once the _webapp_ is running locally, there's alot of technical documentation in the /documentation route. e.g. http://localhost:3000/documentation or https://marriednext.com/documentation (sorry its not in markdown, there isn't really a need for these to be living documents so i just had AI convert them into markup that looks nice instead of going through the hassle of configuring a markdown parser)
 
 ### Running Storybook Locally
 
-if you are looking to run Storybook (/stories) then you'll want to run the storybook command. This will launch a separate server with the interactive Storybook UI.
-
 ```bash
-# run storybook
-pnpm run storybook
+pnpm turbo dev --filter=storybook
 ```
 
 Enviroment variable required for a good time (no errors)
