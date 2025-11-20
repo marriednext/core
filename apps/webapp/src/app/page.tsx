@@ -6,10 +6,11 @@ import {
   MarriedNextMarketingUploadMemories,
   MarriedNextMarketingFooter,
 } from "component-shelf";
+import "style-shelf/styles";
 
 export default function Home() {
   return (
-    <div className="px-4 mx:px-10">
+    <div>
       <MarriedNextMarketingNavigation />
       <MarriedNextMarketingHero />
       <MarriedNextMarketingHowItWorks />

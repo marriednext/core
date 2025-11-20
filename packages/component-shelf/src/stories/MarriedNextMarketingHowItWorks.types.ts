@@ -3,6 +3,6 @@ interface HowItWorksStepsTypes {
   text: string;
 }
 export interface HowItWorksTypes {
-  howItWorksLabel: string;
-  steps: HowItWorksStepsTypes[];
+  howItWorksLabel?: string;
+  steps?: HowItWorksStepsTypes[];
 }
