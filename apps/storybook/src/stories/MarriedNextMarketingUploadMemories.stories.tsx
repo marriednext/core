@@ -1,44 +1,24 @@
-import type { Meta } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MINIMAL_VIEWPORTS } from "storybook/viewport";
-
-export const UploadMemories = () => {
-  return (
-    <section className="mn-shell mn-memories">
-      <div className="mn-memoriesshell">
-        <div className="mn-memories-leftside">
-          <img
-            className="mn-memories-img"
-            src="https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/marketing/weddingcouple.png"
-          />
-        </div>
-        <div className="mn-memories-rightside">
-          <h2 className="mn-memories-headinglabel">
-            {"Upload and Share Your Memories"}
-          </h2>
-          <span className="mn-memories-textlabel">
-            {
-              "After the fun is over, your guests can upload photos they took of your special day. No additional sign up required."
-            }
-          </span>
-          <a className="mn-primary-button mn-large-button">Get Started</a>
-        </div>
-      </div>
-    </section>
-  );
-};
+import { MarriedNextMarketingUploadMemories } from "./MarriedNextMarketingUploadMemories";
+import { marriedNextMarketingUploadMemoriesDefaults } from "./MarriedNextMarketingUploadMemories.constants";
 
 const meta = {
   title: "MarriedNext.com Marketing/Upload Memories",
-  component: UploadMemories,
+  component: MarriedNextMarketingUploadMemories,
   parameters: {
     layout: "fullscreen",
     viewport: {
       options: MINIMAL_VIEWPORTS,
     },
   },
-  args: {},
   tags: ["autodocs"],
-} satisfies Meta<typeof UploadMemories>;
+} satisfies Meta<typeof MarriedNextMarketingUploadMemories>;
 
 export default meta;
-// type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>;
+export const Primary: Story = {
+  args: {
+    ...marriedNextMarketingUploadMemoriesDefaults,
+  },
+};
