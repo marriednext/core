@@ -15,7 +15,7 @@ export default function WheelSvg({
       <path
         d="M2 22C2 10.9543 10.9543 2 22 2V2C33.0457 2 42 10.9543 42 22V22C42 33.0457 33.0457 42 22 42V42C10.9543 42 2 33.0457 2 22V22Z"
         stroke="#745656"
-        stroke-width="4"
+        stroke-width="2"
         stroke-linecap="square"
         stroke-linejoin="round"
         stroke-dasharray="8 8"
