@@ -38,7 +38,7 @@ export const MarriedNextMarketingFooter = ({
             </div>
           ))}
           <div className="mn-footer-branding-content">
-            <a href="mn-outline-button mn-large-button">{ctaButtonLabel}</a>
+            <a className="mn-outline-button">{ctaButtonLabel}</a>
 
             <span className="mn-footer-branding-copyright">
               {copyrightLine1}
@@ -52,4 +52,3 @@ export const MarriedNextMarketingFooter = ({
     </footer>
   );
 };
-

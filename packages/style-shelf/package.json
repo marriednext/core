@@ -2,12 +2,23 @@
   "name": "style-shelf",
   "version": "0.0.0",
   "private": true,
-  "exports": {
-    "./styles": "./src/defaults.css",
-    ".": "./src/defaults.css"
+  "scripts": {
+    "build": "postcss src/defaults.css -o dist/defaults.css",
+    "dev": "postcss src/defaults.css -o dist/defaults.css --watch"
   },
+  "exports": {
+    "./styles": "./dist/defaults.css",
+    ".": "./dist/defaults.css"
+  },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "autoprefixer": "10.4.20",
-    "postcss": "8.5.6"
+    "postcss": "8.5.6",
+    "postcss-cli": "11.0.1",
+    "postcss-import": "16.1.1",
+    "postcss-mixins": "12.1.2",
+    "postcss-nested": "7.0.2"
   }
 }
