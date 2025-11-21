@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getWeddingByDomain } from "@/lib/tenant/getWeddingByDomain";
+import { GoogleMaps } from "component-shelf";
 
 export default async function Travel() {
   const weddingData = await getWeddingByDomain("yulissaandmatthew");
@@ -27,19 +28,7 @@ export default async function Travel() {
           <div className="mb-20">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
               {weddingData.fieldMapsEmbedUrl && (
-                <div className="flex items-center justify-center w-[402px] h-[302px]">
-                  <div className="rounded-lg overflow-hidden border border-gray-300 h-full w-fit">
-                    <iframe
-                      src={weddingData.fieldMapsEmbedUrl}
-                      width="400"
-                      height="300"
-                      style={{ border: 0 }}
-                      allowFullScreen={true}
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    />
-                  </div>
-                </div>
+                <GoogleMaps embedUrl={weddingData.fieldMapsEmbedUrl} />
               )}
               <div className="flex items-center justify-center h-full">
                 <div>

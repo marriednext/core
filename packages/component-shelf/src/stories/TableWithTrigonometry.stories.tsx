@@ -4,7 +4,7 @@ import { TableWithTrigonometry } from "./TableWithTrigonometry";
 import { tableWithTrigonometryDefaults } from "./TableWithTrigonometry.constants";
 
 const meta = {
-  title: "Public/TableWithTrigonometry",
+  title: "Components/TableWithTrigonometry",
   component: TableWithTrigonometry,
   parameters: {
     layout: "fullscreen",
