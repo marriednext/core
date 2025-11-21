@@ -5,5 +5,9 @@
   "exports": {
     "./styles": "./src/defaults.css",
     ".": "./src/defaults.css"
+  },
+  "dependencies": {
+    "autoprefixer": "10.4.20",
+    "postcss": "8.5.6"
   }
 }
