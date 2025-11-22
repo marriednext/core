@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "postcss src/defaults.css src/tailwind-hybrid.css --dir dist && rm -rf dist/fonts && cp -r src/fonts dist/fonts",
+    "build": "NODE_ENV=production postcss src/defaults.css src/tailwind-hybrid.css --dir dist && rm -rf dist/fonts && cp -r src/fonts dist/fonts",
     "prepack": "pnpm build",
-    "dev": "postcss src/defaults.css src/tailwind-hybrid.css --dir dist --watch"
+    "dev": "NODE_ENV=development postcss src/defaults.css src/tailwind-hybrid.css --dir dist --watch"
   },
   "exports": {
     "./styles": "./dist/defaults.css",
