@@ -18,17 +18,17 @@ html {
   container-type: inline-size;
 
   .mn-page-title {
-    margin-left: auto;
-    margin-right: auto;
+    @mixin ResetMarginAndPadding;
     font-family: var(--primary-font-family);
   }
 
   .mn-header-shell {
+    @mixin MarketingContainer;
+
     display: flex;
-    flex-direction: column;
-    max-width: var(--max-width-marketing-desktop);
-    margin-left: auto;
-    margin-right: auto;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
     padding-bottom: 15px;
@@ -66,7 +66,6 @@ html {
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: 0;
     }
 
     .mn-page-title {
@@ -110,9 +109,8 @@ html {
   container-type: inline-size;
 
   .mn-heroshell {
-    max-width: var(--max-width-marketing-desktop);
-    margin-left: auto;
-    margin-right: auto;
+    @mixin MarketingContainer;
+
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -178,7 +176,6 @@ html {
     .mn-hero-leftside {
       grid-column: initial;
       order: initial;
-      padding-left: 0;
       padding-right: 0;
       align-items: flex-start;
     }
@@ -214,20 +211,20 @@ html {
     }
 
     .mn-hero-fancytext1 {
-      font-size: 24px;
+      font-size: 18px;
     }
 
     .mn-hero-fancytext2 {
-      font-size: 24px;
+      font-size: 18px;
     }
 
     .mn-hero-fancytext3 {
-      font-size: 24px;
+      font-size: 18px;
       font-weight: 700;
     }
 
     .mn-hero-fancytext4 {
-      font-size: 24px;
+      font-size: 18px;
     }
   }
 
@@ -248,6 +245,10 @@ html {
     .mn-hero-fancytextgroup {
       width: initial;
       align-self: end;
+    }
+
+    .mn-hero-leftside {
+      padding-left: 0;
     }
 
     .mn-hero-rightside {
@@ -275,27 +276,34 @@ html {
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-    padding-top: 60px;
+    padding-top: 90px;
+    padding-left: 20px;
     padding-bottom: 60px;
-    background: #d4c2a66b;
+    padding-right: 20px;
+    background: conic-gradient(
+      from 0deg at -5% -5%,
+      #fbfaf9,
+      #d4c2a6b8,
+      #f8bf76,
+      #f9f5f0
+    );
   }
 
   .mn-hiw-inner-shell {
-    max-width: var(--max-width-marketing-desktop);
+    @mixin MarketingContainer;
+
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    margin-left: auto;
-    margin-right: auto;
   }
 
   .mn-hiw-leftside {
-    grid-column: 1 / -1;
+    @mixin GridColumn 1 / -1, 1 / 5, 1 / 5;
     padding-left: 40px;
     padding-right: 40px;
     padding-bottom: 60px;
   }
   .mn-hiw-rightside {
-    grid-column: 1 / -1;
+    @mixin GridColumn 1 / -1, 6 / -1, 6 / -1;
   }
 
   .mn-hiw-titlelabel {
@@ -327,7 +335,7 @@ html {
   }
 
   .mn-hiw-cardtext {
-    font-size: 20px;
+    font-size: 16px;
     margin-top: 0;
     margin-bottom: 0;
     font-family: var(--secondary-font-family);
@@ -348,16 +356,10 @@ html {
 
   @container (width > 700px) {
     .mn-hiw-leftside {
-      grid-column: 1 / 5;
       display: flex;
-      justify-content: flex-end;
       padding-left: initial;
       padding-right: initial;
       padding-bottom: initial;
-    }
-    .mn-hiw-rightside {
-      grid-column: 6 / -1;
-      /* padding-right: 40px; */
     }
 
     .mn-hiw-rightsideshell {
@@ -379,12 +381,7 @@ html {
 
   @container (width > 960px) {
     .mn-hiw-leftside {
-      grid-column: 1 / 5;
       display: flex;
-      justify-content: flex-end;
-    }
-    .mn-hiw-rightside {
-      grid-column: 6 / -1;
     }
   }
 }
@@ -395,11 +392,12 @@ html {
   container-type: inline-size;
 
   .mn-memoriesshell {
+    @mixin MarketingContainer;
+
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     padding-top: 160px;
     padding-bottom: 160px;
-    max-width: var(--max-width-marketing-desktop);
     margin-left: auto;
     margin-right: auto;
   }
@@ -409,13 +407,13 @@ html {
   }
 
   .mn-memories-leftside {
-    grid-column: 1 / -1;
+    @mixin GridColumn 1 / -1, 1 / 5, 1 / 5;
     display: flex;
-    /* justify-content: center; */
+    justify-content: center;
   }
 
   .mn-memories-rightside {
-    grid-column: 1 / -1;
+    @mixin GridColumn 1 / -1, 6 / -1, 7 / -1;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -425,13 +423,14 @@ html {
 
   .mn-memories-headinglabel {
     font-size: 30px;
+    line-height: 1em;
     margin-top: 40px;
     margin-bottom: 20px;
     font-family: var(--primary-font-family);
   }
 
   .mn-memories-textlabel {
-    font-size: 20px;
+    font-size: 18px;
     display: inline-block;
     margin-bottom: 40px;
     font-family: var(--secondary-font-family);
@@ -448,29 +447,23 @@ html {
     }
 
     .mn-memories-leftside {
-      grid-column: 1 / 6;
+      justify-content: initial;
     }
 
     .mn-memories-rightside {
-      grid-column: 6 / -1;
       padding-left: initial;
       padding-right: initial;
     }
   }
 
   @container (width > 960px) {
+    .mn-memoriesshell {
+      padding-left: initial;
+      padding-right: initial;
+    }
+
     .mn-memories-img {
       height: 340px;
-    }
-
-    .mn-memories-leftside {
-      grid-column: 1 / 5;
-      /* justify-content: flex-end; */
-      /* padding-left: 40px; */
-    }
-
-    .mn-memories-rightside {
-      grid-column: 7 / -1;
     }
 
     .mn-memories-headinglabel {
@@ -478,7 +471,7 @@ html {
     }
 
     .mn-memories-textlabel {
-      font-size: 24px;
+      font-size: 20px;
     }
   }
 }
@@ -488,11 +481,12 @@ html {
   container-type: inline-size;
 
   .mn-seatingplannershell {
+    @mixin MarketingContainer;
+
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     padding-top: 160px;
     padding-bottom: 160px;
-    max-width: var(--max-width-marketing-tablet);
     margin-left: auto;
     margin-right: auto;
   }
@@ -502,7 +496,7 @@ html {
   }
 
   .mn-seatingplanner-leftside {
-    grid-column: 1 / -1;
+    @mixin GridColumn 1 / -1, 1 / 7, 1 / 7;
     order: 2;
     display: flex;
     flex-direction: column;
@@ -511,21 +505,22 @@ html {
     padding-right: 40px;
   }
   .mn-seatingplanner-rightside {
-    grid-column: 1 / -1;
+    @mixin GridColumn 1 / -1, 7 / -1, 7 / -1;
     order: 1;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
   }
 
   .mn-seatingplanner-headinglabel {
     font-size: 30px;
+    line-height: 1em;
     margin-top: 40px;
     margin-bottom: 20px;
     font-family: var(--primary-font-family);
   }
 
   .mn-seatingplanner-textlabel {
-    font-size: 20px;
+    font-size: 18px;
     display: inline-block;
     margin-bottom: 40px;
     font-family: var(--secondary-font-family);
@@ -533,15 +528,14 @@ html {
 
   @container (width > 700px) {
     .mn-seatingplanner-leftside {
-      grid-column: 1 / 7;
       padding-left: initial;
       padding-right: initial;
       order: initial;
     }
 
     .mn-seatingplanner-rightside {
-      grid-column: 7 / -1;
       order: initial;
+      justify-content: flex-end;
     }
 
     .mn-seatingplanner-headinglabel {
@@ -556,11 +550,10 @@ html {
     }
 
     .mn-seatingplanner-textlabel {
-      font-size: 24px;
+      font-size: 20px;
     }
 
     .mn-seatingplannershell {
-      max-width: var(--max-width-marketing-desktop);
       margin-left: auto;
       margin-right: auto;
     }
@@ -576,7 +569,7 @@ html {
   container-type: inline-size;
 
   .mn-footershell {
-    max-width: var(--max-width-marketing-desktop);
+    @mixin MarketingContainer;
     margin-left: auto;
     margin-right: auto;
     padding-top: 60px;
@@ -622,6 +615,7 @@ html {
   .mn-footer-link-groups {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
+
     gap: 10px;
   }
 

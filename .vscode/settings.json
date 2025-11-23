@@ -4,5 +4,6 @@
     "multitenancy",
     "seatingplanner",
     "Swipeable"
-  ]
+  ],
+  "css.validate": false
 }

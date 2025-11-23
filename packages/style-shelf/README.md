@@ -40,3 +40,51 @@ margin-right: 10px;
 margin-bottom: 40px;
 margin-left: 25px;
 ```
+
+## Container Query Mixin Convention
+
+This should be the new default paradigm moving forward. We'll need to create a shit ton of mixins at first but eventually all of our mixins should be using this paradigm
+
+here's an example of how we can reduce the clutter when managing container queries
+
+```css
+.mn-hiw {
+  container-type: inline-size;
+
+  .mn-hiw-inner-shell {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .mn-hiw-leftside {
+    grid-column: 1 / -1;
+  }
+
+  @container (width > 700px) {
+    .mn-hiw-leftside {
+      grid-column: 1 / 5;
+    }
+  }
+
+  @container (width > 960px) {
+    .mn-hiw-leftside {
+      grid-column: 1 / 6;
+    }
+  }
+}
+```
+
+with the mixins:
+
+```css
+.mn-hiw {
+  container-type: inline-size;
+
+  .mn-hiw-inner-shell {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .mn-hiw-leftside {
+    @mixin GridColumn 1 / -1, 1 / 5, 1 / 6;
+  }
+}
+```

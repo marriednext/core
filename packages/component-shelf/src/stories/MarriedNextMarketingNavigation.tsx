@@ -13,16 +13,17 @@ export const MarriedNextMarketingNavigation = ({
         <h1 className="mn-page-title">{titleLabel}</h1>
 
         <nav className="mn-navigation">
-          <ul className="mn-navigation-list">
-            {useable &&
-              navLinks.map((item) => (
+          {useable && (
+            <ul className="mn-navigation-list">
+              {navLinks.map((item) => (
                 <li className="mn-navigation-list-item">
                   <a className="mn-navigation-link" href={item.link}>
                     {item.label}
                   </a>
                 </li>
               ))}
-          </ul>
+            </ul>
+          )}
 
           {isAuthenticated ? (
             <a
