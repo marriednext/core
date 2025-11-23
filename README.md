@@ -57,3 +57,13 @@ Enviroment variable required for a good time (no errors)
 - BLOB_READ_WRITE_TOKEN (Vercel Blog Storage)
 - UPSTASH_REDIS_REST_URL (Used as a cache layer for the tenant app)
 - UPSTASH_REDIS_REST_TOKEN
+
+## Troubleshooting
+
+If you need a sanity check, run the following command to clear all auto-generated assets.
+
+```shell
+pnpm run clean
+```
+
+_Don't forget to reinstall the project dependencies before running the dev server or production build_

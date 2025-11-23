@@ -1,9 +1,15 @@
 {
   "scripts": {
     "dev": "turbo dev",
-    "build": "turbo build"
+    "build": "turbo build",
+    "clean:root": "rimraf package-lock.json pnpm-lock.json dist node_modules .turbo",
+    "clean:webapp": "rimraf apps/webapp/node_modules apps/webapp/.turbo apps/webapp/dist apps/webapp/package-lock.json apps/webapp/pnpm-lock.json apps/webapp/.next",
+    "clean:style-shelf": "rimraf packages/style-shelf/node_modules packages/style-shelf/.turbo packages/style-shelf/dist packages/style-shelf/package-lock.json packages/style-shelf/pnpm-lock.json",
+    "clean:component-shelf": "rimraf packages/component-shelf/node_modules packages/component-shelf/.turbo packages/component-shelf/dist packages/component-shelf/package-lock.json packages/component-shelf/pnpm-lock.json",
+    "clean": "pnpm run clean:webapp && pnpm run clean:style-shelf && pnpm run clean:component-shelf && pnpm run clean:root"
   },
   "devDependencies": {
+    "rimraf": "6.1.2",
     "turbo": "2.6.1"
   },
   "packageManager": "pnpm@8.9.0+sha512.ef8859938e1f0537b9fcf0309044311392f3b38b344176e6cd4fdee21b225524b0ac2a1b08ae2ae2ddd5b3ff4b8ca496d6778e950f3e7c9f555b81325982441c"
