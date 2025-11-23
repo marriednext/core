@@ -237,6 +237,12 @@ importers:
       '@tailwindcss/vite':
         specifier: 4.1.17
         version: 4.1.17(vite@7.2.2)
+      clsx:
+        specifier: 2.1.1
+        version: 2.1.1
+      lucide-react:
+        specifier: 0.540.0
+        version: 0.540.0(react@19.2.0)
       postcss:
         specifier: 8.5.6
         version: 8.5.6
@@ -328,6 +334,9 @@ importers:
 
   packages/style-shelf:
     dependencies:
+      '@tailwindcss/postcss':
+        specifier: ^4.1.17
+        version: 4.1.17
       autoprefixer:
         specifier: 10.4.20
         version: 10.4.20(postcss@8.5.6)
@@ -346,6 +355,9 @@ importers:
       postcss-nested:
         specifier: 7.0.2
         version: 7.0.2(postcss@8.5.6)
+      tailwindcss:
+        specifier: ^4.1.17
+        version: 4.1.17
 
 packages:
 
