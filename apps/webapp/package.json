@@ -84,11 +84,14 @@
     "eslint-config-next": "16.0.1",
     "eslint-plugin-storybook": "9.1.10",
     "playwright": "catalog:",
+    "postcss-import": "16.1.1",
+    "postcss-mixins": "catalog:",
     "storybook": "9.1.10",
     "tailwindcss": "catalog:",
     "tw-animate-css": "1.3.7",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "@vitest/browser-playwright": "4.0.14"
   },
   "packageManager": "pnpm@8.9.0+sha512.ef8859938e1f0537b9fcf0309044311392f3b38b344176e6cd4fdee21b225524b0ac2a1b08ae2ae2ddd5b3ff4b8ca496d6778e950f3e7c9f555b81325982441c",
   "pnpm": {
