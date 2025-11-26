@@ -65,88 +65,91 @@ export default function InvitationCard({
   };
 
   return (
-    <Root className="rounded-xl bg-white border border-gray-200 p-4 hover:border-gray-300 hover:shadow-sm transition-all">
-      <div className="flex items-start justify-between mb-3 gap-2">
-        {isEditing && editForm ? (
-          <Input
-            value={editForm.inviteGroupName || ""}
-            onChange={(e) =>
-              onFormChange({
-                ...editForm,
-                inviteGroupName: e.target.value || null,
-              })
-            }
-            placeholder={getDefaultDisplayName()}
-            className="text-lg font-semibold font-handwritten-font"
-            disabled={isSaving}
-          />
-        ) : (
-          <h3 className="text-lg font-semibold text-gray-900">{displayName}</h3>
-        )}
-        {isEditing ? (
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={onCancel}
-              className="h-8"
-              disabled={isSaving}
-            >
-              <X className="w-4 h-4 mr-1" />
-              Cancel
-            </Button>
-            <Button onClick={onSave} className="h-8" disabled={isSaving}>
-              <Check className="w-4 h-4 mr-1" />
-              {isSaving ? "Saving..." : "Save"}
-            </Button>
-          </div>
-        ) : (
-          <div className="flex gap-2">
-            {onCollapse && (
-              <button
-                onClick={onCollapse}
-                className="p-1 hover:bg-gray-100 rounded transition-colors"
-                aria-label="Collapse"
-              >
-                <ChevronUp className="w-4 h-4 text-gray-600" />
-              </button>
-            )}
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className="p-1 hover:bg-gray-100 rounded transition-colors"
-                aria-label="Open guest menu"
-              >
-                <MoreVertical className="w-4 h-4 text-gray-600" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={onEdit} className="cursor-pointer">
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={handleDeleteClick}
-                  className="cursor-pointer text-red-600 focus:text-red-600"
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Remove
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        )}
-      </div>
-
+    <Root className="rounded-xl bg-white border border-gray-200 p-4 hover:border-gray-300 hover:shadow-sm transition-all flex flex-col justify-between">
       <div className="space-y-2">
-        {isEditing && editForm ? (
-          <GuestFieldsEdit
-            editForm={editForm}
-            onFormChange={onFormChange}
-            disabled={isSaving}
-          />
-        ) : (
-          <GuestFieldsView entry={entry} />
-        )}
-      </div>
+        <div className="flex items-start justify-between mb-3 gap-2">
+          {isEditing && editForm ? (
+            <Input
+              value={editForm.inviteGroupName || ""}
+              onChange={(e) =>
+                onFormChange({
+                  ...editForm,
+                  inviteGroupName: e.target.value || null,
+                })
+              }
+              placeholder={getDefaultDisplayName()}
+              className="text-lg font-semibold font-handwritten-font"
+              disabled={isSaving}
+            />
+          ) : (
+            <h3 className="text-lg font-semibold text-gray-900">
+              {displayName}
+            </h3>
+          )}
+          {isEditing ? (
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={onCancel}
+                className="h-8"
+                disabled={isSaving}
+              >
+                <X className="w-4 h-4 mr-1" />
+                Cancel
+              </Button>
+              <Button onClick={onSave} className="h-8" disabled={isSaving}>
+                <Check className="w-4 h-4 mr-1" />
+                {isSaving ? "Saving..." : "Save"}
+              </Button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              {onCollapse && (
+                <button
+                  onClick={onCollapse}
+                  className="p-1 hover:bg-gray-100 rounded transition-colors"
+                  aria-label="Collapse"
+                >
+                  <ChevronUp className="w-4 h-4 text-gray-600" />
+                </button>
+              )}
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className="p-1 hover:bg-gray-100 rounded transition-colors"
+                  aria-label="Open guest menu"
+                >
+                  <MoreVertical className="w-4 h-4 text-gray-600" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={onEdit} className="cursor-pointer">
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleDeleteClick}
+                    className="cursor-pointer text-red-600 focus:text-red-600"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Remove
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
+        </div>
 
+        <div>
+          {isEditing && editForm ? (
+            <GuestFieldsEdit
+              editForm={editForm}
+              onFormChange={onFormChange}
+              disabled={isSaving}
+            />
+          ) : (
+            <GuestFieldsView entry={entry} />
+          )}
+        </div>
+      </div>
       <div className="flex justify-between mt-3 text-xs text-gray-600 font-medium">
         {entry.createdAt && (
           <p>

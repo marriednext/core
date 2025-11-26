@@ -9,7 +9,7 @@ const defaultUser = {
   name: "Matthew Bub",
   email: "matthew@marriednext.com",
   imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    "https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/placeholders/Primary.png",
 };
 const navigation = [
   { name: "Dashboard", href: "/engaged", current: true },

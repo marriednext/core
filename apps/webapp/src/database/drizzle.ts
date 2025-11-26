@@ -1,20 +1,14 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import { eq, count, and, sql } from "drizzle-orm";
 import * as schema from "orm-shelf/schema";
-import {
-  invitation,
-  guest,
-  weddingUsers,
-  seatingTable,
-  seatAssignment,
-} from "orm-shelf/schema";
+import { invitation, guest } from "orm-shelf/schema";
 import {
   guestRelations,
   weddingRelations,
   invitationRelations,
   weddingUsersRelations,
 } from "orm-shelf/relations";
-import type { InferSelectModel } from "drizzle-orm";
+import type { DbGuest } from "orm-shelf/types";
 import postgres from "postgres";
 
 const { DATABASE_URL } = process.env;
@@ -33,21 +27,6 @@ export const db = drizzle(queryClient, {
     weddingUsersRelations,
   },
 });
-
-export type DbGuest = InferSelectModel<typeof guest>;
-export type DbInvitation = InferSelectModel<typeof invitation>;
-export type DbWeddingUser = InferSelectModel<typeof weddingUsers>;
-export type DbSeatingTable = InferSelectModel<typeof seatingTable>;
-export type DbSeatAssignment = InferSelectModel<typeof seatAssignment>;
-
-export type DbInvitationWithGuests = DbInvitation & {
-  guests: DbGuest[];
-  attending?: number;
-  total?: number;
-};
-
-export type DbInvitationGroupWithGuests = DbInvitationWithGuests;
-export type DbInvitationGroup = DbInvitation;
 
 export const getGuestList = async (weddingId: string): Promise<DbGuest[]> => {
   const guestList = await db

@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { GuestFieldsViewProps } from "@/components/guest-list/guestList.types";
+import type { GuestFieldsViewProps } from "orm-shelf/types";
 
 export default function GuestFieldsView({ entry }: GuestFieldsViewProps) {
   const guests = entry.guests;

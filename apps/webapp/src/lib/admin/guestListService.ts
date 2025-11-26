@@ -2,9 +2,8 @@ import {
   getGuestList,
   getInvitationsWithGuests,
   getInvitationsCount,
-  type DbGuest,
-  type DbInvitationWithGuests,
 } from "@/database/drizzle";
+import type { DbInvitationWithGuests, DbGuest } from "orm-shelf/types";
 
 export class DatabaseError extends Error {
   constructor(message: string, public cause?: unknown) {
@@ -49,6 +48,7 @@ export type GuestListResponse = {
   hasMore: boolean;
   currentOffset: number;
   currentLimit: number;
+  confirmedRsvpCount: number;
 };
 
 export type GuestListParams = {
@@ -101,6 +101,9 @@ export async function getGuestListData(
     });
 
     const plusOneCount = guestList.filter((g) => g.hasPlusOne).length;
+    const confirmedRsvpCount = invitationsWithAttendance.filter(
+      (i) => i.attending > 0
+    ).length;
 
     return {
       invitations: invitationsWithAttendance,
@@ -114,6 +117,7 @@ export async function getGuestListData(
       hasMore: offset + limit < totalCount,
       currentOffset: offset,
       currentLimit: limit,
+      confirmedRsvpCount,
     };
   } catch (error) {
     throw new DatabaseError("Failed to fetch guest list data", error);

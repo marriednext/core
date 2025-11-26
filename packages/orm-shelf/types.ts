@@ -1,4 +1,26 @@
-import { DbInvitationGroupWithGuests } from "orm-shelf/types";
+import { InferSelectModel } from "drizzle-orm";
+import {
+  guest,
+  invitation,
+  weddingUsers,
+  seatingTable,
+  seatAssignment,
+} from "./drizzle/schema";
+
+export type DbGuest = InferSelectModel<typeof guest>;
+export type DbInvitation = InferSelectModel<typeof invitation>;
+export type DbWeddingUser = InferSelectModel<typeof weddingUsers>;
+export type DbSeatingTable = InferSelectModel<typeof seatingTable>;
+export type DbSeatAssignment = InferSelectModel<typeof seatAssignment>;
+
+export type DbInvitationWithGuests = DbInvitation & {
+  guests: DbGuest[];
+  attending?: number;
+  total?: number;
+};
+
+export type DbInvitationGroupWithGuests = DbInvitationWithGuests;
+export type DbInvitationGroup = DbInvitation;
 
 export interface GuestFormData {
   id?: string;
