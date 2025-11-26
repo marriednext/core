@@ -3,7 +3,8 @@
     "adminyulissaandmatthew",
     "multitenancy",
     "seatingplanner",
-    "Swipeable"
+    "Swipeable",
+    "VIEWPORTS"
   ],
   "css.validate": false
 }

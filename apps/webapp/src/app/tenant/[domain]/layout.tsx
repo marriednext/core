@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Cormorant_Infant } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
-import "./globals.css";
-import { TenantLayoutContent } from "./TenantLayoutContent";
-import { getWeddingByDomain } from "@/lib/tenant/getWeddingByDomain";
+import "style-shelf/tailwind-hybrid";
 import { notFound } from "next/navigation";
+import { getWeddingByDomain } from "@/lib/tenant/getWeddingByDomain";
+import { TenantLayoutContent } from "./TenantLayoutContent";
 
 const cormorantInfant = Cormorant_Infant({
   variable: "--font-cormorant-infant",
@@ -40,7 +39,6 @@ export default async function RootLayout({
         <TenantLayoutContent initialData={weddingData}>
           {children}
         </TenantLayoutContent>
-        <Analytics />
       </body>
     </html>
   );

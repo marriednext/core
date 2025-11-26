@@ -8,7 +8,11 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { ArrowRight, Check } from "lucide-react";
 
-export function RsvpSection() {
+interface RsvpSectionProps {
+  rsvpFormComponent?: React.ReactNode;
+}
+
+export function RsvpSection({ rsvpFormComponent }: RsvpSectionProps) {
   const [step, setStep] = useState<"search" | "found" | "confirmed">("search");
   const [firstName, setFirstName] = useState("");
 
@@ -23,9 +27,29 @@ export function RsvpSection() {
     setStep("confirmed");
   };
 
+  if (rsvpFormComponent) {
+    return (
+      <section
+        id="rsvp"
+        className="py-32 bg-[#faf9f6] relative overflow-hidden"
+      >
+        <div className="absolute top-0 left-0 w-64 h-64 bg-[#745656]/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#745656]/5 rounded-full translate-x-1/2 translate-y-1/2" />
+        <div className="max-w-xl mx-auto px-6 text-center relative z-10">
+          <p className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4">
+            We Hope You Can Join Us
+          </p>
+          <h2 className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic mb-4">
+            RSVP
+          </h2>
+          <div className="mt-12">{rsvpFormComponent}</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="rsvp" className="py-32 bg-[#faf9f6] relative overflow-hidden">
-      {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-64 h-64 bg-[#745656]/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#745656]/5 rounded-full translate-x-1/2 translate-y-1/2" />
 

@@ -1,5 +1,4 @@
 import type { Preview } from "@storybook/react-vite";
-import "style-shelf/styles";
 import { MINIMAL_VIEWPORTS } from "storybook/viewport";
 
 const preview: Preview = {

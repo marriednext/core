@@ -55,7 +55,15 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     }
 
     if (isTenantHost) {
-      return nextResponseRewrite(req, `/tenant/${hostHeader}${pathname}`);
+      const hostWithoutPort = hostHeader.split(":")[0];
+      const hostParts = hostWithoutPort.split(".");
+      const isSubdomain =
+        hostParts.length > 2 ||
+        (hostParts.length > 1 &&
+          hostParts[hostParts.length - 1] === "localhost");
+      const domain = isSubdomain ? firstLabel : hostWithoutPort;
+
+      return nextResponseRewrite(req, `/tenant/${domain}${pathname}`);
     }
   }
 });
