@@ -10,11 +10,6 @@ const domains = {
   "blog.marriednext.com": { isTenantHost: false, firstLabel: "blog" },
   "docs.marriednext.com": { isTenantHost: false, firstLabel: "docs" },
   "marriednext.com": { isTenantHost: false, firstLabel: "marriednext" },
-  "yulissaandmatthew.com": {
-    isTenantHost: false,
-    firstLabel: "yulissaandmatthew",
-  },
-  "www.yulissaandmatthew.com": { isTenantHost: false, firstLabel: "www" },
   localhost: { isTenantHost: false, firstLabel: "localhost" },
   "localhost:3000": { isTenantHost: false, firstLabel: "localhost" },
   "emilyandjack.localhost:3000": {

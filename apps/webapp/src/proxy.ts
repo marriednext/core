@@ -54,12 +54,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       return NextResponse.next();
     }
 
-    if (firstLabel === "yulissaandmatthew") {
-      return nextResponseRewrite(
-        req,
-        `/legacy/yulissaandmatthew.com${pathname}`
-      );
-    } else if (isTenantHost) {
+    if (isTenantHost) {
       return nextResponseRewrite(req, `/tenant/${hostHeader}${pathname}`);
     }
   }

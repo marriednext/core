@@ -9,14 +9,12 @@ import { useRsvpStore } from "@/stores/rsvpStore";
 
 interface RsvpFormProps {
   className?: string;
-  variant?: "tenant" | "legacy";
   onLookup: (name: string) => void;
   onSubmit: () => void;
 }
 
 export default function RsvpForm({
   className,
-  variant = "tenant",
   onLookup,
   onSubmit,
 }: RsvpFormProps) {
@@ -55,8 +53,6 @@ export default function RsvpForm({
     }
   }, [email, setEmailValue]);
 
-  const isLegacy = variant === "legacy";
-
   const handleNameSubmit = (data: { name: string }) => {
     onLookup(data.name);
   };
@@ -77,11 +73,7 @@ export default function RsvpForm({
 
   const containerStyles = clsx("max-w-3xl w-full text-center");
 
-  const titleStyles = clsx(
-    isLegacy
-      ? "text-5xl md:text-6xl mt-6 md:mt-10"
-      : "text-5xl md:text-6xl mt-6 md:mt-10"
-  );
+  const titleStyles = clsx("text-5xl md:text-6xl mt-6 md:mt-10");
 
   const buttonStyles = clsx(
     "inline-block border-2 border-black px-8 py-3 uppercase tracking-wider hover:bg-black hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"

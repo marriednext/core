@@ -7,12 +7,10 @@ import RsvpForm from "./RsvpForm";
 
 interface RsvpFormContainerProps {
   className?: string;
-  variant?: "tenant" | "legacy";
 }
 
 export default function RsvpFormContainer({
   className,
-  variant,
 }: RsvpFormContainerProps) {
   const {
     email,
@@ -90,7 +88,6 @@ export default function RsvpFormContainer({
   return (
     <RsvpForm
       className={className}
-      variant={variant}
       onLookup={(name) => lookupMutation.mutate(name)}
       onSubmit={() => submitMutation.mutate()}
     />
