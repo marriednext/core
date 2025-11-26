@@ -1,3 +1,5 @@
+import "style-shelf/tailwind-hybrid";
+
 export function OurStorySection() {
   const milestones = [
     {

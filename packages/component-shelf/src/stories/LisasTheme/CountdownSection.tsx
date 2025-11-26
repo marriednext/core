@@ -1,5 +1,6 @@
 "use client"
 
+import "style-shelf/tailwind-hybrid";
 import { useState, useEffect } from "react"
 
 interface TimeLeft {

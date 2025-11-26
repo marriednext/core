@@ -1,26 +1,27 @@
-"use client"
+"use client";
 
-import type React from "react"
+import "style-shelf/tailwind-hybrid";
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ArrowRight, Check } from "lucide-react"
+import { useState } from "react";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { ArrowRight, Check } from "lucide-react";
 
 export function RsvpSection() {
-  const [step, setStep] = useState<"search" | "found" | "confirmed">("search")
-  const [firstName, setFirstName] = useState("")
+  const [step, setStep] = useState<"search" | "found" | "confirmed">("search");
+  const [firstName, setFirstName] = useState("");
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (firstName.trim()) {
-      setStep("found")
+      setStep("found");
     }
-  }
+  };
 
   const handleConfirm = () => {
-    setStep("confirmed")
-  }
+    setStep("confirmed");
+  };
 
   return (
     <section id="rsvp" className="py-32 bg-[#faf9f6] relative overflow-hidden">
@@ -29,9 +30,15 @@ export function RsvpSection() {
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#745656]/5 rounded-full translate-x-1/2 translate-y-1/2" />
 
       <div className="max-w-xl mx-auto px-6 text-center relative z-10">
-        <p className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4">We Hope You Can Join Us</p>
-        <h2 className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic mb-4">RSVP</h2>
-        <p className="text-[#2c2c2c]/70 mb-12">Please respond by March 15, 2026</p>
+        <p className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4">
+          We Hope You Can Join Us
+        </p>
+        <h2 className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic mb-4">
+          RSVP
+        </h2>
+        <p className="text-[#2c2c2c]/70 mb-12">
+          Please respond by March 15, 2026
+        </p>
 
         {step === "search" && (
           <form onSubmit={handleSearch} className="space-y-6">
@@ -57,8 +64,12 @@ export function RsvpSection() {
         {step === "found" && (
           <div className="space-y-8">
             <div className="py-8 border-y border-[#745656]/20">
-              <p className="text-[#2c2c2c]/60 text-sm tracking-[0.2em] uppercase mb-2">Invitation for</p>
-              <p className="font-serif text-3xl text-[#2c2c2c] italic">{firstName} & Guest</p>
+              <p className="text-[#2c2c2c]/60 text-sm tracking-[0.2em] uppercase mb-2">
+                Invitation for
+              </p>
+              <p className="font-serif text-3xl text-[#2c2c2c] italic">
+                {firstName} & Guest
+              </p>
             </div>
 
             <div className="space-y-4">
@@ -87,14 +98,17 @@ export function RsvpSection() {
               <Check className="w-10 h-10 text-[#745656]" />
             </div>
             <div>
-              <h3 className="font-serif text-3xl text-[#2c2c2c] italic mb-2">Thank You, {firstName}!</h3>
+              <h3 className="font-serif text-3xl text-[#2c2c2c] italic mb-2">
+                Thank You, {firstName}!
+              </h3>
               <p className="text-[#2c2c2c]/70">
-                We can't wait to celebrate with you. Check your email for confirmation details.
+                We can't wait to celebrate with you. Check your email for
+                confirmation details.
               </p>
             </div>
           </div>
         )}
       </div>
     </section>
-  )
+  );
 }

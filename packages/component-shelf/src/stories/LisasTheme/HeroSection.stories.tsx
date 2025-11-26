@@ -1,0 +1,18 @@
+import "style-shelf/tailwind-hybrid";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { HeroSection } from "./HeroSection";
+
+const meta = {
+  title: "LisasTheme/HeroSection",
+  component: HeroSection,
+  parameters: {
+    layout: "fullscreen",
+  },
+  tags: ["autodocs"],
+} satisfies Meta<typeof HeroSection>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Primary: Story = {};
+

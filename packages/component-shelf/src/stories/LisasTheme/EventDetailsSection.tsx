@@ -1,3 +1,4 @@
+import "style-shelf/tailwind-hybrid";
 import { MapPin, Clock, Sparkles } from "lucide-react"
 
 export function EventDetailsSection() {

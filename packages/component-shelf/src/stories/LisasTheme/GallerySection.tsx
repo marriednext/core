@@ -1,3 +1,5 @@
+import "style-shelf/tailwind-hybrid";
+
 export function GallerySection() {
   const images = [
     { src: "/romantic-couple-portrait-engagement.jpg", span: "row-span-2" },

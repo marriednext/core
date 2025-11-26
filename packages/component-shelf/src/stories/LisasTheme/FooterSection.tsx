@@ -1,3 +1,5 @@
+import "style-shelf/tailwind-hybrid";
+
 export function FooterSection() {
   return (
     <footer className="py-20 bg-[#2c2c2c] text-white/80">

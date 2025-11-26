@@ -1,5 +1,6 @@
 "use client"
 
+import "style-shelf/tailwind-hybrid";
 import { useEffect, useState } from "react"
 
 export function HeroSection() {
