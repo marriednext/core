@@ -17,7 +17,7 @@ import {
   type Shape,
 } from "@/stores/seatingPlannerStore";
 import type { GuestListResponse } from "@/lib/admin/guestListService";
-import type { DbGuest } from "@/database/drizzle";
+import type { DbGuest } from "orm-shelf/types";
 import { clsx } from "clsx";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

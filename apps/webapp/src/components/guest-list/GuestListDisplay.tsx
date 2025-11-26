@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DbInvitationGroupWithGuests } from "@/database/drizzle";
 import { LayoutGrid, List, Search } from "lucide-react";
 import clsx from "clsx";
 import {
@@ -12,11 +11,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import {
+import type {
   GuestListDisplayProps,
   EditFormData,
   SortOption,
-} from "@/components/guest-list/guestList.types";
+  DbInvitationGroupWithGuests,
+} from "orm-shelf/types";
 import InvitationCard from "@/components/guest-list/InvitationCard";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Button } from "@/components/ui/button";

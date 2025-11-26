@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { InvitationCardProps } from "@/components/guest-list/guestList.types";
+import { InvitationCardProps } from "orm-shelf/types";
 import GuestFieldsView from "@/components/guest-list/GuestFieldsView";
 import GuestFieldsEdit from "@/components/guest-list/GuestFieldsEdit";
 

@@ -12,11 +12,7 @@ import { TableAssignmentModal } from "./TableAssignmentModal";
 import { NameDistributor } from "./NameDistributor";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import type {
-  DbSeatingTable,
-  DbSeatAssignment,
-  DbGuest,
-} from "@/database/drizzle";
+import type { DbSeatingTable, DbSeatAssignment } from "orm-shelf/types";
 
 interface DraggedCanvasItem {
   id: string;

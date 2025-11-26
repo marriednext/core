@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { fn, within, userEvent, waitFor } from "storybook/test";
 import InvitationCard from "@/components/guest-list/InvitationCard";
-import { DbInvitationGroupWithGuests, DbGuest } from "@/database/drizzle";
-import { EditFormData } from "@/components/guest-list/guestList.types";
+import type {
+  DbInvitationGroupWithGuests,
+  DbGuest,
+  EditFormData,
+} from "orm-shelf/types";
 
 const createMockEntry = (
   overrides?: Partial<DbInvitationGroupWithGuests> & Record<string, unknown>

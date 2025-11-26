@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import GuestListDisplay from "@/components/guest-list/GuestListDisplay";
-import {
+import type {
   GuestListData,
   UpdateGuestPayload,
   SortOption,
-} from "@/components/guest-list/guestList.types";
-import { DbInvitationGroupWithGuests } from "@/database/drizzle";
+  DbInvitationGroupWithGuests,
+} from "orm-shelf/types";
 import { useDebounce } from "@/hooks/useDebounce";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { AddGuestDialog } from "@/components/guest-list/AddGuestDialog";

@@ -3,7 +3,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import type { GuestListResponse } from "@/lib/admin/guestListService";
-import type { DbGuest } from "@/database/drizzle";
+import type { DbGuest } from "orm-shelf/types";
 import { clsx } from "clsx";
 
 const GUESTS_PER_PAGE = 25;

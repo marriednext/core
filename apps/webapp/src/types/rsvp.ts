@@ -1,4 +1,4 @@
-import { DbInvitationWithGuests } from "@/database/drizzle";
+import type { DbInvitationWithGuests } from "orm-shelf/types";
 
 export type RsvpNameFormat = "FIRST_NAME_ONLY" | "FULL_NAME";
 

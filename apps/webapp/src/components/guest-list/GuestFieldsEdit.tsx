@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
-import { GuestFieldsEditProps } from "@/components/guest-list/guestList.types";
+import type { GuestFieldsEditProps } from "orm-shelf/types";
 
 export default function GuestFieldsEdit({
   editForm,

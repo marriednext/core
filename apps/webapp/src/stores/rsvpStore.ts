@@ -5,7 +5,7 @@ import {
   GuestSelection,
   RsvpNameFormat,
 } from "@/types/rsvp";
-import { DbInvitationWithGuests } from "@/database/drizzle";
+import type { DbInvitationWithGuests } from "orm-shelf/types";
 
 interface RsvpStore extends RsvpFormState {
   setStep: (step: RsvpFormStep) => void;
