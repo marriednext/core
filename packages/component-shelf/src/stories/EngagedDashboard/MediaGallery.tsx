@@ -67,8 +67,7 @@ export function MediaGallery() {
             <img
               src={media.url || "/placeholder.svg"}
               alt={media.alt}
-              fill
-              className="object-cover transition-transform group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
           </div>

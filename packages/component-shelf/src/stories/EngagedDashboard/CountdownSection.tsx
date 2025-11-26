@@ -126,7 +126,7 @@ export function CountdownSection({
             { value: timeLeft.hours, label: "Hours" },
             { value: timeLeft.minutes, label: "Minutes" },
             { value: timeLeft.seconds, label: "Seconds" },
-          ].map((item, index) => (
+          ].map((item) => (
             <div key={item.label} className="flex flex-col items-center">
               <div className="bg-[#f5f3eb] rounded-2xl w-full py-5 md:py-6 border border-[#2c2c2c]/5">
                 <span className="font-serif text-3xl md:text-5xl text-[#745656]">

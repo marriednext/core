@@ -15,7 +15,6 @@ interface DomainStatusProps {
 export function DomainStatus({
   subdomain: initialSubdomain,
   customDomain,
-  isPremium,
 }: DomainStatusProps) {
   const [subdomain, setSubdomain] = useState(initialSubdomain);
   const [isEditing, setIsEditing] = useState(false);
