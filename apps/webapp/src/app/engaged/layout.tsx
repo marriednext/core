@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import NavBar from "@/components/NavBar";
-import "./admin-global.css";
 import "style-shelf/tailwind-hybrid";
 
 export const metadata: Metadata = {

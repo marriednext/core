@@ -1,6 +1,5 @@
 import { SignIn } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import "../engaged/admin-global.css";
 
 export const metadata: Metadata = {
   title: "Sign In - Married Next",

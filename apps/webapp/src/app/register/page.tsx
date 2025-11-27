@@ -1,6 +1,6 @@
 import { SignUp } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import "../engaged/admin-global.css";
+
 export const metadata: Metadata = {
   title: "Register - Married Next",
   description: "Create your account to start building your wedding website",

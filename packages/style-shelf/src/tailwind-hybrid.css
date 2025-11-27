@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@source "../../component-shelf/src/**/*.{js,ts,jsx,tsx}";
+@source "../../../apps/webapp/src/**/*.{js,ts,jsx,tsx}";
+
+@theme {
+  --font-size-8xl: 6rem;
+  --font-size-9xl: 8rem;
+}
+
 @import "./variables.css";
 @import "./mixins.css";
 
