@@ -1,0 +1,20 @@
+{
+  "name": "label-shelf",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./lisastheme": "./dist/lisastheme.json"
+  },
+  "scripts": {
+    "dev": "tsc && node .build/build.js --watch",
+    "build": "tsc && node .build/build.js"
+  },
+  "dependencies": {
+    "properties-file": "3.6.3"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

@@ -54,13 +54,22 @@ export function StickyNav() {
             className={cn(
               "relative text-base tracking-[0.2em] uppercase transition-colors duration-300",
               activeSection === item.href.slice(1)
-                ? "text-[#745656]"
-                : "text-[#2c2c2c]/70 hover:text-[#745656]"
+                ? isScrolled
+                  ? "text-[#745656]"
+                  : "text-white"
+                : isScrolled
+                  ? "text-[#2c2c2c]/70 hover:text-[#745656]"
+                  : "text-white/90 hover:text-white"
             )}
           >
             {item.label}
             {activeSection === item.href.slice(1) && (
-              <span className="absolute -bottom-1 left-0 right-0 h-px bg-[#745656]" />
+              <span
+                className={cn(
+                  "absolute -bottom-1 left-0 right-0 h-px",
+                  isScrolled ? "bg-[#745656]" : "bg-white"
+                )}
+              />
             )}
           </a>
         ))}

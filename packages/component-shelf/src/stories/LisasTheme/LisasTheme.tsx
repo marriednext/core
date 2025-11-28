@@ -2,6 +2,7 @@
 
 import "style-shelf/tailwind-hybrid";
 import type React from "react";
+import labels from "label-shelf/lisastheme";
 import { StickyNav } from "./StickyNav";
 import { HeroSection } from "./HeroSection";
 import { CountdownSection } from "./CountdownSection";
@@ -21,7 +22,7 @@ export interface LisasThemeTypes {
   fieldMapsShareUrl?: string | null;
   heroImageUrl?: string;
   heroImageComponent?: React.ReactNode;
-  rsvpFormComponent: React.ReactNode;
+  rsvpFormComponent?: React.ReactNode;
   ourStoryImageUrl?: string;
   ourStoryImageComponent?: React.ReactNode;
 }
@@ -36,7 +37,6 @@ export function LisasTheme({
   fieldMapsShareUrl,
   heroImageUrl,
   heroImageComponent,
-  rsvpFormComponent,
   ourStoryImageUrl,
   ourStoryImageComponent,
 }: LisasThemeTypes) {
@@ -66,7 +66,7 @@ export function LisasTheme({
         mapsShareUrl={fieldMapsShareUrl}
       />
       <GallerySection />
-      <RsvpSection rsvpFormComponent={rsvpFormComponent} />
+      <RsvpSection />
       <FooterSection
         nameA={fieldNameA}
         nameB={fieldNameB}

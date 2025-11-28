@@ -23,4 +23,3 @@ export const Primary: Story = {
     mapsShareUrl: "https://maps.app.goo.gl/LzKDwyJxmDePAbvb6",
   },
 };
-

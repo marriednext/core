@@ -1,0 +1,30 @@
+---
+alwaysApply: true
+---
+
+We design and build Wedding Website templates for engaged couples, and then host their website through our multi tenant web system.
+
+## Template Theme
+
+Timeless, "classic" theme.
+
+## Template Requirements
+
+These are required to make the website function properly and consistently with the rest of the themes.
+
+**Absolutely no cards in the design. EVER.**
+
+Must be mobile responsive (Using Container Queries)
+
+Must have the following sections:
+
+- Our Story
+- Details
+- Gallery
+- RSVP
+- FAQ
+- Registry (Link out to) (No icons)
+  - Crate and Barrel
+  - Amazon
+  - Williams Sonoma
+  - Honeymoon Fund

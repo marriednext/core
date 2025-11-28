@@ -3,15 +3,7 @@
 import { useSwipeable } from "react-swipeable";
 import { usePathname, useRouter } from "next/navigation";
 
-const navItems = [
-  "/",
-  "/our-story",
-  "/photos",
-  "/wedding-party",
-  "/q-and-a",
-  "/travel",
-  "/registry",
-];
+const navItems = ["/"];
 
 export default function Swipeable({
   children,

@@ -14,7 +14,7 @@ export function TenantLayoutContent({
   return (
     <WeddingDataProvider weddingData={initialData}>
       <Swipeable>
-        <div className="px-4 md:px-0 mx-auto">{children}</div>
+        <div className="w-full">{children}</div>
       </Swipeable>
     </WeddingDataProvider>
   );
