@@ -2,6 +2,7 @@
 
 import "style-shelf/tailwind-hybrid";
 import { useState, useEffect } from "react";
+import { differenceInSeconds } from "date-fns";
 
 interface TimeLeft {
   days: number;
@@ -29,14 +30,26 @@ export function CountdownSection({ eventDate }: CountdownSectionProps) {
 
     const calculateTimeLeft = () => {
       const now = new Date();
-      const difference = weddingDate.getTime() - now.getTime();
+      const totalSeconds = differenceInSeconds(weddingDate, now);
 
-      if (difference > 0) {
+      if (totalSeconds > 0) {
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
         setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
+          days,
+          hours,
+          minutes,
+          seconds,
+        });
+      } else {
+        setTimeLeft({
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
         });
       }
     };

@@ -48,6 +48,7 @@
     "@tailwindcss/vite": "4.1.17",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
+    "date-fns": "catalog:",
     "cmdk": "catalog:",
     "embla-carousel-react": "catalog:",
     "input-otp": "catalog:",

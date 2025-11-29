@@ -522,6 +522,9 @@ importers:
       cmdk:
         specifier: 'catalog:'
         version: 1.0.4(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.1.0
       embla-carousel-react:
         specifier: 'catalog:'
         version: 8.5.1(react@19.2.0)

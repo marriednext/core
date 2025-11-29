@@ -51,7 +51,9 @@ export function LisasTheme({
         imageUrl={heroImageUrl}
         imageComponent={heroImageComponent}
       />
-      <CountdownSection eventDate={fieldEventDate} />
+      <div suppressHydrationWarning>
+        <CountdownSection eventDate={fieldEventDate} />
+      </div>
       <OurStorySection
         nameA={fieldNameA}
         nameB={fieldNameB}
