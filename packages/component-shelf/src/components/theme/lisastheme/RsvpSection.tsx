@@ -4,8 +4,8 @@ import "style-shelf/tailwind-hybrid";
 import type React from "react";
 
 import { useState } from "react";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import { ArrowRight, Check } from "lucide-react";
 
 interface RsvpSectionProps {

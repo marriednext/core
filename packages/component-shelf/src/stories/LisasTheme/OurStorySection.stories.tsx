@@ -18,6 +18,7 @@ export const Primary: Story = {
   args: {
     nameA: "Yulissa",
     nameB: "Matthew",
+    imageUrl:
+      "https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/lisastheme/main-image",
   },
 };
-

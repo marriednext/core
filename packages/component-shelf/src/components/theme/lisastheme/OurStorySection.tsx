@@ -1,18 +1,53 @@
-import "style-shelf/tailwind-hybrid";
 import type React from "react";
+import "style-shelf/tailwind-hybrid";
+
+interface Milestone {
+  date: string;
+  title: string;
+  description: string;
+}
 
 interface OurStorySectionProps {
   nameA?: string | null;
   nameB?: string | null;
   imageUrl?: string;
   imageComponent?: React.ReactNode;
+  milestones?: Milestone[];
 }
+
+const defaultMilestones: Milestone[] = [
+  {
+    date: "June 2018",
+    title: "First Meeting",
+    description:
+      "A chance encounter at a mutual friend's gathering changed everything. We talked for hours and knew something special had begun.",
+  },
+  {
+    date: "December 2019",
+    title: "First Trip Together",
+    description:
+      "Our adventure to Big Sur solidified what we already knew—we were meant to explore life together.",
+  },
+  {
+    date: "August 2024",
+    title: "The Proposal",
+    description:
+      "Under the stars at Joshua Tree, Matthew asked the question that would change our lives forever.",
+  },
+  {
+    date: "April 2026",
+    title: "Forever Begins",
+    description:
+      "Surrounded by our loved ones, we'll say 'I do' and begin our greatest adventure yet.",
+  },
+];
 
 export function OurStorySection({
   nameA,
   nameB,
   imageUrl,
   imageComponent,
+  milestones = defaultMilestones,
 }: OurStorySectionProps) {
   const coupleName = nameA && nameB ? `${nameA} and ${nameB}` : "Us";
 
@@ -52,6 +87,41 @@ export function OurStorySection({
               different—something worth holding onto. We're ready to make it
               official, surrounded by the people who matter most to us.
             </p>
+          </div>
+        </div>
+
+        <div className="relative">
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-[#745656]/20 hidden md:block" />
+
+          <div className="space-y-16">
+            {milestones.map((milestone, index) => (
+              <div
+                key={milestone.title}
+                className={`relative grid md:grid-cols-2 gap-8 ${
+                  index % 2 === 0 ? "" : "md:direction-rtl"
+                }`}
+              >
+                <div
+                  className={`${
+                    index % 2 === 0
+                      ? "md:text-right md:pr-16"
+                      : "md:text-left md:pl-16 md:col-start-2"
+                  }`}
+                >
+                  <span className="text-[#745656] tracking-[0.2em] uppercase text-sm">
+                    {milestone.date}
+                  </span>
+                  <h3 className="font-serif text-3xl text-[#2c2c2c] mt-2 mb-3 font-light italic">
+                    {milestone.title}
+                  </h3>
+                  <p className="text-[#2c2c2c]/70 leading-relaxed">
+                    {milestone.description}
+                  </p>
+                </div>
+
+                <div className="absolute left-1/2 top-2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#745656] hidden md:block" />
+              </div>
+            ))}
           </div>
         </div>
       </div>
