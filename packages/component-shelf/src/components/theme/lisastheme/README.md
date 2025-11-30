@@ -20,7 +20,7 @@ lisastheme/
 └── StickyNav.tsx       # Fixed navigation bar
 ```
 
-## Prop Convention
+## Phase 1: Data & Customization Props
 
 Components separate **required database data** from **optional customizations**:
 
@@ -52,37 +52,53 @@ Labels and style tweaks. All have sensible defaults from `label-shelf`.
 />
 ```
 
+## Phase 2: Editable Labels
+
+Add inline editing for customization labels. Useful for building WYSIWYG editors.
+
+### Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `editable` | `boolean` | When `true`, labels show edit affordances |
+| `onCustomizationChange` | `(key, value) => void` | Callback when a label is edited |
+
+### Usage
+
+```tsx
+<HeroSection
+  data={{ nameA: "Lisa", nameB: "Matthew" }}
+  editable={true}
+  onCustomizationChange={(key, value) => {
+    console.log(`Changed ${key} to ${value}`);
+  }}
+/>
+```
+
+### Parent Orchestration
+
+`LisasTheme` passes editable props to all children with section prefixes:
+
+```tsx
+<LisasTheme
+  fieldNameA="Lisa"
+  fieldNameB="Matthew"
+  editable={true}
+  onCustomizationChange={(section, key, value) => {
+    console.log(`${section}.${key} = ${value}`);
+  }}
+/>
+```
+
 ## Type Interfaces
 
 Each component with database data has three interfaces in `types.ts`:
 
-| Interface        | Purpose                        | JSDoc Tag       |
-| ---------------- | ------------------------------ | --------------- |
-| `*Data`          | Database-required fields       | `@database`     |
+| Interface | Purpose | JSDoc Tag |
+|-----------|---------|-----------|
+| `*Data` | Database-required fields | `@database` |
 | `*Customization` | Optional label/style overrides | `@customizable` |
-| `*Props`         | Combined props interface       | -               |
-
-Example:
-
-```typescript
-/** @database */
-export interface HeroSectionData {
-  nameA: string | null;
-  nameB: string | null;
-  eventDate?: string | null;
-  location?: string | null;
-}
-
-/** @customizable */
-export interface HeroSectionCustomization {
-  subtitleLabel?: string;
-}
-
-export interface HeroSectionProps {
-  data: HeroSectionData;
-  customization?: HeroSectionCustomization;
-}
-```
+| `*Props` | Combined props interface | - |
 
 ## Components Without Database Data
 
@@ -104,6 +120,6 @@ All label defaults come from `label-shelf/lisastheme`. To customize:
 
 1. Create `*Data` interface in `types.ts` (if DB data needed)
 2. Create `*Customization` interface with label fields
-3. Create `*Props` combining both
-4. Build component with `data` and `customization` destructuring
-5. Add to `LisasTheme.tsx` with data passed from parent props
+3. Create `*Props` with `editable` and `onCustomizationChange`
+4. Build component with `EditableLabel` wrapping customization labels
+5. Add to `LisasTheme.tsx` with data and editable props passed from parent

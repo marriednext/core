@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { differenceInSeconds } from "date-fns";
 import labels from "label-shelf/lisastheme";
 import type { CountdownSectionProps, TimeLeft } from "./types";
+import { EditableLabel } from "../../ui/editable-label";
 
 export function CountdownSection({
   data,
@@ -15,6 +16,8 @@ export function CountdownSection({
     minutesLabel: labels["lisastheme.countdown.minutes.label"],
     secondsLabel: labels["lisastheme.countdown.seconds.label"],
   },
+  editable = false,
+  onCustomizationChange,
 }: CountdownSectionProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
@@ -59,30 +62,62 @@ export function CountdownSection({
     return () => clearInterval(timer);
   }, [data.eventDate]);
 
+  const handleChange = (key: keyof typeof customization, value: string) => {
+    onCustomizationChange?.(key, value);
+  };
+
   const timeUnits = [
-    { value: timeLeft.days, label: customization.daysLabel },
-    { value: timeLeft.hours, label: customization.hoursLabel },
-    { value: timeLeft.minutes, label: customization.minutesLabel },
-    { value: timeLeft.seconds, label: customization.secondsLabel },
+    {
+      value: timeLeft.days,
+      label: customization.daysLabel,
+      key: "daysLabel" as const,
+    },
+    {
+      value: timeLeft.hours,
+      label: customization.hoursLabel,
+      key: "hoursLabel" as const,
+    },
+    {
+      value: timeLeft.minutes,
+      label: customization.minutesLabel,
+      key: "minutesLabel" as const,
+    },
+    {
+      value: timeLeft.seconds,
+      label: customization.secondsLabel,
+      key: "secondsLabel" as const,
+    },
   ];
 
   return (
     <section className="py-32 bg-[#faf9f6]">
       <div className="max-w-5xl mx-auto px-6 text-center">
-        <p className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4">
-          {customization.pretextLabel}
-        </p>
+        {customization.pretextLabel && (
+          <EditableLabel
+            as="p"
+            value={customization.pretextLabel}
+            editable={editable}
+            onChange={(v) => handleChange("pretextLabel", v)}
+            className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4"
+          />
+        )}
 
         <div className="flex items-center justify-center gap-8 md:gap-16 mt-12">
           {timeUnits.map((unit, index) => (
-            <div key={unit.label} className="flex items-center gap-8 md:gap-16">
+            <div key={unit.key} className="flex items-center gap-8 md:gap-16">
               <div className="text-center">
                 <span className="block font-serif text-6xl md:text-8xl text-[#2c2c2c] font-light">
                   {String(unit.value).padStart(2, "0")}
                 </span>
-                <span className="block mt-3 text-[#745656]/70 tracking-[0.3em] uppercase text-xs">
-                  {unit.label}
-                </span>
+                {unit.label && (
+                  <EditableLabel
+                    as="span"
+                    value={unit.label}
+                    editable={editable}
+                    onChange={(v) => handleChange(unit.key, v)}
+                    className="block mt-3 text-[#745656]/70 tracking-[0.3em] uppercase text-xs"
+                  />
+                )}
               </div>
               {index < timeUnits.length - 1 && (
                 <span className="text-[#745656]/30 text-4xl md:text-5xl font-light hidden md:block">

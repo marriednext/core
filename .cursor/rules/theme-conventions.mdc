@@ -9,7 +9,7 @@ alwaysApply: false
 
 Wedding website themes use a strict prop convention to separate database-required data from optional customizations.
 
-## Prop Structure
+## Phase 1: Data & Customization Props
 
 Components that receive database data use two prop categories:
 
@@ -39,10 +39,49 @@ export interface HeroSectionCustomization {
 
 ```typescript
 export interface HeroSectionProps {
-  /** Required data from the database */
   data: HeroSectionData;
-  /** Optional label/style customizations */
   customization?: HeroSectionCustomization;
+}
+```
+
+## Phase 2: Editable Labels
+
+Add inline editing support for customization labels via `editable` and `onCustomizationChange` props.
+
+### Props Interface
+
+```typescript
+export interface HeroSectionProps {
+  data: HeroSectionData;
+  customization?: HeroSectionCustomization;
+  editable?: boolean;
+  onCustomizationChange?: (key: keyof HeroSectionCustomization, value: string) => void;
+}
+```
+
+### Component Implementation
+
+```tsx
+import { EditableLabel } from "../../ui/editable-label";
+
+export function HeroSection({
+  data,
+  customization = { subtitleLabel: labels["lisastheme.hero.pretext.label"] },
+  editable = false,
+  onCustomizationChange,
+}: HeroSectionProps) {
+  const handleChange = (key: keyof typeof customization, value: string) => {
+    onCustomizationChange?.(key, value);
+  };
+
+  return (
+    <EditableLabel
+      as="p"
+      value={customization.subtitleLabel}
+      editable={editable}
+      onChange={(v) => handleChange("subtitleLabel", v)}
+    />
+  );
 }
 ```
 
@@ -50,24 +89,7 @@ export interface HeroSectionProps {
 
 - `*Data` - Database-required fields (e.g., `HeroSectionData`)
 - `*Customization` - Optional label/style overrides (e.g., `HeroSectionCustomization`)
-- `*Props` - Combined interface with `data` and `customization` (e.g., `HeroSectionProps`)
-
-## Component Implementation
-
-```tsx
-export function HeroSection({
-  data,
-  customization = {
-    subtitleLabel: labels["lisastheme.hero.pretext.label"],
-  },
-}: HeroSectionProps) {
-  // Access database values via data.*
-  const formattedDate = formatDate(data.eventDate);
-
-  // Access customizations via customization.*
-  return <p>{customization.subtitleLabel}</p>;
-}
-```
+- `*Props` - Combined interface with `data`, `customization`, and editable props
 
 ## Components Without Database Data
 
@@ -77,6 +99,6 @@ Some components have no required database fields (e.g., `StickyNav`, `RegistrySe
 
 1. Define `*Data` interface in `types.ts` with `@database` JSDoc tag (if component needs DB data)
 2. Define `*Customization` interface with `@customizable` JSDoc tag
-3. Define `*Props` interface combining both with JSDoc comments
-4. Implement component destructuring `data` and `customization` with defaults
+3. Define `*Props` interface with `data`, `customization`, `editable`, and `onCustomizationChange`
+4. Implement component with `EditableLabel` wrapping customization labels
 5. Wire up in parent theme component (e.g., `LisasTheme.tsx`)

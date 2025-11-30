@@ -9,6 +9,7 @@ import type {
   FaqSectionCustomization,
   FaqSectionProps,
 } from "./types";
+import { EditableLabel } from "../../ui/editable-label";
 
 const defaultFaqItems: FaqItem[] = [
   {
@@ -56,20 +57,38 @@ const defaultFaqCustomization: FaqSectionCustomization = {
 export function FaqSection({
   data,
   customization = defaultFaqCustomization,
+  editable = false,
+  onCustomizationChange,
 }: FaqSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const faqItems = data.faqs ?? defaultFaqItems;
+
+  const handleChange = (key: keyof FaqSectionCustomization, value: string) => {
+    onCustomizationChange?.(key, value);
+  };
 
   return (
     <section id="faq" className="py-32 px-6 bg-[#faf9f6]">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-20">
-          <p className="text-sm tracking-[0.3em] uppercase text-[#745656] mb-4">
-            {customization.pretitleLabel}
-          </p>
-          <h2 className="font-serif text-5xl md:text-6xl text-[#2c2c2c] mb-6">
-            {customization.titleLabel}
-          </h2>
+          {customization.pretitleLabel && (
+            <EditableLabel
+              as="p"
+              value={customization.pretitleLabel}
+              editable={editable}
+              onChange={(v) => handleChange("pretitleLabel", v)}
+              className="text-sm tracking-[0.3em] uppercase text-[#745656] mb-4"
+            />
+          )}
+          {customization.titleLabel && (
+            <EditableLabel
+              as="h2"
+              value={customization.titleLabel}
+              editable={editable}
+              onChange={(v) => handleChange("titleLabel", v)}
+              className="font-serif text-5xl md:text-6xl text-[#2c2c2c] mb-6"
+            />
+          )}
           <div className="w-24 h-px bg-[#745656]/30 mx-auto" />
         </div>
 
@@ -107,15 +126,28 @@ export function FaqSection({
         </div>
 
         <div className="mt-16 pt-12 border-t border-[#745656]/20 text-center">
-          <p className="text-lg text-[#2c2c2c]/70 mb-4">
-            {customization.noteLabel}
-          </p>
-          <a
-            href={customization.noteLinkHref}
-            className="inline-flex items-center gap-2 text-[#745656] text-lg hover:underline underline-offset-4 transition-all"
-          >
-            {customization.noteLinkLabel}
-          </a>
+          {customization.noteLabel && (
+            <EditableLabel
+              as="p"
+              value={customization.noteLabel}
+              editable={editable}
+              onChange={(v) => handleChange("noteLabel", v)}
+              className="text-lg text-[#2c2c2c]/70 mb-4"
+            />
+          )}
+          {customization.noteLinkLabel && (
+            <a
+              href={customization.noteLinkHref}
+              className="inline-flex items-center gap-2 text-[#745656] text-lg hover:underline underline-offset-4 transition-all"
+            >
+              <EditableLabel
+                as="span"
+                value={customization.noteLinkLabel}
+                editable={editable}
+                onChange={(v) => handleChange("noteLinkLabel", v)}
+              />
+            </a>
+          )}
         </div>
       </div>
     </section>

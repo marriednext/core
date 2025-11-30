@@ -2,6 +2,8 @@ import "style-shelf/tailwind-hybrid";
 import { MapPin, Clock, Sparkles } from "lucide-react";
 import labels from "label-shelf/lisastheme";
 import type { EventDetailsSectionProps } from "./types";
+import clsx from "clsx";
+import { EditableLabel } from "../../ui/editable-label";
 
 export function EventDetailsSection({
   data,
@@ -23,23 +25,37 @@ export function EventDetailsSection({
     dressCodeValueLabel: labels["lisastheme.details.dresscode.title.label"],
     dressCodeNoteLabel: labels["lisastheme.details.dresscode.text.label"],
   },
+  editable = false,
+  onCustomizationChange,
 }: EventDetailsSectionProps) {
-  const formattedTime = data.eventTime;
-  const addressLines = data.locationAddress?.split("\n") || [];
+  const formattedTime = data?.eventTime || "4:00 PM";
+  const addressLines = data?.locationAddress?.split("\n") || [];
+
+  const handleChange = (key: keyof typeof customization, value: string) => {
+    onCustomizationChange?.(key, value);
+  };
 
   return (
     <section id="details" className="py-32 bg-[#faf9f6]">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-20">
           {customization?.headingPretextLabel && (
-            <p className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4">
-              {customization.headingPretextLabel}
-            </p>
+            <EditableLabel
+              as="p"
+              value={customization.headingPretextLabel}
+              editable={editable}
+              onChange={(v) => handleChange("headingPretextLabel", v)}
+              className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4"
+            />
           )}
           {customization?.headingLabel && (
-            <h2 className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic">
-              {customization.headingLabel}
-            </h2>
+            <EditableLabel
+              as="h2"
+              value={customization.headingLabel}
+              editable={editable}
+              onChange={(v) => handleChange("headingLabel", v)}
+              className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic"
+            />
           )}
         </div>
 
@@ -50,14 +66,22 @@ export function EventDetailsSection({
                 <Sparkles className="w-6 h-6 text-[#745656]" />
               </div>
               {customization?.ceremonyHeadingLabel && (
-                <h3 className="font-serif text-2xl text-[#2c2c2c] mb-4 italic">
-                  {customization.ceremonyHeadingLabel}
-                </h3>
+                <EditableLabel
+                  as="h3"
+                  value={customization.ceremonyHeadingLabel}
+                  editable={editable}
+                  onChange={(v) => handleChange("ceremonyHeadingLabel", v)}
+                  className="font-serif text-2xl text-[#2c2c2c] mb-4 italic"
+                />
               )}
               {customization?.ceremonyDescriptionLabel && (
-                <p className="text-[#2c2c2c]/70 mb-6 leading-relaxed">
-                  {customization.ceremonyDescriptionLabel}
-                </p>
+                <EditableLabel
+                  as="p"
+                  value={customization.ceremonyDescriptionLabel}
+                  editable={editable}
+                  onChange={(v) => handleChange("ceremonyDescriptionLabel", v)}
+                  className="text-[#2c2c2c]/70 mb-6 leading-relaxed"
+                />
               )}
               <div className="space-y-2 text-[#2c2c2c]/80">
                 <p className="flex items-center justify-center gap-2">
@@ -68,24 +92,28 @@ export function EventDetailsSection({
             </div>
           )}
 
-          {data.locationName && (
+          {data?.locationName && (
             <div
-              className={`text-center ${
-                formattedTime
-                  ? "border-x-0 md:border-x border-[#745656]/10 px-0 md:px-8"
-                  : ""
-              }`}
+              className={clsx(
+                "text-center",
+                formattedTime &&
+                  "border-x-0 md:border-x border-[#745656]/10 px-0 md:px-8"
+              )}
             >
               <div className="inline-flex items-center justify-center w-16 h-16 border border-[#745656]/30 rounded-full mb-6">
                 <MapPin className="w-6 h-6 text-[#745656]" />
               </div>
               {customization?.venueHeadingLabel && (
-                <h3 className="font-serif text-2xl text-[#2c2c2c] mb-4 italic">
-                  {customization.venueHeadingLabel}
-                </h3>
+                <EditableLabel
+                  as="h3"
+                  value={customization.venueHeadingLabel}
+                  editable={editable}
+                  onChange={(v) => handleChange("venueHeadingLabel", v)}
+                  className="font-serif text-2xl text-[#2c2c2c] mb-4 italic"
+                />
               )}
               <p className="text-[#2c2c2c]/70 mb-6 leading-relaxed">
-                {data.locationName}
+                {data?.locationName}
               </p>
               {addressLines.length > 0 && (
                 <address className="not-italic text-[#2c2c2c]/80 space-y-1">
@@ -94,9 +122,9 @@ export function EventDetailsSection({
                   ))}
                 </address>
               )}
-              {data.mapsShareUrl && customization?.viewMapLabel && (
+              {data?.mapsShareUrl && customization?.viewMapLabel && (
                 <a
-                  href={data.mapsShareUrl}
+                  href={data?.mapsShareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block mt-4 text-[#745656] text-sm tracking-[0.2em] uppercase border-b border-[#745656]/30 pb-1 hover:border-[#745656] transition-colors"
@@ -112,20 +140,32 @@ export function EventDetailsSection({
               <span className="text-[#745656] text-xl">✦</span>
             </div>
             {customization?.celebrationHeadingLabel && (
-              <h3 className="font-serif text-2xl text-[#2c2c2c] mb-4 italic">
-                {customization.celebrationHeadingLabel}
-              </h3>
+              <EditableLabel
+                as="h3"
+                value={customization.celebrationHeadingLabel}
+                editable={editable}
+                onChange={(v) => handleChange("celebrationHeadingLabel", v)}
+                className="font-serif text-2xl text-[#2c2c2c] mb-4 italic"
+              />
             )}
             {customization?.celebrationDescriptionLabel && (
-              <p className="text-[#2c2c2c]/70 mb-6 leading-relaxed">
-                {customization.celebrationDescriptionLabel}
-              </p>
+              <EditableLabel
+                as="p"
+                value={customization.celebrationDescriptionLabel}
+                editable={editable}
+                onChange={(v) => handleChange("celebrationDescriptionLabel", v)}
+                className="text-[#2c2c2c]/70 mb-6 leading-relaxed"
+              />
             )}
             {customization?.celebrationAttireLabel && (
               <div className="space-y-2 text-[#2c2c2c]/80">
-                <p className="text-sm">
-                  {customization.celebrationAttireLabel}
-                </p>
+                <EditableLabel
+                  as="p"
+                  value={customization.celebrationAttireLabel}
+                  editable={editable}
+                  onChange={(v) => handleChange("celebrationAttireLabel", v)}
+                  className="text-sm"
+                />
               </div>
             )}
           </div>
@@ -136,19 +176,31 @@ export function EventDetailsSection({
           customization?.dressCodeNoteLabel) && (
           <div className="mt-20 pt-12 border-t border-[#745656]/10 text-center">
             {customization?.dressCodeSectionLabel && (
-              <p className="text-[#745656] tracking-[0.3em] uppercase text-sm mb-3">
-                {customization.dressCodeSectionLabel}
-              </p>
+              <EditableLabel
+                as="p"
+                value={customization.dressCodeSectionLabel}
+                editable={editable}
+                onChange={(v) => handleChange("dressCodeSectionLabel", v)}
+                className="text-[#745656] tracking-[0.3em] uppercase text-sm mb-3"
+              />
             )}
             {customization?.dressCodeValueLabel && (
-              <p className="font-serif text-2xl text-[#2c2c2c] italic">
-                {customization.dressCodeValueLabel}
-              </p>
+              <EditableLabel
+                as="p"
+                value={customization.dressCodeValueLabel}
+                editable={editable}
+                onChange={(v) => handleChange("dressCodeValueLabel", v)}
+                className="font-serif text-2xl text-[#2c2c2c] italic"
+              />
             )}
             {customization?.dressCodeNoteLabel && (
-              <p className="text-[#2c2c2c]/60 mt-3 max-w-lg mx-auto">
-                {customization.dressCodeNoteLabel}
-              </p>
+              <EditableLabel
+                as="p"
+                value={customization.dressCodeNoteLabel}
+                editable={editable}
+                onChange={(v) => handleChange("dressCodeNoteLabel", v)}
+                className="text-[#2c2c2c]/60 mt-3 max-w-lg mx-auto"
+              />
             )}
           </div>
         )}

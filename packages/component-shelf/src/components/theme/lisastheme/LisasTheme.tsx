@@ -25,10 +25,19 @@ export function LisasTheme({
   rsvpFormComponent,
   ourStoryImageUrl,
   ourStoryImageComponent,
+  editable = false,
+  onCustomizationChange,
 }: LisasThemeTypes) {
+  const handleSectionChange = (section: string) => (key: string, value: string) => {
+    onCustomizationChange?.(section, key, value);
+  };
+
   return (
     <div className="min-h-screen">
-      <StickyNav />
+      <StickyNav
+        editable={editable}
+        onCustomizationChange={handleSectionChange("stickyNav")}
+      />
       <HeroSection
         data={{
           nameA: fieldNameA,
@@ -38,9 +47,15 @@ export function LisasTheme({
           imageUrl: heroImageUrl,
           imageComponent: heroImageComponent,
         }}
+        editable={editable}
+        onCustomizationChange={handleSectionChange("hero")}
       />
       <div suppressHydrationWarning>
-        <CountdownSection data={{ eventDate: fieldEventDate }} />
+        <CountdownSection
+          data={{ eventDate: fieldEventDate }}
+          editable={editable}
+          onCustomizationChange={handleSectionChange("countdown")}
+        />
       </div>
       <OurStorySection
         data={{
@@ -49,6 +64,8 @@ export function LisasTheme({
           imageUrl: ourStoryImageUrl,
           imageComponent: ourStoryImageComponent,
         }}
+        editable={editable}
+        onCustomizationChange={handleSectionChange("ourStory")}
       />
       <EventDetailsSection
         data={{
@@ -58,10 +75,24 @@ export function LisasTheme({
           eventTime: fieldEventTime,
           mapsShareUrl: fieldMapsShareUrl,
         }}
+        editable={editable}
+        onCustomizationChange={handleSectionChange("eventDetails")}
       />
-      <GallerySection data={{}} />
-      <FaqSection data={{}} />
-      <RsvpSection data={{ rsvpFormComponent }} />
+      <GallerySection
+        data={{}}
+        editable={editable}
+        onCustomizationChange={handleSectionChange("gallery")}
+      />
+      <FaqSection
+        data={{}}
+        editable={editable}
+        onCustomizationChange={handleSectionChange("faq")}
+      />
+      <RsvpSection
+        data={{ rsvpFormComponent }}
+        editable={editable}
+        onCustomizationChange={handleSectionChange("rsvp")}
+      />
       <FooterSection
         data={{
           nameA: fieldNameA,
@@ -69,6 +100,8 @@ export function LisasTheme({
           eventDate: fieldEventDate,
           location: fieldLocationName,
         }}
+        editable={editable}
+        onCustomizationChange={handleSectionChange("footer")}
       />
     </div>
   );

@@ -17,6 +17,12 @@ export interface LisasThemeTypes {
   rsvpFormComponent?: ReactNode;
   ourStoryImageUrl?: string;
   ourStoryImageComponent?: ReactNode;
+  editable?: boolean;
+  onCustomizationChange?: (
+    section: string,
+    key: string,
+    value: string
+  ) => void;
 }
 
 /**
@@ -41,10 +47,13 @@ export interface HeroSectionData {
 }
 
 export interface HeroSectionProps {
-  /** Required data from the database */
   data: HeroSectionData;
-  /** Optional label/style customizations */
   customization?: HeroSectionCustomization;
+  editable?: boolean;
+  onCustomizationChange?: (
+    key: keyof HeroSectionCustomization,
+    value: string
+  ) => void;
 }
 
 /**
@@ -63,6 +72,11 @@ export interface StickyNavCustomization {
 
 export interface StickyNavProps {
   customization?: StickyNavCustomization;
+  editable?: boolean;
+  onCustomizationChange?: (
+    key: keyof NonNullable<StickyNavCustomization["navLabels"]>,
+    value: string
+  ) => void;
 }
 
 /**
@@ -92,10 +106,13 @@ export interface RsvpSectionData {
 }
 
 export interface RsvpSectionProps {
-  /** Required data from the database */
   data?: RsvpSectionData;
-  /** Optional label/style customizations */
   customization?: RsvpSectionCustomization;
+  editable?: boolean;
+  onCustomizationChange?: (
+    key: keyof RsvpSectionCustomization,
+    value: string
+  ) => void;
 }
 
 /**
@@ -119,10 +136,13 @@ export interface FooterSectionData {
 }
 
 export interface FooterSectionProps {
-  /** Required data from the database */
   data: FooterSectionData;
-  /** Optional label/style customizations */
   customization?: FooterSectionCustomization;
+  editable?: boolean;
+  onCustomizationChange?: (
+    key: keyof FooterSectionCustomization,
+    value: string
+  ) => void;
 }
 
 export interface FaqItem {
@@ -151,10 +171,13 @@ export interface FaqSectionData {
 }
 
 export interface FaqSectionProps {
-  /** Required data from the database */
   data: FaqSectionData;
-  /** Optional label/style customizations */
   customization?: FaqSectionCustomization;
+  editable?: boolean;
+  onCustomizationChange?: (
+    key: keyof FaqSectionCustomization,
+    value: string
+  ) => void;
 }
 
 export interface Milestone {
@@ -187,10 +210,13 @@ export interface OurStorySectionData {
 }
 
 export interface OurStorySectionProps {
-  /** Required data from the database */
   data: OurStorySectionData;
-  /** Optional label/style customizations */
   customization?: OurStorySectionCustomization;
+  editable?: boolean;
+  onCustomizationChange?: (
+    key: keyof OurStorySectionCustomization,
+    value: string
+  ) => void;
 }
 
 export interface TimeLeft {
@@ -221,10 +247,13 @@ export interface CountdownSectionData {
 }
 
 export interface CountdownSectionProps {
-  /** Required data from the database */
   data: CountdownSectionData;
-  /** Optional label/style customizations */
   customization?: CountdownSectionCustomization;
+  editable?: boolean;
+  onCustomizationChange?: (
+    key: keyof CountdownSectionCustomization,
+    value: string
+  ) => void;
 }
 
 export interface RegistryEntry {
@@ -248,6 +277,11 @@ export interface RegistrySectionCustomization {
 
 export interface RegistrySectionProps {
   customization?: RegistrySectionCustomization;
+  editable?: boolean;
+  onCustomizationChange?: (
+    key: keyof RegistrySectionCustomization,
+    value: string
+  ) => void;
 }
 
 export interface GalleryImage {
@@ -274,10 +308,13 @@ export interface GallerySectionData {
 }
 
 export interface GallerySectionProps {
-  /** Required data from the database */
   data: GallerySectionData;
-  /** Optional label/style customizations */
   customization?: GallerySectionCustomization;
+  editable?: boolean;
+  onCustomizationChange?: (
+    key: keyof GallerySectionCustomization,
+    value: string
+  ) => void;
 }
 
 /**
@@ -312,8 +349,11 @@ export interface EventDetailsSectionData {
 }
 
 export interface EventDetailsSectionProps {
-  /** Required data from the database */
   data: EventDetailsSectionData;
-  /** Optional label/style customizations */
   customization?: EventDetailsSectionCustomization;
+  editable?: boolean;
+  onCustomizationChange?: (
+    key: keyof EventDetailsSectionCustomization,
+    value: string
+  ) => void;
 }

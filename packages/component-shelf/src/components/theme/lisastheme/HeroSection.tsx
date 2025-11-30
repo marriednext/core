@@ -4,6 +4,7 @@ import "style-shelf/tailwind-hybrid";
 import { useEffect, useState } from "react";
 import type { HeroSectionProps } from "./types";
 import labels from "label-shelf/lisastheme";
+import { EditableLabel } from "../../ui/editable-label";
 
 function formatDate(dateString: string | null | undefined): string {
   if (!dateString) return "";
@@ -20,6 +21,8 @@ export function HeroSection({
   customization = {
     subtitleLabel: labels["lisastheme.hero.pretext.label"],
   },
+  editable = false,
+  onCustomizationChange,
 }: HeroSectionProps) {
   const [mounted, setMounted] = useState(false);
 
@@ -29,6 +32,10 @@ export function HeroSection({
   }, []);
 
   const formattedDate = formatDate(data.eventDate);
+
+  const handleChange = (key: keyof typeof customization, value: string) => {
+    onCustomizationChange?.(key, value);
+  };
 
   return (
     <section
@@ -59,9 +66,13 @@ export function HeroSection({
         }`}
       >
         {customization.subtitleLabel && (
-          <p className="text-white/90 tracking-[0.4em] uppercase text-sm mb-6">
-            {customization.subtitleLabel}
-          </p>
+          <EditableLabel
+            as="p"
+            value={customization.subtitleLabel}
+            editable={editable}
+            onChange={(v) => handleChange("subtitleLabel", v)}
+            className="text-white/90 tracking-[0.4em] uppercase text-sm mb-6"
+          />
         )}
 
         <h1 className="font-serif text-white">

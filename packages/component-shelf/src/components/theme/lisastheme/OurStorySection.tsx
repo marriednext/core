@@ -5,6 +5,7 @@ import type {
   OurStorySectionCustomization,
   OurStorySectionProps,
 } from "./types";
+import { EditableLabel } from "../../ui/editable-label";
 
 const defaultMilestones: Milestone[] = [
   {
@@ -43,21 +44,39 @@ const defaultOurStoryCustomization: OurStorySectionCustomization = {
 export function OurStorySection({
   data,
   customization = defaultOurStoryCustomization,
+  editable = false,
+  onCustomizationChange,
 }: OurStorySectionProps) {
   const coupleName =
     data.nameA && data.nameB ? `${data.nameA} and ${data.nameB}` : "Us";
   const milestones = data.milestones ?? defaultMilestones;
 
+  const handleChange = (key: keyof OurStorySectionCustomization, value: string) => {
+    onCustomizationChange?.(key, value);
+  };
+
   return (
     <section id="story" className="py-32 bg-[#f5f3eb]">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-20">
-          <p className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4">
-            {customization.pretitleLabel}
-          </p>
-          <h2 className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic">
-            {customization.titleLabel}
-          </h2>
+          {customization.pretitleLabel && (
+            <EditableLabel
+              as="p"
+              value={customization.pretitleLabel}
+              editable={editable}
+              onChange={(v) => handleChange("pretitleLabel", v)}
+              className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4"
+            />
+          )}
+          {customization.titleLabel && (
+            <EditableLabel
+              as="h2"
+              value={customization.titleLabel}
+              editable={editable}
+              onChange={(v) => handleChange("titleLabel", v)}
+              className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic"
+            />
+          )}
         </div>
 
         <div className="grid md:grid-cols-2 gap-16 items-center mb-24">
@@ -74,12 +93,24 @@ export function OurStorySection({
             )}
           </div>
           <div className="space-y-8">
-            <p className="text-xl md:text-2xl text-[#2c2c2c]/80 font-light leading-relaxed">
-              {customization.sectionTextLabel}
-            </p>
-            <p className="text-lg text-[#2c2c2c]/70 leading-relaxed">
-              {customization.sectionSubtextLabel}
-            </p>
+            {customization.sectionTextLabel && (
+              <EditableLabel
+                as="p"
+                value={customization.sectionTextLabel}
+                editable={editable}
+                onChange={(v) => handleChange("sectionTextLabel", v)}
+                className="text-xl md:text-2xl text-[#2c2c2c]/80 font-light leading-relaxed"
+              />
+            )}
+            {customization.sectionSubtextLabel && (
+              <EditableLabel
+                as="p"
+                value={customization.sectionSubtextLabel}
+                editable={editable}
+                onChange={(v) => handleChange("sectionSubtextLabel", v)}
+                className="text-lg text-[#2c2c2c]/70 leading-relaxed"
+              />
+            )}
           </div>
         </div>
 

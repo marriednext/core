@@ -7,6 +7,7 @@ import type {
   RegistrySectionCustomization,
   RegistrySectionProps,
 } from "./types";
+import { EditableLabel } from "../../ui/editable-label";
 
 const defaultRegistryEntries: RegistryEntry[] = [
   {
@@ -42,22 +43,46 @@ const defaultRegistryCustomization: RegistrySectionCustomization = {
 
 export function RegistrySection({
   customization = defaultRegistryCustomization,
+  editable = false,
+  onCustomizationChange,
 }: RegistrySectionProps) {
   const registries = customization.registries ?? [];
+
+  const handleChange = (key: keyof RegistrySectionCustomization, value: string) => {
+    onCustomizationChange?.(key, value);
+  };
 
   return (
     <section id="registry" className="py-32 px-6 bg-[#faf9f6]">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-20">
-          <p className="text-base tracking-[0.3em] uppercase text-[#745656] mb-4">
-            {customization.pretitleLabel}
-          </p>
-          <h2 className="font-serif text-5xl md:text-6xl text-[#2c2c2c] mb-6">
-            {customization.titleLabel}
-          </h2>
-          <p className="text-xl text-[#2c2c2c]/70 max-w-2xl mx-auto leading-relaxed">
-            {customization.descriptionLabel}
-          </p>
+          {customization.pretitleLabel && (
+            <EditableLabel
+              as="p"
+              value={customization.pretitleLabel}
+              editable={editable}
+              onChange={(v) => handleChange("pretitleLabel", v)}
+              className="text-base tracking-[0.3em] uppercase text-[#745656] mb-4"
+            />
+          )}
+          {customization.titleLabel && (
+            <EditableLabel
+              as="h2"
+              value={customization.titleLabel}
+              editable={editable}
+              onChange={(v) => handleChange("titleLabel", v)}
+              className="font-serif text-5xl md:text-6xl text-[#2c2c2c] mb-6"
+            />
+          )}
+          {customization.descriptionLabel && (
+            <EditableLabel
+              as="p"
+              value={customization.descriptionLabel}
+              editable={editable}
+              onChange={(v) => handleChange("descriptionLabel", v)}
+              className="text-xl text-[#2c2c2c]/70 max-w-2xl mx-auto leading-relaxed"
+            />
+          )}
         </div>
 
         <div className="border-t border-[#2c2c2c]/10">
@@ -87,9 +112,15 @@ export function RegistrySection({
           ))}
         </div>
 
-        <p className="text-center text-lg text-[#2c2c2c]/50 mt-12 italic">
-          {customization.noteLabel}
-        </p>
+        {customization.noteLabel && (
+          <EditableLabel
+            as="p"
+            value={customization.noteLabel}
+            editable={editable}
+            onChange={(v) => handleChange("noteLabel", v)}
+            className="text-center text-lg text-[#2c2c2c]/50 mt-12 italic"
+          />
+        )}
       </div>
     </section>
   );

@@ -2,11 +2,16 @@
 
 import "style-shelf/tailwind-hybrid";
 import { useState, useEffect, useMemo } from "react";
-import type { StickyNavProps } from "./types";
+import type { StickyNavCustomization, StickyNavProps } from "./types";
 import { cn } from "../../../lib/utils";
 import labels from "label-shelf/lisastheme";
+import { EditableLabel } from "../../ui/editable-label";
 
-export function StickyNav({ customization = {} }: StickyNavProps) {
+export function StickyNav({
+  customization = {},
+  editable = false,
+  onCustomizationChange,
+}: StickyNavProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
@@ -18,13 +23,18 @@ export function StickyNav({ customization = {} }: StickyNavProps) {
     rsvp: labels["lisastheme.nav.rsvp.label"],
     ...customization.navLabels,
   };
+
+  const handleChange = (key: keyof NonNullable<StickyNavCustomization["navLabels"]>, value: string) => {
+    onCustomizationChange?.(key, value);
+  };
+
   const navItems = useMemo(
     () => [
-      { label: navLabels.home, href: "#home" },
-      { label: navLabels.story, href: "#story" },
-      { label: navLabels.details, href: "#details" },
-      { label: navLabels.gallery, href: "#gallery" },
-      { label: navLabels.rsvp, href: "#rsvp" },
+      { label: navLabels.home, href: "#home", key: "home" as const },
+      { label: navLabels.story, href: "#story", key: "story" as const },
+      { label: navLabels.details, href: "#details", key: "details" as const },
+      { label: navLabels.gallery, href: "#gallery", key: "gallery" as const },
+      { label: navLabels.rsvp, href: "#rsvp", key: "rsvp" as const },
     ],
     [
       navLabels.home,
@@ -81,7 +91,14 @@ export function StickyNav({ customization = {} }: StickyNavProps) {
                 : "text-white/90 hover:text-white"
             )}
           >
-            {item.label}
+            {item.label && (
+              <EditableLabel
+                as="span"
+                value={item.label}
+                editable={editable}
+                onChange={(v) => handleChange(item.key, v)}
+              />
+            )}
             {activeSection === item.href.slice(1) && (
               <span
                 className={cn(

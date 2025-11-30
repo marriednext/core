@@ -2,7 +2,8 @@
 
 import "style-shelf/tailwind-hybrid";
 import labels from "label-shelf/lisastheme";
-import type { GalleryImage, GallerySectionProps } from "./types";
+import type { GalleryImage, GallerySectionCustomization, GallerySectionProps } from "./types";
+import { EditableLabel } from "../../ui/editable-label";
 
 const defaultImages: GalleryImage[] = [
   { src: "/romantic-couple-portrait-engagement.jpg", span: "row-span-2" },
@@ -22,19 +23,37 @@ export function GallerySection({
     titleLabel: labels["lisastheme.moments.title.label"],
     imageAltLabel: labels["lisastheme.moments.image.alt.label"],
   },
+  editable = false,
+  onCustomizationChange,
 }: GallerySectionProps) {
   const images = data.images ?? defaultImages;
+
+  const handleChange = (key: keyof GallerySectionCustomization, value: string) => {
+    onCustomizationChange?.(key, value);
+  };
 
   return (
     <section id="gallery" className="py-32 bg-[#f5f3eb]">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <p className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4">
-            {customization.pretitleLabel}
-          </p>
-          <h2 className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic">
-            {customization.titleLabel}
-          </h2>
+          {customization.pretitleLabel && (
+            <EditableLabel
+              as="p"
+              value={customization.pretitleLabel}
+              editable={editable}
+              onChange={(v) => handleChange("pretitleLabel", v)}
+              className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4"
+            />
+          )}
+          {customization.titleLabel && (
+            <EditableLabel
+              as="h2"
+              value={customization.titleLabel}
+              editable={editable}
+              onChange={(v) => handleChange("titleLabel", v)}
+              className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic"
+            />
+          )}
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
