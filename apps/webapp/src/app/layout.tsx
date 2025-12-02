@@ -23,9 +23,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body
-          className={`${dmSans.className} ${playfair.className} antialiased bg-transparent`}
-        >
+        <body className={`antialiased bg-transparent`}>
           <QueryProvider>
             <div className="mx-auto">{children}</div>
           </QueryProvider>

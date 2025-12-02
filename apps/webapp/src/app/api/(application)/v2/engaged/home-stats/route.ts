@@ -91,6 +91,8 @@ export async function GET() {
       },
       subscriptionPlan,
       siteUrl,
+      subdomain: weddingData.subdomain || null,
+      customDomain: weddingData.customDomain || null,
       user: {
         fullName:
           user.fullName ||
@@ -101,6 +103,7 @@ export async function GET() {
         initials: getInitials(user.fullName, user.firstName, user.lastName),
         email: user.emailAddresses[0]?.emailAddress || "",
       },
+      websiteTemplate: weddingData.websiteTemplate,
     });
   } catch (error) {
     console.error("Error fetching home stats:", error);

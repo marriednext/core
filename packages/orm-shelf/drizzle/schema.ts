@@ -65,6 +65,7 @@ export const wedding = pgTable(
     fieldPreferredLocationState: text("field_preferred_location_state"),
     fieldPreferredLocationZipCode: text("field_preferred_location_zip_code"),
     fieldPreferredLocationCountry: text("field_preferred_location_country"),
+    websiteTemplate: text("website_template").default("lisastheme"),
   },
   (table) => [
     unique("weddings_subdomain_unique").on(table.subdomain),

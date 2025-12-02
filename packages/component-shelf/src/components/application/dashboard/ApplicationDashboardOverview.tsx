@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   Card,
   CardContent,
@@ -5,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
-import { Button } from "../../../components/ui/button";
+import { Button, buttonVariants } from "../../../components/ui/button";
 import { Progress } from "../../../components/ui/progress";
 import {
   Users,
@@ -18,6 +19,7 @@ import {
   Sparkles,
   Camera,
   Grid3X3,
+  CalendarHeart,
 } from "lucide-react";
 
 export interface HomeStatsData {
@@ -35,11 +37,15 @@ export interface HomeStatsData {
   };
   subscriptionPlan: string;
   siteUrl: string;
+  subdomain: string | null;
+  customDomain: string | null;
+  websiteTemplate: string;
 }
 
 export interface ApplicationDashboardOverviewProps {
   data?: HomeStatsData;
   isLoading?: boolean;
+  Link?: React.ComponentType<React.AnchorHTMLAttributes<HTMLAnchorElement>>;
 }
 
 const recentActivity = [
@@ -105,7 +111,10 @@ const quickActions = [
 export function ApplicationDashboardOverview({
   data,
   isLoading,
+  Link,
 }: ApplicationDashboardOverviewProps) {
+  const LinkComponent = Link ?? "a";
+  console.log("data", data);
   const displayName =
     data?.coupleNames?.displayName ||
     (data?.coupleNames?.nameA && data?.coupleNames?.nameB
@@ -141,14 +150,8 @@ export function ApplicationDashboardOverview({
     },
   ];
 
-  const formattedDate = data?.weddingDate
-    ? new Date(data.weddingDate).toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
-    : null;
-
+  const iframeUrl = data?.subdomain ? `/tenant/${data?.subdomain}` : null;
+  console.log("iframeUrl", iframeUrl);
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -213,27 +216,29 @@ export function ApplicationDashboardOverview({
                   {data?.siteUrl || "Not set up yet"}
                 </CardDescription>
               </div>
-              <Button variant="outline" size="sm">
+              <LinkComponent
+                href="/v2/engaged/website"
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+              >
                 Customize
                 <ArrowRight className="h-3 w-3 ml-2" />
-              </Button>
+              </LinkComponent>
             </CardHeader>
             <CardContent>
               <div className="relative aspect-video rounded-lg overflow-hidden bg-muted border border-border">
-                <img
-                  src="/elegant-wedding-website-preview-with-couple-photo.jpg"
-                  alt="Wedding website preview"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <p className="font-serif text-2xl text-white">
-                    {displayName || "Your Wedding"}
-                  </p>
-                  <p className="text-white/80 text-sm">
-                    {formattedDate || "Set your wedding date"}
-                  </p>
-                </div>
+                {data?.siteUrl ? (
+                  <iframe
+                    src={iframeUrl || ""}
+                    title="Wedding website preview"
+                    className="w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none border-0"
+                  />
+                ) : (
+                  <img
+                    src="/placeholder-website-preview.jpg"
+                    alt="Wedding website preview"
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </div>
               <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -241,7 +246,10 @@ export function ApplicationDashboardOverview({
                   <span>Published</span>
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Template: <span className="text-foreground">Sage Garden</span>
+                  Template:{" "}
+                  <span className="text-foreground">
+                    {data?.websiteTemplate}
+                  </span>
                 </div>
                 <div className="text-sm text-muted-foreground ml-auto">
                   342 visits this month
@@ -290,45 +298,79 @@ export function ApplicationDashboardOverview({
                   <p className="text-xs text-muted-foreground mt-1">Pending</p>
                 </div>
               </div>
-              <Button variant="outline" className="w-full bg-transparent">
-                Send Reminder to Pending Guests
-              </Button>
             </CardContent>
           </Card>
 
           {/* Seating Overview */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div>
-                <CardTitle className="text-lg">Seating Arrangement</CardTitle>
-                <CardDescription>
-                  8 tables configured, 72 guests seated
-                </CardDescription>
-              </div>
-              <Button variant="outline" size="sm">
-                Open Planner
-                <ArrowRight className="h-3 w-3 ml-2" />
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-4 gap-3">
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((table) => (
-                  <div
-                    key={table}
-                    className="aspect-square rounded-full border-2 border-dashed border-border bg-muted/50 flex flex-col items-center justify-center hover:border-primary hover:bg-primary/5 transition-colors cursor-pointer"
-                  >
-                    <span className="text-xs text-muted-foreground">Table</span>
-                    <span className="font-semibold text-foreground">
-                      {table}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {((table * 3) % 5) + 6}/10
-                    </span>
+          {/* Save the Date CTA */}
+          <div className="grid gap-6 sm:grid-cols-2">
+            <Card className="relative overflow-hidden border-primary/20 hover:border-primary/40 transition-colors">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2.5 rounded-lg bg-primary/10">
+                    <CalendarHeart className="h-5 w-5 text-primary" />
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  <div>
+                    <h3 className="font-semibold text-foreground">
+                      Save the Date
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Collect early headcounts
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Let guests indicate their likelihood of attending before
+                  sending formal invitations.
+                </p>
+                <Button
+                  variant="outline"
+                  className="w-full bg-transparent"
+                  asChild
+                >
+                  <a href="/v2/engaged/save-the-date">
+                    Get Started
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Seating Planner CTA */}
+            <Card className="relative overflow-hidden border-accent/20 hover:border-accent/40 transition-colors">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2.5 rounded-lg bg-accent/10">
+                    <Grid3X3 className="h-5 w-5 text-accent" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">
+                      Seating Planner
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Arrange your tables
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Drag and drop guests to tables. Visualize your reception
+                  layout with ease.
+                </p>
+                <Button
+                  variant="outline"
+                  className="w-full bg-transparent"
+                  asChild
+                >
+                  <a href="/v2/engaged/seating">
+                    Open Planner
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Right Column - 1/3 width */}

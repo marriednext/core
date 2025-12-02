@@ -54,37 +54,7 @@ export function ApplicationDashboardHeader({
       <div className="h-6 w-px bg-border lg:hidden" />
 
       <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-        <div className="relative flex flex-1 items-center max-w-md">
-          <Search className="pointer-events-none absolute left-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search guests, tables..."
-            className="pl-10 bg-muted/50 border-0 focus-visible:ring-1"
-          />
-        </div>
-
         <div className="flex items-center gap-x-4 lg:gap-x-6 ml-auto">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="sm" className="hidden sm:flex">
-                <Plus className="h-4 w-4 mr-2" />
-                Quick Add
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem>Add Guest</DropdownMenuItem>
-              <DropdownMenuItem>Add Table</DropdownMenuItem>
-              <DropdownMenuItem>Upload Photos</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Send Invitations</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <button className="relative p-2 text-muted-foreground hover:text-foreground transition-colors">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-accent" />
-          </button>
-
           <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-border" />
 
           <DropdownMenu>

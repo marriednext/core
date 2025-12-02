@@ -29,11 +29,21 @@ export async function getCurrentWedding() {
       fieldNameA: wedding.fieldNameA,
       fieldNameB: wedding.fieldNameB,
       controlRsvpNameFormat: wedding.controlRsvpNameFormat,
+      websiteTemplate: wedding.websiteTemplate,
+      fieldPreferredLocationAddressLine1:
+        wedding.fieldPreferredLocationAddressLine1,
+      fieldPreferredLocationAddressLine2:
+        wedding.fieldPreferredLocationAddressLine2,
+      fieldPreferredLocationCity: wedding.fieldPreferredLocationCity,
+      fieldPreferredLocationState: wedding.fieldPreferredLocationState,
+      fieldPreferredLocationZipCode: wedding.fieldPreferredLocationZipCode,
+      fieldPreferredLocationCountry: wedding.fieldPreferredLocationCountry,
     })
     .from(weddingUsers)
     .innerJoin(wedding, eq(weddingUsers.weddingId, wedding.id))
     .where(eq(weddingUsers.clerkUserId, userId))
     .limit(1);
 
+  console.log("result", result?.websiteTemplate);
   return result || null;
 }

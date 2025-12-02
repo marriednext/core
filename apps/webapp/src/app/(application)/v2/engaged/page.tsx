@@ -33,6 +33,9 @@ const homeStatsSchema = z.object({
     initials: z.string(),
     email: z.string(),
   }),
+  websiteTemplate: z.string(),
+  subdomain: z.string().nullable(),
+  customDomain: z.string().nullable(),
 });
 
 type HomeStatsResponse = z.infer<typeof homeStatsSchema>;
@@ -43,7 +46,9 @@ async function fetchHomeStats(): Promise<HomeStatsResponse> {
     throw new Error("Failed to fetch home stats");
   }
   const data = await res.json();
-  return homeStatsSchema.parse(data);
+  console.log("data", data);
+  // return homeStatsSchema.parse(data);
+  return data;
 }
 
 function transformToOverviewData(response: HomeStatsResponse): HomeStatsData {
@@ -58,6 +63,9 @@ function transformToOverviewData(response: HomeStatsResponse): HomeStatsData {
     coupleNames: response.coupleNames,
     subscriptionPlan: response.subscriptionPlan,
     siteUrl: response.siteUrl,
+    subdomain: response.subdomain,
+    customDomain: response.customDomain,
+    websiteTemplate: response.websiteTemplate,
   };
 }
 
@@ -88,7 +96,6 @@ export default function DashboardPage() {
     queryKey: ["home-stats"],
     queryFn: fetchHomeStats,
   });
-
   const overviewData = data ? transformToOverviewData(data) : undefined;
   const userData = data ? transformToUserData(data) : undefined;
   const weddingData = data ? transformToWeddingData(data) : undefined;
