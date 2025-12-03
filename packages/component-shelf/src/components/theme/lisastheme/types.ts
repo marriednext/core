@@ -17,6 +17,7 @@ export interface LisasThemeTypes {
   rsvpFormComponent?: ReactNode;
   ourStoryImageUrl?: string;
   ourStoryImageComponent?: ReactNode;
+  galleryImages?: string[];
   editable?: boolean;
   contained?: boolean;
   onCustomizationChange?: (

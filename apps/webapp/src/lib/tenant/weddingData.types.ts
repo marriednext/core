@@ -1,3 +1,11 @@
+export type WeddingPhoto = {
+  id: string;
+  themeId: string;
+  photoType: "hero" | "story" | "gallery" | "memory";
+  blobUrl: string;
+  displayOrder: number;
+};
+
 export type WeddingData = {
   id: string;
   subdomain: string | null;
@@ -16,6 +24,7 @@ export type WeddingData = {
   fieldNameA: string | null;
   fieldNameB: string | null;
   controlRsvpNameFormat: "FIRST_NAME_ONLY" | "FULL_NAME";
+  photos?: WeddingPhoto[];
 };
 
 export type QA = {

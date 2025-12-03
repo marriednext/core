@@ -22,6 +22,15 @@ const websiteBuilderSchema = z.object({
   nameA: z.string(),
   nameB: z.string(),
   subdomain: z.string(),
+  photos: z.array(
+    z.object({
+      id: z.string(),
+      themeId: z.string(),
+      photoType: z.enum(["hero", "story", "gallery", "memory"]),
+      blobUrl: z.string(),
+      displayOrder: z.number(),
+    })
+  ).optional(),
   user: z.object({
     fullName: z.string(),
     imageUrl: z.string().nullable(),
@@ -53,6 +62,7 @@ function transformToBuilderData(
     fieldEventDate: response.eventDate || null,
     fieldEventTime: response.eventTime || null,
     fieldMapsShareUrl: response.mapsShareUrl || null,
+    photos: response.photos,
   };
 }
 

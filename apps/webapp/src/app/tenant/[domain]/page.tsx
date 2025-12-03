@@ -6,6 +6,18 @@ import { useWeddingData } from "@/contexts/WeddingDataContext";
 
 export default function Home() {
   const weddingData = useWeddingData();
+  const themeId = "lisastheme";
+
+  const heroPhoto = weddingData.photos?.find(
+    (p) => p.photoType === "hero" && p.themeId === themeId
+  );
+  const storyPhoto = weddingData.photos?.find(
+    (p) => p.photoType === "story" && p.themeId === themeId
+  );
+  const galleryPhotos =
+    weddingData.photos
+      ?.filter((p) => p.photoType === "gallery" && p.themeId === themeId)
+      .sort((a, b) => a.displayOrder - b.displayOrder) || [];
 
   return (
     <LisasTheme
@@ -16,25 +28,12 @@ export default function Home() {
       fieldEventDate={weddingData.fieldEventDate}
       fieldEventTime={weddingData.fieldEventTime}
       fieldMapsShareUrl={weddingData.fieldMapsShareUrl}
-      ourStoryImageComponent={
-        <Image
-          src="https://q8a0jhjw1u.ufs.sh/f/3POoQHRcbaUOsRkrN3Yzk9tQwr7sxHynVo4JE0OBaUh8jlAZ"
-          alt={`${weddingData.fieldNameA} and ${weddingData.fieldNameB}`}
-          width={420}
-          height={500}
-          quality={100}
-          className="w-full h-full object-cover brightness-80"
-        />
-      }
-      heroImageComponent={
-        <Image
-          src="https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/lisastheme/17%20-Courtyard%20Wedding%20Reception%20with%20Pergola%20at%20Bel%20Vino%20Winery%20%281%29.webp"
-          alt={`${weddingData.fieldNameA} and ${weddingData.fieldNameB}`}
-          width={420}
-          height={500}
-          quality={100}
-          className="w-full h-full object-cover brightness-80"
-        />
+      heroImageUrl={heroPhoto?.blobUrl}
+      ourStoryImageUrl={storyPhoto?.blobUrl}
+      galleryImages={
+        galleryPhotos.length > 0
+          ? galleryPhotos.map((p) => p.blobUrl)
+          : undefined
       }
     />
   );
