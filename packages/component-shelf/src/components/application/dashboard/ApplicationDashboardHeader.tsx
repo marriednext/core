@@ -41,7 +41,7 @@ export function ApplicationDashboardHeader({
   const subscriptionPlan = user?.subscriptionPlan || "Free Plan";
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-border bg-card px-4 sm:gap-x-6 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-60 flex h-16 shrink-0 items-center gap-x-4 border-b border-border bg-card px-4 sm:gap-x-6 sm:px-6 lg:px-8">
       <button
         type="button"
         className="lg:hidden p-2.5 text-muted-foreground hover:text-foreground transition-colors"

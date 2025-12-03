@@ -53,6 +53,7 @@ export { ApplicationDashboardSidebar } from "./components/application/dashboard/
 export { ApplicationGuestListManager } from "./components/application/dashboard/ApplicationGuestListManager";
 export { ApplicationMemoriesGallery } from "./components/application/dashboard/ApplicationMemoriesGallery";
 export { ApplicationWebsiteBuilder } from "./components/application/dashboard/ApplicationWebsiteBuilder";
+export type { WebsiteBuilderData, ApplicationWebsiteBuilderProps } from "./components/application/dashboard/ApplicationWebsiteBuilder";
 export { ApplicationWeddingDetailsSettings } from "./components/application/dashboard/ApplicationWeddingDetailsSettings";
 
 export { ApplicationConnectDomainArticle } from "./components/application/help/ApplicationConnectDomainArticle";

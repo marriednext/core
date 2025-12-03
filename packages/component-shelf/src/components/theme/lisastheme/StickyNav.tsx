@@ -10,6 +10,7 @@ import { EditableLabel } from "../../ui/editable-label";
 export function StickyNav({
   customization = {},
   editable = false,
+  contained = false,
   onCustomizationChange,
 }: StickyNavProps) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -72,7 +73,8 @@ export function StickyNav({
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+        contained ? "sticky" : "fixed",
+        "top-0 left-0 right-0 z-50 transition-all duration-500",
         isScrolled
           ? "bg-[#faf9f6]/95 backdrop-blur-sm py-4 border-b border-[#745656]/10"
           : "bg-transparent py-6"

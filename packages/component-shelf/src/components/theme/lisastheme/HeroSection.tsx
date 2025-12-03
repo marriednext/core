@@ -51,13 +51,13 @@ export function HeroSection({
           <img
             src={
               data?.imageUrl ||
-              "/romantic-vineyard-wedding-venue-at-golden-hour-wit.jpg"
+              "https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/placeholders/cody-chan-7jgtAhJkjwk-unsplash.jpg"
             }
             alt=""
             className="w-full h-full object-cover"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#2c2c2c]/50 via-[#2c2c2c]/30 to-[#faf9f6]" />
+        <div className="absolute inset-0 bg-linear-to-b from-[#2c2c2c]/50 via-[#2c2c2c]/30 to-[#faf9f6]" />
       </div>
 
       <div

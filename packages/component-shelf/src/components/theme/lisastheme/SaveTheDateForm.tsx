@@ -61,7 +61,7 @@ export function SaveTheDateForm() {
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="/romantic-vineyard-wedding-venue-at-golden-hour-wit.jpg"
+            src="https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/placeholders/cody-chan-7jgtAhJkjwk-unsplash.jpg"
             alt=""
             className="w-full h-full object-cover"
           />

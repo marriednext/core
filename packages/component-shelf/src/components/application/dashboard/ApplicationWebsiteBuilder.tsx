@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 import { useState } from "react";
 import {
   Card,
@@ -11,10 +9,14 @@ import {
   CardDescription,
 } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
-import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
-import { Textarea } from "../../../components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import { Switch } from "../../../components/ui/switch";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -23,7 +25,6 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 import {
-  Type,
   Palette,
   ImageIcon,
   Layout,
@@ -42,14 +43,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const fontOptions = [
-  { value: "playfair", label: "Playfair Display", style: "font-serif" },
-  { value: "cormorant", label: "Cormorant Garamond", style: "font-serif" },
-  { value: "dm-sans", label: "DM Sans", style: "font-sans" },
-  { value: "inter", label: "Inter", style: "font-sans" },
-  { value: "lora", label: "Lora", style: "font-serif" },
-];
+import { LisasTheme } from "../../theme/lisastheme/LisasTheme";
 
 const colorPresets = [
   {
@@ -90,6 +84,14 @@ const colorPresets = [
   },
 ];
 
+const fontOptions = [
+  { value: "playfair", label: "Playfair Display", style: "font-serif" },
+  { value: "cormorant", label: "Cormorant Garamond", style: "font-serif" },
+  { value: "dm-sans", label: "DM Sans", style: "font-sans" },
+  { value: "inter", label: "Inter", style: "font-sans" },
+  { value: "lora", label: "Lora", style: "font-serif" },
+];
+
 type WebsiteContent = {
   coupleNames: string;
   weddingDate: string;
@@ -106,14 +108,32 @@ type WebsiteStyles = {
   colorPreset: number;
 };
 
-export function ApplicationWebsiteBuilder() {
+export type WebsiteBuilderData = {
+  fieldNameA: string | null;
+  fieldNameB: string | null;
+  fieldLocationName: string | null;
+  fieldLocationAddress: string | null;
+  fieldEventDate: string | null;
+  fieldEventTime: string | null;
+  fieldMapsShareUrl: string | null;
+};
+
+export type ApplicationWebsiteBuilderProps = {
+  data?: WebsiteBuilderData;
+  isLoading?: boolean;
+};
+
+export function ApplicationWebsiteBuilder({
+  data,
+  isLoading = false,
+}: ApplicationWebsiteBuilderProps) {
   const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">(
     "desktop"
   );
   const [hasChanges, setHasChanges] = useState(false);
-  const [currentTemplate, setCurrentTemplate] = useState("Elegant Garden");
+  const currentTemplate = "Lisa's Theme";
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState("content");
+  const [activeTab, setActiveTab] = useState("images");
 
   const defaultContent: WebsiteContent = {
     coupleNames: "Sarah & Michael",
@@ -139,7 +159,8 @@ export function ApplicationWebsiteBuilder() {
     venueAddress: "1234 Garden Lane, Napa Valley, CA",
     welcomeMessage:
       "We are so excited to celebrate our special day with you. Join us for an evening of love, laughter, and dancing under the stars.",
-    heroImage: "/elegant-wedding-website-preview-with-couple-photo.jpg",
+    heroImage:
+      "https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/placeholders/cody-chan-7jgtAhJkjwk-unsplash.jpghttps://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/placeholders/cody-chan-7jgtAhJkjwk-unsplash.jpg",
     galleryImages: [],
   });
 
@@ -149,8 +170,6 @@ export function ApplicationWebsiteBuilder() {
     colorPreset: 0,
   });
 
-  const currentColors = colorPresets[styles.colorPreset];
-
   const handleReset = () => {
     setContent(defaultContent);
     setStyles(defaultStyles);
@@ -159,14 +178,6 @@ export function ApplicationWebsiteBuilder() {
 
   const copyUrl = () => {
     navigator.clipboard.writeText("marriednext.com/sarah-michael");
-  };
-
-  const updateContent = (
-    key: keyof WebsiteContent,
-    value: string | string[]
-  ) => {
-    setContent((prev) => ({ ...prev, [key]: value }));
-    setHasChanges(true);
   };
 
   const updateStyles = (key: keyof WebsiteStyles, value: string | number) => {
@@ -227,19 +238,6 @@ export function ApplicationWebsiteBuilder() {
               variant="ghost"
               size="icon"
               className={`h-9 w-9 ${
-                activeTab === "content"
-                  ? "text-foreground bg-muted"
-                  : "text-muted-foreground"
-              }`}
-              title="Content"
-              onClick={() => handleCollapsedTabClick("content")}
-            >
-              <Type className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`h-9 w-9 ${
                 activeTab === "images"
                   ? "text-foreground bg-muted"
                   : "text-muted-foreground"
@@ -285,11 +283,7 @@ export function ApplicationWebsiteBuilder() {
               className="w-full"
             >
               <div className="flex items-center gap-2">
-                <TabsList className="grid flex-1 grid-cols-4">
-                  <TabsTrigger value="content" className="text-xs">
-                    <Type className="h-4 w-4 sm:mr-1" />
-                    <span className="hidden sm:inline">Content</span>
-                  </TabsTrigger>
+                <TabsList className="grid flex-1 grid-cols-3">
                   <TabsTrigger value="images" className="text-xs">
                     <ImageIcon className="h-4 w-4 sm:mr-1" />
                     <span className="hidden sm:inline">Images</span>
@@ -313,83 +307,6 @@ export function ApplicationWebsiteBuilder() {
                   <PanelLeftClose className="h-4 w-4" />
                 </Button>
               </div>
-
-              {/* Content Tab */}
-              <TabsContent value="content" className="mt-4 space-y-4">
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">Hero Section</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="coupleNames">Couple Names</Label>
-                      <Input
-                        id="coupleNames"
-                        value={content.coupleNames}
-                        onChange={(e) =>
-                          updateContent("coupleNames", e.target.value)
-                        }
-                        placeholder="Sarah & Michael"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="weddingDate">Wedding Date</Label>
-                      <Input
-                        id="weddingDate"
-                        value={content.weddingDate}
-                        onChange={(e) =>
-                          updateContent("weddingDate", e.target.value)
-                        }
-                        placeholder="June 15, 2025"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">Venue Details</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="venue">Venue Name</Label>
-                      <Input
-                        id="venue"
-                        value={content.venue}
-                        onChange={(e) => updateContent("venue", e.target.value)}
-                        placeholder="Rosewood Garden Estate"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="venueAddress">Venue Address</Label>
-                      <Input
-                        id="venueAddress"
-                        value={content.venueAddress}
-                        onChange={(e) =>
-                          updateContent("venueAddress", e.target.value)
-                        }
-                        placeholder="1234 Garden Lane, Napa Valley, CA"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">Welcome Message</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Textarea
-                      value={content.welcomeMessage}
-                      onChange={(e) =>
-                        updateContent("welcomeMessage", e.target.value)
-                      }
-                      placeholder="Write a heartfelt message for your guests..."
-                      rows={4}
-                    />
-                  </CardContent>
-                </Card>
-              </TabsContent>
 
               {/* Images Tab */}
               <TabsContent value="images" className="mt-4 space-y-4">
@@ -572,21 +489,7 @@ export function ApplicationWebsiteBuilder() {
                           <span className="text-sm font-medium">
                             {section.name}
                           </span>
-                          <button
-                            className={cn(
-                              "relative h-6 w-11 rounded-full transition-colors",
-                              section.enabled ? "bg-primary" : "bg-muted"
-                            )}
-                          >
-                            <span
-                              className={cn(
-                                "absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-transform",
-                                section.enabled
-                                  ? "translate-x-6"
-                                  : "translate-x-1"
-                              )}
-                            />
-                          </button>
+                          <Switch checked={section.enabled} />
                         </div>
                       ))}
                     </div>
@@ -598,8 +501,8 @@ export function ApplicationWebsiteBuilder() {
         )}
 
         {/* Right Panel - Preview */}
-        <Card className="flex-1 min-w-0 overflow-hidden">
-          <CardHeader className="border-b border-border py-3 px-4">
+        <div className="bg-card text-card-foreground flex flex-col rounded-xl border shadow-sm flex-1 min-w-0 overflow-hidden">
+          <div className="border-b border-border py-3 px-4">
             <div className="flex flex-col gap-3">
               {/* Top row: Preview URL and view options */}
               <div className="flex items-center justify-between">
@@ -685,111 +588,45 @@ export function ApplicationWebsiteBuilder() {
                 </div>
               </div>
             </div>
-          </CardHeader>
-          <CardContent className="p-0 bg-muted/30">
+          </div>
+          <div className="p-0 bg-muted/30">
             <div
               className={cn(
-                "mx-auto transition-all duration-300 bg-white",
+                "mx-auto transition-all duration-300 bg-white overflow-auto",
                 previewMode === "mobile"
                   ? "max-w-[375px] my-6 rounded-xl shadow-lg"
                   : "w-full"
               )}
+              style={{
+                maxHeight: "800px",
+              }}
             >
-              {/* Live Preview */}
-              <div
-                className="min-h-[600px]"
-                style={
-                  {
-                    "--preview-primary": currentColors.primary,
-                    "--preview-secondary": currentColors.secondary,
-                    "--preview-accent": currentColors.accent,
-                  } as React.CSSProperties
-                }
-              >
-                {/* Preview Hero Section */}
-                <div
-                  className="relative h-[400px] overflow-hidden"
-                  style={{ backgroundColor: currentColors.secondary }}
-                >
-                  {content.heroImage && (
-                    <img
-                      src={content.heroImage || "/placeholder.svg"}
-                      alt="Hero"
-                      className="absolute inset-0 w-full h-full object-cover opacity-90"
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-6">
-                    <p
-                      className="text-sm uppercase tracking-[0.3em] mb-4"
-                      style={{ color: currentColors.accent }}
-                    >
-                      We're Getting Married
-                    </p>
-                    <h1 className="font-serif text-4xl md:text-5xl font-semibold mb-4 text-balance">
-                      {content.coupleNames || "Your Names"}
-                    </h1>
-                    <div
-                      className="h-px w-16 mb-4"
-                      style={{ backgroundColor: currentColors.accent }}
-                    />
-                    <p className="text-lg">
-                      {content.weddingDate || "Your Wedding Date"}
-                    </p>
-                  </div>
+              {isLoading ? (
+                <div className="flex items-center justify-center min-h-[600px]">
+                  <p className="text-muted-foreground">Loading preview...</p>
                 </div>
-
-                {/* Preview Welcome Section */}
-                <div
-                  className="py-16 px-6 text-center"
-                  style={{ backgroundColor: currentColors.secondary }}
-                >
-                  <h2
-                    className="font-serif text-2xl mb-6"
-                    style={{ color: currentColors.primary }}
-                  >
-                    Welcome
-                  </h2>
-                  <p
-                    className="max-w-lg mx-auto leading-relaxed text-balance"
-                    style={{ color: currentColors.primary, opacity: 0.8 }}
-                  >
-                    {content.welcomeMessage ||
-                      "Your welcome message will appear here..."}
+              ) : data ? (
+                <LisasTheme
+                  fieldNameA={data.fieldNameA}
+                  fieldNameB={data.fieldNameB}
+                  fieldLocationName={data.fieldLocationName}
+                  fieldLocationAddress={data.fieldLocationAddress}
+                  fieldEventDate={data.fieldEventDate}
+                  fieldEventTime={data.fieldEventTime}
+                  fieldMapsShareUrl={data.fieldMapsShareUrl}
+                  editable={true}
+                  contained={true}
+                />
+              ) : (
+                <div className="flex items-center justify-center min-h-[600px]">
+                  <p className="text-muted-foreground">
+                    No website data available
                   </p>
                 </div>
-
-                {/* Preview Venue Section */}
-                <div className="py-16 px-6 text-center bg-white">
-                  <h2
-                    className="font-serif text-2xl mb-2"
-                    style={{ color: currentColors.primary }}
-                  >
-                    The Venue
-                  </h2>
-                  <p
-                    className="text-lg font-medium"
-                    style={{ color: currentColors.primary }}
-                  >
-                    {content.venue || "Venue Name"}
-                  </p>
-                  <p
-                    className="text-sm mt-1"
-                    style={{ color: currentColors.primary, opacity: 0.7 }}
-                  >
-                    {content.venueAddress || "Venue Address"}
-                  </p>
-                  <button
-                    className="mt-6 px-6 py-2 rounded-full text-sm text-white transition-opacity hover:opacity-90"
-                    style={{ backgroundColor: currentColors.primary }}
-                  >
-                    RSVP Now
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

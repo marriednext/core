@@ -46,8 +46,6 @@ async function fetchHomeStats(): Promise<HomeStatsResponse> {
     throw new Error("Failed to fetch home stats");
   }
   const data = await res.json();
-  console.log("data", data);
-  // return homeStatsSchema.parse(data);
   return data;
 }
 

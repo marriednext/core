@@ -90,7 +90,7 @@ export function CountdownSection({
   ];
 
   return (
-    <section className="py-32 bg-[#faf9f6]">
+    <section className="@container py-32 bg-[#faf9f6]">
       <div className="max-w-5xl mx-auto px-6 text-center">
         {customization?.pretextLabel && (
           <EditableLabel
@@ -102,11 +102,11 @@ export function CountdownSection({
           />
         )}
 
-        <div className="flex items-center justify-center gap-8 md:gap-16 mt-12">
+        <div className="flex items-center justify-center gap-8 @md:gap-16 mt-12">
           {timeUnits.map((unit, index) => (
-            <div key={unit.key} className="flex items-center gap-8 md:gap-16">
+            <div key={unit.key} className="flex items-center gap-8">
               <div className="text-center">
-                <span className="block font-serif text-6xl md:text-8xl text-[#2c2c2c] font-light">
+                <span className="block font-serif text-6xl @md:text-8xl text-[#2c2c2c] font-light">
                   {String(unit.value).padStart(2, "0")}
                 </span>
                 {unit.label && (
@@ -120,7 +120,7 @@ export function CountdownSection({
                 )}
               </div>
               {index < timeUnits.length - 1 && (
-                <span className="text-[#745656]/30 text-4xl md:text-5xl font-light hidden md:block">
+                <span className="text-[#745656]/30 text-4xl @md:text-5xl font-light hidden @md:block">
                   :
                 </span>
               )}

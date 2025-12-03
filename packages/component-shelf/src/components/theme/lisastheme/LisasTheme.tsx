@@ -26,6 +26,7 @@ export function LisasTheme({
   ourStoryImageUrl,
   ourStoryImageComponent,
   editable = true,
+  contained = false,
   onCustomizationChange,
 }: LisasThemeTypes) {
   const handleSectionChange =
@@ -37,6 +38,7 @@ export function LisasTheme({
     <div className="min-h-screen">
       <StickyNav
         editable={editable}
+        contained={contained}
         onCustomizationChange={handleSectionChange("stickyNav")}
       />
       <HeroSection

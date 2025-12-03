@@ -100,3 +100,9 @@ export type GuestListData = {
   currentOffset: number;
   currentLimit: number;
 };
+
+export type WebsiteSection = {
+  id: string;
+  enabled: boolean;
+  order: number;
+};

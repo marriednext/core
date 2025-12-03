@@ -18,6 +18,7 @@ export interface LisasThemeTypes {
   ourStoryImageUrl?: string;
   ourStoryImageComponent?: ReactNode;
   editable?: boolean;
+  contained?: boolean;
   onCustomizationChange?: (
     section: string,
     key: string,
@@ -73,6 +74,7 @@ export interface StickyNavCustomization {
 export interface StickyNavProps {
   customization?: StickyNavCustomization;
   editable?: boolean;
+  contained?: boolean;
   onCustomizationChange?: (
     key: keyof NonNullable<StickyNavCustomization["navLabels"]>,
     value: string
