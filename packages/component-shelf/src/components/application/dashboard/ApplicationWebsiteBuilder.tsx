@@ -181,8 +181,8 @@ export function ApplicationWebsiteBuilder({
     const galleryPhotos =
       data?.photos
         ?.filter((p) => p.photoType === "gallery" && p.themeId === themeId)
-        .sort((a, b) => a.displayOrder - b.displayOrder)
-        .map((p) => p.blobUrl) || [];
+        ?.sort((a, b) => a.displayOrder - b.displayOrder)
+        ?.map((p) => p.blobUrl) || [];
 
     return {
       coupleNames:
