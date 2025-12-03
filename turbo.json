@@ -5,6 +5,9 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
+    "component-shelf#build": {
+      "env": []
+    },
     "check-types": {
       "dependsOn": ["^check-types"]
     },
