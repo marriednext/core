@@ -27,6 +27,7 @@ export const tableType = pgEnum("table_type", [
   "circle",
 ]);
 export const userRole = pgEnum("user_role", ["spouse", "family", "planner"]);
+export const photoType = pgEnum("photo_type", ["hero", "story", "gallery", "memory"]);
 
 export const wedding = pgTable(
   "wedding",
@@ -243,5 +244,30 @@ export const seatAssignment = pgTable(
       .onUpdate("cascade")
       .onDelete("cascade"),
     unique("uq_seat_assignment_table_guest").on(table.tableId, table.guestId),
+  ]
+);
+
+export const weddingPhotos = pgTable(
+  "wedding_photos",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    weddingId: uuid("wedding_id").notNull(),
+    themeId: text("theme_id").notNull(),
+    photoType: photoType("photo_type").notNull(),
+    blobUrl: text("blob_url").notNull(),
+    blobPathname: text("blob_pathname").notNull(),
+    displayOrder: integer("display_order").default(0),
+    createdAt: timestamp("created_at", { mode: "string" })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.weddingId],
+      foreignColumns: [wedding.id],
+      name: "fk_wedding_photos_wedding",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
   ]
 );

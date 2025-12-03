@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { getCurrentWedding } from "@/lib/admin/getCurrentWedding";
 import { getInitials } from "@/lib/siteUtils";
+import { db } from "@/database/drizzle";
+import { weddingPhotos } from "orm-shelf/schema";
+import { eq, and, asc } from "drizzle-orm";
 
 export async function GET() {
   try {
@@ -18,6 +21,25 @@ export async function GET() {
       return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
     }
 
+    const themeId = wedding.websiteTemplate || "lisastheme";
+
+    const photos = await db
+      .select({
+        id: weddingPhotos.id,
+        themeId: weddingPhotos.themeId,
+        photoType: weddingPhotos.photoType,
+        blobUrl: weddingPhotos.blobUrl,
+        displayOrder: weddingPhotos.displayOrder,
+      })
+      .from(weddingPhotos)
+      .where(
+        and(
+          eq(weddingPhotos.weddingId, wedding.id),
+          eq(weddingPhotos.themeId, themeId)
+        )
+      )
+      .orderBy(asc(weddingPhotos.displayOrder), asc(weddingPhotos.createdAt));
+
     const subscriptionPlan = "Free";
 
     return NextResponse.json({
@@ -30,6 +52,7 @@ export async function GET() {
       nameA: wedding.fieldNameA || "",
       nameB: wedding.fieldNameB || "",
       subdomain: wedding.subdomain || "",
+      photos,
       user: {
         fullName:
           user.fullName ||

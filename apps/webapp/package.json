@@ -36,6 +36,7 @@
     "@tanstack/react-query": "5.90.2",
     "@upstash/redis": "1.35.6",
     "@vercel/analytics": "1.5.0",
+    "@vercel/blob": "^2.0.0",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "component-shelf": "workspace:*",
@@ -76,6 +77,7 @@
     "@types/react-dom": "catalog:",
     "@types/three": "0.180.0",
     "@vitest/browser": "catalog:",
+    "@vitest/browser-playwright": "4.0.14",
     "@vitest/coverage-v8": "catalog:",
     "dotenv": "catalog:",
     "eslint": "catalog:",
@@ -85,8 +87,7 @@
     "storybook": "9.1.10",
     "tw-animate-css": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:",
-    "@vitest/browser-playwright": "4.0.14"
+    "vitest": "catalog:"
   },
   "packageManager": "pnpm@8.9.0+sha512.ef8859938e1f0537b9fcf0309044311392f3b38b344176e6cd4fdee21b225524b0ac2a1b08ae2ae2ddd5b3ff4b8ca496d6778e950f3e7c9f555b81325982441c",
   "pnpm": {

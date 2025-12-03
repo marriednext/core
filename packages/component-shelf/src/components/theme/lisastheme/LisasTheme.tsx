@@ -25,6 +25,7 @@ export function LisasTheme({
   rsvpFormComponent,
   ourStoryImageUrl,
   ourStoryImageComponent,
+  galleryImages,
   editable = true,
   contained = false,
   onCustomizationChange,
@@ -82,7 +83,11 @@ export function LisasTheme({
         onCustomizationChange={handleSectionChange("eventDetails")}
       />
       <GallerySection
-        data={{}}
+        data={{
+          images: galleryImages && galleryImages.length > 0
+            ? galleryImages.map((url) => ({ src: url }))
+            : undefined,
+        }}
         editable={editable}
         onCustomizationChange={handleSectionChange("gallery")}
       />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -41,6 +41,7 @@ import {
   Copy,
   PanelLeftClose,
   ChevronRight,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LisasTheme } from "../../theme/lisastheme/LisasTheme";
@@ -92,6 +93,8 @@ const fontOptions = [
   { value: "lora", label: "Lora", style: "font-serif" },
 ];
 
+const MAX_GALLERY_PHOTOS = 8;
+
 type WebsiteContent = {
   coupleNames: string;
   weddingDate: string;
@@ -99,6 +102,7 @@ type WebsiteContent = {
   venueAddress: string;
   welcomeMessage: string;
   heroImage: string;
+  ourStoryImage: string;
   galleryImages: string[];
 };
 
@@ -106,6 +110,14 @@ type WebsiteStyles = {
   headingFont: string;
   bodyFont: string;
   colorPreset: number;
+};
+
+export type WebsiteBuilderPhoto = {
+  id: string;
+  themeId: string;
+  photoType: "hero" | "story" | "gallery" | "memory";
+  blobUrl: string;
+  displayOrder: number;
 };
 
 export type WebsiteBuilderData = {
@@ -116,6 +128,7 @@ export type WebsiteBuilderData = {
   fieldEventDate: string | null;
   fieldEventTime: string | null;
   fieldMapsShareUrl: string | null;
+  photos?: WebsiteBuilderPhoto[];
 };
 
 export type ApplicationWebsiteBuilderProps = {
@@ -132,8 +145,10 @@ export function ApplicationWebsiteBuilder({
   );
   const [hasChanges, setHasChanges] = useState(false);
   const currentTemplate = "Lisa's Theme";
+  const themeId = "lisastheme";
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("images");
+  const [isUploading, setIsUploading] = useState(false);
 
   const defaultContent: WebsiteContent = {
     coupleNames: "Sarah & Michael",
@@ -143,6 +158,7 @@ export function ApplicationWebsiteBuilder({
     welcomeMessage:
       "We are so excited to celebrate our special day with you. Join us for an evening of love, laughter, and dancing under the stars.",
     heroImage: "/elegant-wedding-website-preview-with-couple-photo.jpg",
+    ourStoryImage: "",
     galleryImages: [],
   };
 
@@ -152,16 +168,34 @@ export function ApplicationWebsiteBuilder({
     colorPreset: 0,
   };
 
-  const [content, setContent] = useState<WebsiteContent>({
-    coupleNames: "Sarah & Michael",
-    weddingDate: "June 15, 2025",
-    venue: "Rosewood Garden Estate",
-    venueAddress: "1234 Garden Lane, Napa Valley, CA",
-    welcomeMessage:
-      "We are so excited to celebrate our special day with you. Join us for an evening of love, laughter, and dancing under the stars.",
-    heroImage:
-      "https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/placeholders/cody-chan-7jgtAhJkjwk-unsplash.jpghttps://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/placeholders/cody-chan-7jgtAhJkjwk-unsplash.jpg",
-    galleryImages: [],
+  const [content, setContent] = useState<WebsiteContent>(() => {
+    const heroPhoto = data?.photos?.find(
+      (p) => p.photoType === "hero" && p.themeId === themeId
+    );
+    const storyPhoto = data?.photos?.find(
+      (p) => p.photoType === "story" && p.themeId === themeId
+    );
+    const galleryPhotos =
+      data?.photos
+        ?.filter((p) => p.photoType === "gallery" && p.themeId === themeId)
+        .sort((a, b) => a.displayOrder - b.displayOrder)
+        .map((p) => p.blobUrl) || [];
+
+    return {
+      coupleNames:
+        data?.fieldNameA && data?.fieldNameB
+          ? `${data.fieldNameA} & ${data.fieldNameB}`
+          : "Sarah & Michael",
+      weddingDate: data?.fieldEventDate || "June 15, 2025",
+      venue: data?.fieldLocationName || "Rosewood Garden Estate",
+      venueAddress:
+        data?.fieldLocationAddress || "1234 Garden Lane, Napa Valley, CA",
+      welcomeMessage:
+        "We are so excited to celebrate our special day with you. Join us for an evening of love, laughter, and dancing under the stars.",
+      heroImage: heroPhoto?.blobUrl || "",
+      ourStoryImage: storyPhoto?.blobUrl || "",
+      galleryImages: galleryPhotos,
+    };
   });
 
   const [styles, setStyles] = useState<WebsiteStyles>({
@@ -188,6 +222,117 @@ export function ApplicationWebsiteBuilder({
   const handleCollapsedTabClick = (tab: string) => {
     setActiveTab(tab);
     setIsPanelCollapsed(false);
+  };
+
+  useEffect(() => {
+    if (data) {
+      const heroPhoto = data.photos?.find(
+        (p) => p.photoType === "hero" && p.themeId === themeId
+      );
+      const storyPhoto = data.photos?.find(
+        (p) => p.photoType === "story" && p.themeId === themeId
+      );
+      const galleryPhotos =
+        data.photos
+          ?.filter((p) => p.photoType === "gallery" && p.themeId === themeId)
+          .sort((a, b) => a.displayOrder - b.displayOrder)
+          .map((p) => p.blobUrl) || [];
+
+      setContent((prev) => ({
+        ...prev,
+        coupleNames:
+          data.fieldNameA && data.fieldNameB
+            ? `${data.fieldNameA} & ${data.fieldNameB}`
+            : prev.coupleNames,
+        weddingDate: data.fieldEventDate || prev.weddingDate,
+        venue: data.fieldLocationName || prev.venue,
+        venueAddress: data.fieldLocationAddress || prev.venueAddress,
+        heroImage: heroPhoto?.blobUrl || prev.heroImage,
+        ourStoryImage: storyPhoto?.blobUrl || prev.ourStoryImage,
+        galleryImages:
+          galleryPhotos.length > 0 ? galleryPhotos : prev.galleryImages,
+      }));
+    }
+  }, [data, themeId]);
+
+  const handleUploadPhoto = async (
+    photoType: "hero" | "story" | "gallery",
+    file: File
+  ) => {
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("photoType", photoType);
+      formData.append("themeId", themeId);
+      if (photoType === "gallery") {
+        const currentGalleryCount = content.galleryImages.length;
+        formData.append("displayOrder", currentGalleryCount.toString());
+      }
+
+      const response = await fetch("/api/website-builder/photos", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload photo");
+      }
+
+      const { photo } = await response.json();
+
+      if (photoType === "hero") {
+        setContent((prev) => ({ ...prev, heroImage: photo.blobUrl }));
+      } else if (photoType === "story") {
+        setContent((prev) => ({ ...prev, ourStoryImage: photo.blobUrl }));
+      } else if (photoType === "gallery") {
+        setContent((prev) => ({
+          ...prev,
+          galleryImages: [...prev.galleryImages, photo.blobUrl],
+        }));
+      }
+
+      setHasChanges(true);
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleRemoveGalleryPhoto = async (index: number) => {
+    const photoUrl = content.galleryImages[index];
+    if (!data?.photos) return;
+
+    const photo = data.photos.find(
+      (p) =>
+        p.blobUrl === photoUrl &&
+        p.photoType === "gallery" &&
+        p.themeId === themeId
+    );
+
+    if (photo) {
+      try {
+        const response = await fetch("/api/website-builder/photos", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ photoId: photo.id }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to delete photo");
+        }
+      } catch (error) {
+        console.error("Error deleting photo:", error);
+        return;
+      }
+    }
+
+    setContent((prev) => ({
+      ...prev,
+      galleryImages: prev.galleryImages.filter((_, i) => i !== index),
+    }));
+    setHasChanges(true);
   };
 
   return (
@@ -319,6 +464,18 @@ export function ApplicationWebsiteBuilder({
                   </CardHeader>
                   <CardContent>
                     <div className="relative aspect-video rounded-lg border-2 border-dashed border-border bg-muted/50 overflow-hidden group cursor-pointer hover:border-primary transition-colors">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleUploadPhoto("hero", file);
+                          }
+                        }}
+                        disabled={isUploading}
+                      />
                       {content.heroImage ? (
                         <>
                           <img
@@ -327,9 +484,13 @@ export function ApplicationWebsiteBuilder({
                             className="w-full h-full object-cover"
                           />
                           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <Button variant="secondary" size="sm">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              disabled={isUploading}
+                            >
                               <Upload className="h-4 w-4 mr-2" />
-                              Replace Image
+                              {isUploading ? "Uploading..." : "Replace Image"}
                             </Button>
                           </div>
                         </>
@@ -337,7 +498,7 @@ export function ApplicationWebsiteBuilder({
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">
                           <Upload className="h-8 w-8 mb-2" />
                           <p className="text-sm font-medium">
-                            Upload Hero Image
+                            {isUploading ? "Uploading..." : "Upload Hero Image"}
                           </p>
                           <p className="text-xs">Recommended: 1920x1080px</p>
                         </div>
@@ -348,21 +509,132 @@ export function ApplicationWebsiteBuilder({
 
                 <Card>
                   <CardHeader className="pb-3">
+                    <CardTitle className="text-base">Our Story</CardTitle>
+                    <CardDescription>
+                      A photo for your story section
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="relative aspect-video rounded-lg border-2 border-dashed border-border bg-muted/50 overflow-hidden group cursor-pointer hover:border-primary transition-colors">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleUploadPhoto("story", file);
+                          }
+                        }}
+                        disabled={isUploading}
+                      />
+                      {content.ourStoryImage ? (
+                        <>
+                          <img
+                            src={content.ourStoryImage || "/placeholder.svg"}
+                            alt="Our Story"
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              disabled={isUploading}
+                            >
+                              <Upload className="h-4 w-4 mr-2" />
+                              {isUploading ? "Uploading..." : "Replace Image"}
+                            </Button>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">
+                          <Upload className="h-8 w-8 mb-2" />
+                          <p className="text-sm font-medium">
+                            {isUploading
+                              ? "Uploading..."
+                              : "Upload Our Story Image"}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="pb-3">
                     <CardTitle className="text-base">Photo Gallery</CardTitle>
                     <CardDescription>
-                      Add engagement or pre-wedding photos
+                      Add up to {MAX_GALLERY_PHOTOS} engagement or pre-wedding
+                      photos
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-3 gap-2">
-                      {[1, 2, 3, 4, 5, 6].map((i) => (
+                      {content.galleryImages.map((image, index) => (
                         <div
-                          key={i}
-                          className="aspect-square rounded-lg border-2 border-dashed border-border bg-muted/50 flex items-center justify-center cursor-pointer hover:border-primary transition-colors"
+                          key={index}
+                          className="relative aspect-square rounded-lg border-2 border-border bg-muted/50 overflow-hidden group"
                         >
-                          <Upload className="h-5 w-5 text-muted-foreground" />
+                          {image ? (
+                            <>
+                              <img
+                                src={image || "/placeholder.svg"}
+                                alt={`Gallery ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  onClick={() =>
+                                    handleRemoveGalleryPhoto(index)
+                                  }
+                                  className="mr-2"
+                                  disabled={isUploading}
+                                >
+                                  <X className="h-4 w-4 mr-1" />
+                                  Remove
+                                </Button>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    handleUploadPhoto("gallery", file);
+                                  }
+                                }}
+                                disabled={isUploading}
+                              />
+                              <div className="absolute inset-0 flex items-center justify-center cursor-pointer hover:border-primary transition-colors">
+                                <Upload className="h-5 w-5 text-muted-foreground" />
+                              </div>
+                            </>
+                          )}
                         </div>
                       ))}
+                      {content.galleryImages.length < MAX_GALLERY_PHOTOS && (
+                        <div className="relative aspect-square rounded-lg border-2 border-dashed border-border bg-muted/50 flex items-center justify-center cursor-pointer hover:border-primary transition-colors">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                handleUploadPhoto("gallery", file);
+                              }
+                            }}
+                            disabled={isUploading}
+                          />
+                          <Upload className="h-5 w-5 text-muted-foreground" />
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -614,6 +886,13 @@ export function ApplicationWebsiteBuilder({
                   fieldEventDate={data.fieldEventDate}
                   fieldEventTime={data.fieldEventTime}
                   fieldMapsShareUrl={data.fieldMapsShareUrl}
+                  heroImageUrl={content.heroImage || undefined}
+                  ourStoryImageUrl={content.ourStoryImage || undefined}
+                  galleryImages={
+                    content.galleryImages.length > 0
+                      ? content.galleryImages
+                      : undefined
+                  }
                   editable={true}
                   contained={true}
                 />

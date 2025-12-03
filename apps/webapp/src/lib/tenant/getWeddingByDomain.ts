@@ -1,7 +1,7 @@
 import { db } from "@/database/drizzle";
 import { redis } from "@/database/redis";
-import { wedding } from "orm-shelf/schema";
-import { eq, or } from "drizzle-orm";
+import { wedding, weddingPhotos } from "orm-shelf/schema";
+import { eq, or, asc } from "drizzle-orm";
 import type { WeddingData } from "@/lib/tenant/weddingData.types";
 import { WEDDING_CACHE_TTL } from "@/lib/cache/constants";
 
@@ -32,7 +32,26 @@ async function getWeddingFromDatabase(
     .where(or(eq(wedding.subdomain, domain), eq(wedding.customDomain, domain)))
     .limit(1);
 
-  return result || null;
+  if (!result) {
+    return null;
+  }
+
+  const photos = await db
+    .select({
+      id: weddingPhotos.id,
+      themeId: weddingPhotos.themeId,
+      photoType: weddingPhotos.photoType,
+      blobUrl: weddingPhotos.blobUrl,
+      displayOrder: weddingPhotos.displayOrder,
+    })
+    .from(weddingPhotos)
+    .where(eq(weddingPhotos.weddingId, result.id))
+    .orderBy(asc(weddingPhotos.displayOrder), asc(weddingPhotos.createdAt));
+
+  return {
+    ...result,
+    photos: photos.length > 0 ? photos : undefined,
+  };
 }
 
 export async function getWeddingByDomain(

@@ -7,6 +7,7 @@ import {
   collaboratorInvitations,
   seatingTable,
   seatAssignment,
+  weddingPhotos,
 } from "./schema";
 
 export const guestRelations = relations(guest, ({ one, many }) => ({
@@ -27,6 +28,7 @@ export const weddingRelations = relations(wedding, ({ many }) => ({
   weddingUsers: many(weddingUsers),
   collaboratorInvitations: many(collaboratorInvitations),
   seatingTables: many(seatingTable),
+  photos: many(weddingPhotos),
 }));
 
 export const invitationRelations = relations(invitation, ({ one, many }) => ({
@@ -73,5 +75,12 @@ export const seatAssignmentRelations = relations(seatAssignment, ({ one }) => ({
   guest: one(guest, {
     fields: [seatAssignment.guestId],
     references: [guest.id],
+  }),
+}));
+
+export const weddingPhotosRelations = relations(weddingPhotos, ({ one }) => ({
+  wedding: one(wedding, {
+    fields: [weddingPhotos.weddingId],
+    references: [wedding.id],
   }),
 }));
