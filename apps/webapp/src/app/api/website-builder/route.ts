@@ -7,6 +7,7 @@ import { db } from "@/database/drizzle";
 import { wedding, weddingPhotos } from "orm-shelf/schema";
 import { eq, and, asc } from "drizzle-orm";
 import { z } from "zod";
+import { invalidateWeddingCache } from "@/lib/admin/invalidateWeddingCache";
 
 export async function GET() {
   try {
@@ -119,6 +120,11 @@ export async function PATCH(req: NextRequest) {
         updatedAt: new Date().toISOString(),
       })
       .where(eq(wedding.id, weddingData.id));
+
+    await invalidateWeddingCache({
+      subdomain: weddingData.subdomain,
+      customDomain: weddingData.customDomain,
+    });
 
     return NextResponse.json({
       success: true,
