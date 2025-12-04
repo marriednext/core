@@ -19,25 +19,31 @@ function fillTemplate(
   return template.replace(/\{([^}]+)\}/g, (_, key) => values[key] ?? "");
 }
 
+const defaultRsvpLabels = {
+  pretitleLabel: labels["lisastheme.rsvp.pretitle.label"],
+  titleLabel: labels["lisastheme.rsvp.title.label"],
+  descriptionLabel: labels["lisastheme.rsvp.text.label"],
+  searchPlaceholderLabel: labels["lisastheme.rsvp.search.placeholder.label"],
+  searchButtonLabel: labels["lisastheme.rsvp.search.button.label"],
+  invitationLabel: labels["lisastheme.rsvp.search.results.pretitle.label"],
+  questionLabel: labels["lisastheme.rsvp.search.question.label"],
+  acceptButtonLabel: labels["lisastheme.rsvp.search.accept.label"],
+  declineButtonLabel: labels["lisastheme.rsvp.search.decline.label"],
+  confirmationHeadingLabel:
+    labels["lisastheme.rsvp.confirmation.heading.label"],
+  confirmationTextLabel: labels["lisastheme.rsvp.confirmation.text.label"],
+};
+
 export function RsvpSection({
   data,
-  customization = {
-    pretitleLabel: labels["lisastheme.rsvp.pretitle.label"],
-    titleLabel: labels["lisastheme.rsvp.title.label"],
-    descriptionLabel: labels["lisastheme.rsvp.text.label"],
-    searchPlaceholderLabel: labels["lisastheme.rsvp.search.placeholder.label"],
-    searchButtonLabel: labels["lisastheme.rsvp.search.button.label"],
-    invitationLabel: labels["lisastheme.rsvp.search.results.pretitle.label"],
-    questionLabel: labels["lisastheme.rsvp.search.question.label"],
-    acceptButtonLabel: labels["lisastheme.rsvp.search.accept.label"],
-    declineButtonLabel: labels["lisastheme.rsvp.search.decline.label"],
-    confirmationHeadingLabel:
-      labels["lisastheme.rsvp.confirmation.heading.label"],
-    confirmationTextLabel: labels["lisastheme.rsvp.confirmation.text.label"],
-  },
+  customization,
   editable = false,
   onCustomizationChange,
 }: RsvpSectionProps) {
+  const mergedCustomization = {
+    ...defaultRsvpLabels,
+    ...customization,
+  };
   const [step, setStep] = useState<"search" | "found" | "confirmed">("search");
   const [firstName, setFirstName] = useState("");
 
@@ -58,7 +64,7 @@ export function RsvpSection({
 
   const labelValues = { firstName };
   const confirmationHeading = fillTemplate(
-    customization?.confirmationHeadingLabel,
+    mergedCustomization.confirmationHeadingLabel,
     labelValues
   );
 
@@ -71,19 +77,19 @@ export function RsvpSection({
         <div className="absolute top-0 left-0 w-64 h-64 bg-[#745656]/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#745656]/5 rounded-full translate-x-1/2 translate-y-1/2" />
         <div className="max-w-xl mx-auto px-6 text-center relative z-10">
-          {customization?.pretitleLabel && (
+          {mergedCustomization.pretitleLabel && (
             <EditableLabel
               as="p"
-              value={customization?.pretitleLabel}
+              value={mergedCustomization.pretitleLabel}
               editable={editable}
               onChange={(v) => handleChange("pretitleLabel", v)}
               className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4"
             />
           )}
-          {customization?.titleLabel && (
+          {mergedCustomization.titleLabel && (
             <EditableLabel
               as="h2"
-              value={customization?.titleLabel}
+              value={mergedCustomization.titleLabel}
               editable={editable}
               onChange={(v) => handleChange("titleLabel", v)}
               className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic mb-4"
@@ -101,28 +107,28 @@ export function RsvpSection({
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#745656]/5 rounded-full translate-x-1/2 translate-y-1/2" />
 
       <div className="max-w-xl mx-auto px-6 text-center relative z-10">
-        {customization?.pretitleLabel && (
+        {mergedCustomization.pretitleLabel && (
           <EditableLabel
             as="p"
-            value={customization?.pretitleLabel}
+            value={mergedCustomization.pretitleLabel}
             editable={editable}
             onChange={(v) => handleChange("pretitleLabel", v)}
             className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4"
           />
         )}
-        {customization?.titleLabel && (
+        {mergedCustomization.titleLabel && (
           <EditableLabel
             as="h2"
-            value={customization?.titleLabel}
+            value={mergedCustomization.titleLabel}
             editable={editable}
             onChange={(v) => handleChange("titleLabel", v)}
             className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic mb-4"
           />
         )}
-        {customization?.descriptionLabel && (
+        {mergedCustomization.descriptionLabel && (
           <EditableLabel
             as="p"
-            value={customization?.descriptionLabel}
+            value={mergedCustomization.descriptionLabel}
             editable={editable}
             onChange={(v) => handleChange("descriptionLabel", v)}
             className="text-[#2c2c2c]/70 mb-12"
@@ -134,7 +140,7 @@ export function RsvpSection({
             <div className="relative">
               <Input
                 type="text"
-                placeholder={customization?.searchPlaceholderLabel}
+                placeholder={mergedCustomization.searchPlaceholderLabel}
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 className="h-14 text-lg text-center bg-transparent border-0 border-b-2 border-[#745656]/30 rounded-none focus:border-[#745656] focus:ring-0 placeholder:text-[#2c2c2c]/40"
@@ -144,7 +150,7 @@ export function RsvpSection({
               type="submit"
               className="h-14 px-12 bg-[#745656] hover:bg-[#5d4545] text-white tracking-[0.2em] uppercase text-sm"
             >
-              {customization?.searchButtonLabel}
+              {mergedCustomization.searchButtonLabel}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </form>
@@ -153,10 +159,10 @@ export function RsvpSection({
         {step === "found" && (
           <div className="space-y-8">
             <div className="py-8 border-y border-[#745656]/20">
-              {customization?.invitationLabel && (
+              {mergedCustomization.invitationLabel && (
                 <EditableLabel
                   as="p"
-                  value={customization?.invitationLabel}
+                  value={mergedCustomization.invitationLabel}
                   editable={editable}
                   onChange={(v) => handleChange("invitationLabel", v)}
                   className="text-[#2c2c2c]/60 text-sm tracking-[0.2em] uppercase mb-2"
@@ -168,10 +174,10 @@ export function RsvpSection({
             </div>
 
             <div className="space-y-4">
-              {customization?.questionLabel && (
+              {mergedCustomization.questionLabel && (
                 <EditableLabel
                   as="p"
-                  value={customization?.questionLabel}
+                  value={mergedCustomization.questionLabel}
                   editable={editable}
                   onChange={(v) => handleChange("questionLabel", v)}
                   className="text-[#2c2c2c]/70"
@@ -182,13 +188,13 @@ export function RsvpSection({
                   onClick={handleConfirm}
                   className="h-14 px-10 bg-[#745656] hover:bg-[#5d4545] text-white tracking-[0.2em] uppercase text-sm"
                 >
-                  {customization?.acceptButtonLabel}
+                  {mergedCustomization.acceptButtonLabel}
                 </Button>
                 <Button
                   variant="outline"
                   className="h-14 px-10 border-[#745656]/30 text-[#2c2c2c] hover:bg-[#745656]/5 tracking-[0.2em] uppercase text-sm bg-transparent"
                 >
-                  {customization?.declineButtonLabel}
+                  {mergedCustomization.declineButtonLabel}
                 </Button>
               </div>
             </div>
@@ -204,10 +210,10 @@ export function RsvpSection({
               <h3 className="font-serif text-3xl text-[#2c2c2c] italic mb-2">
                 {confirmationHeading}
               </h3>
-              {customization?.confirmationTextLabel && (
+              {mergedCustomization.confirmationTextLabel && (
                 <EditableLabel
                   as="p"
-                  value={customization?.confirmationTextLabel}
+                  value={mergedCustomization.confirmationTextLabel}
                   editable={editable}
                   onChange={(v) => handleChange("confirmationTextLabel", v)}
                   className="text-[#2c2c2c]/70"

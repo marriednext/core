@@ -1,6 +1,7 @@
 "use client";
 
 import "style-shelf/tailwind";
+import labels from "label-shelf/lisastheme";
 import type { LisasThemeTypes } from "./types";
 import { StickyNav } from "./StickyNav";
 import { HeroSection } from "./HeroSection";
@@ -28,6 +29,7 @@ export function LisasTheme({
   ourStoryImageComponent,
   galleryImages,
   websiteSections,
+  websiteLabels,
   editable = false,
   contained = false,
   onCustomizationChange,
@@ -36,6 +38,117 @@ export function LisasTheme({
     (section: string) => (key: string, value: string) => {
       onCustomizationChange?.(section, key, value);
     };
+
+  const getSectionLabels = (sectionId: string) => {
+    const defaults: Record<
+      string,
+      Record<string, string | Record<string, string>>
+    > = {
+      stickyNav: {
+        navLabels: {
+          home: labels["lisastheme.nav.home.label"],
+          story: labels["lisastheme.nav.story.label"],
+          details: labels["lisastheme.nav.details.label"],
+          gallery: labels["lisastheme.nav.gallery.label"],
+          rsvp: labels["lisastheme.nav.rsvp.label"],
+        },
+      },
+      hero: {
+        subtitleLabel: labels["lisastheme.hero.pretext.label"],
+      },
+      countdown: {
+        pretextLabel: labels["lisastheme.countdown.pretext.label"],
+        daysLabel: labels["lisastheme.countdown.days.label"],
+        hoursLabel: labels["lisastheme.countdown.hours.label"],
+        minutesLabel: labels["lisastheme.countdown.minutes.label"],
+        secondsLabel: labels["lisastheme.countdown.seconds.label"],
+      },
+      ourStory: {
+        pretitleLabel: labels["lisastheme.ourstory.pretitle.label"],
+        titleLabel: labels["lisastheme.ourstory.title.label"],
+        sectionTextLabel: labels["lisastheme.ourstory.section.text.label"],
+        sectionSubtextLabel:
+          labels["lisastheme.ourstory.section.subtext.label"],
+      },
+      eventDetails: {
+        headingPretextLabel: labels["lisastheme.details.pretitle.label"],
+        headingLabel: labels["lisastheme.details.title.label"],
+        ceremonyHeadingLabel: labels["lisastheme.details.ceremony.title.label"],
+        ceremonyDescriptionLabel:
+          labels["lisastheme.details.ceremony.text.label"],
+        venueHeadingLabel: labels["lisastheme.details.venue.title.label"],
+        viewMapLabel: labels["lisastheme.details.venue.button.label"],
+        celebrationHeadingLabel:
+          labels["lisastheme.details.celebration.title.label"],
+        celebrationDescriptionLabel:
+          labels["lisastheme.details.celebration.text.1.label"],
+        celebrationAttireLabel:
+          labels["lisastheme.details.celebration.text.2.label"],
+        dressCodeSectionLabel:
+          labels["lisastheme.details.dresscode.pretitle.label"],
+        dressCodeValueLabel: labels["lisastheme.details.dresscode.title.label"],
+        dressCodeNoteLabel: labels["lisastheme.details.dresscode.text.label"],
+      },
+      gallery: {
+        pretitleLabel: labels["lisastheme.moments.pretitle.label"],
+        titleLabel: labels["lisastheme.moments.title.label"],
+        imageAltLabel: labels["lisastheme.moments.image.alt.label"],
+      },
+      faq: {
+        pretitleLabel: labels["lisastheme.faq.section.pretitle.label"],
+        titleLabel: labels["lisastheme.faq.section.title.label"],
+        noteLabel: labels["lisastheme.faq.section.intro.label"],
+        noteLinkLabel: labels["lisastheme.faq.note.link.label"],
+        noteLinkHref: labels["lisastheme.faq.note.link.href"],
+      },
+      rsvp: {
+        pretitleLabel: labels["lisastheme.rsvp.pretitle.label"],
+        titleLabel: labels["lisastheme.rsvp.title.label"],
+        descriptionLabel: labels["lisastheme.rsvp.text.label"],
+        searchPlaceholderLabel:
+          labels["lisastheme.rsvp.search.placeholder.label"],
+        searchButtonLabel: labels["lisastheme.rsvp.search.button.label"],
+        invitationLabel:
+          labels["lisastheme.rsvp.search.results.pretitle.label"],
+        questionLabel: labels["lisastheme.rsvp.search.question.label"],
+        acceptButtonLabel: labels["lisastheme.rsvp.search.accept.label"],
+        declineButtonLabel: labels["lisastheme.rsvp.search.decline.label"],
+        confirmationHeadingLabel:
+          labels["lisastheme.rsvp.confirmation.heading.label"],
+        confirmationTextLabel:
+          labels["lisastheme.rsvp.confirmation.text.label"],
+      },
+      footer: {
+        pretitleLabel: labels["lisastheme.footer.pretitle.label"],
+        signatureLabel: labels["lisastheme.footer.signature.label"],
+      },
+    };
+
+    const sectionDefaults = defaults[sectionId] || {};
+    const userOverrides = websiteLabels?.[sectionId] || {};
+
+    const merged: Record<string, string | Record<string, string>> = {
+      ...sectionDefaults,
+    };
+
+    for (const [key, value] of Object.entries(userOverrides)) {
+      if (
+        key === "navLabels" &&
+        typeof sectionDefaults.navLabels === "object" &&
+        typeof value === "object" &&
+        !Array.isArray(value)
+      ) {
+        merged.navLabels = {
+          ...(sectionDefaults.navLabels as Record<string, string>),
+          ...(value as Record<string, string>),
+        };
+      } else {
+        merged[key] = value;
+      }
+    }
+
+    return merged;
+  };
 
   const sections = mergeSectionsWithDefaults(websiteSections);
   const sectionsMap = new Map(sections.map((s) => [s.id, s]));
@@ -47,6 +160,7 @@ export function LisasTheme({
   return (
     <div className="min-h-screen">
       <StickyNav
+        customization={getSectionLabels("stickyNav")}
         editable={editable}
         contained={contained}
         onCustomizationChange={handleSectionChange("stickyNav")}
@@ -61,6 +175,7 @@ export function LisasTheme({
             imageUrl: heroImageUrl,
             imageComponent: heroImageComponent,
           }}
+          customization={getSectionLabels("hero")}
           editable={editable}
           onCustomizationChange={handleSectionChange("hero")}
         />
@@ -69,6 +184,7 @@ export function LisasTheme({
         <div suppressHydrationWarning>
           <CountdownSection
             data={{ eventDate: fieldEventDate }}
+            customization={getSectionLabels("countdown")}
             editable={editable}
             onCustomizationChange={handleSectionChange("countdown")}
           />
@@ -82,6 +198,7 @@ export function LisasTheme({
             imageUrl: ourStoryImageUrl,
             imageComponent: ourStoryImageComponent,
           }}
+          customization={getSectionLabels("ourStory")}
           editable={editable}
           onCustomizationChange={handleSectionChange("ourStory")}
         />
@@ -95,6 +212,7 @@ export function LisasTheme({
             eventTime: fieldEventTime,
             mapsShareUrl: fieldMapsShareUrl,
           }}
+          customization={getSectionLabels("eventDetails")}
           editable={editable}
           onCustomizationChange={handleSectionChange("eventDetails")}
         />
@@ -107,6 +225,7 @@ export function LisasTheme({
                 ? galleryImages.map((url) => ({ src: url }))
                 : undefined,
           }}
+          customization={getSectionLabels("gallery")}
           editable={editable}
           onCustomizationChange={handleSectionChange("gallery")}
         />
@@ -114,6 +233,7 @@ export function LisasTheme({
       {isSectionEnabled("faq") && (
         <FaqSection
           data={{}}
+          customization={getSectionLabels("faq")}
           editable={editable}
           onCustomizationChange={handleSectionChange("faq")}
         />
@@ -121,6 +241,7 @@ export function LisasTheme({
       {isSectionEnabled("rsvp") && (
         <RsvpSection
           data={{ rsvpFormComponent }}
+          customization={getSectionLabels("rsvp")}
           editable={editable}
           onCustomizationChange={handleSectionChange("rsvp")}
         />
@@ -132,6 +253,7 @@ export function LisasTheme({
           eventDate: fieldEventDate,
           location: fieldLocationName,
         }}
+        customization={getSectionLabels("footer")}
         editable={editable}
         onCustomizationChange={handleSectionChange("footer")}
       />

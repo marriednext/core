@@ -32,6 +32,7 @@ export type WeddingData = {
   controlRsvpNameFormat: "FIRST_NAME_ONLY" | "FULL_NAME";
   photos?: WeddingPhoto[];
   websiteSections?: WebsiteSection[] | null;
+  websiteLabels?: Record<string, Record<string, string>> | null;
 };
 
 export type QA = {

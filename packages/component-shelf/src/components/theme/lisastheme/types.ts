@@ -10,6 +10,8 @@ export type WebsiteSection = {
  * Top-level props for the LisasTheme component.
  * @database
  */
+export type WebsiteLabels = Record<string, Record<string, string>>;
+
 export interface LisasThemeTypes {
   fieldNameA: string | null;
   fieldNameB: string | null;
@@ -25,13 +27,10 @@ export interface LisasThemeTypes {
   ourStoryImageComponent?: ReactNode;
   galleryImages?: string[];
   websiteSections?: WebsiteSection[] | null;
+  websiteLabels?: WebsiteLabels | null;
   editable?: boolean;
   contained?: boolean;
-  onCustomizationChange?: (
-    section: string,
-    key: string,
-    value: string
-  ) => void;
+  onCustomizationChange?: (section: string, key: string, value: string) => void;
 }
 
 /**

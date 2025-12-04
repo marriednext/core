@@ -36,6 +36,7 @@ export default function Home() {
           : undefined
       }
       websiteSections={weddingData.websiteSections}
+      websiteLabels={weddingData.websiteLabels}
     />
   );
 }

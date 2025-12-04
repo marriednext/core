@@ -32,7 +32,7 @@ const defaultRegistryEntries: RegistryEntry[] = [
   },
 ];
 
-const defaultRegistryCustomization: RegistrySectionCustomization = {
+const defaultRegistryLabels: RegistrySectionCustomization = {
   pretitleLabel: labels["lisastheme.registry.section.pretitle.label"],
   titleLabel: labels["lisastheme.registry.section.title.label"],
   descriptionLabel: labels["lisastheme.registry.section.description.label"],
@@ -42,13 +42,16 @@ const defaultRegistryCustomization: RegistrySectionCustomization = {
 };
 
 export function RegistrySection({
-  customization = defaultRegistryCustomization,
+  customization = defaultRegistryLabels,
   editable = false,
   onCustomizationChange,
 }: RegistrySectionProps) {
   const registries = customization?.registries ?? [];
 
-  const handleChange = (key: keyof RegistrySectionCustomization, value: string) => {
+  const handleChange = (
+    key: keyof RegistrySectionCustomization,
+    value: string
+  ) => {
     onCustomizationChange?.(key, value);
   };
 

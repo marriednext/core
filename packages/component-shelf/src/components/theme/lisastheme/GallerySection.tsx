@@ -20,16 +20,22 @@ const defaultImages: GalleryImage[] = [
   { src: "/romantic-dance.png", span: "" },
 ];
 
+const defaultGalleryLabels = {
+  pretitleLabel: labels["lisastheme.moments.pretitle.label"],
+  titleLabel: labels["lisastheme.moments.title.label"],
+  imageAltLabel: labels["lisastheme.moments.image.alt.label"],
+};
+
 export function GallerySection({
   data,
-  customization = {
-    pretitleLabel: labels["lisastheme.moments.pretitle.label"],
-    titleLabel: labels["lisastheme.moments.title.label"],
-    imageAltLabel: labels["lisastheme.moments.image.alt.label"],
-  },
+  customization,
   editable = false,
   onCustomizationChange,
 }: GallerySectionProps) {
+  const mergedCustomization = {
+    ...defaultGalleryLabels,
+    ...customization,
+  };
   const images = data?.images ?? defaultImages;
 
   const handleChange = (
@@ -43,19 +49,19 @@ export function GallerySection({
     <section id="gallery" className="py-32 bg-[#f5f3eb]">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          {customization?.pretitleLabel && (
+          {mergedCustomization.pretitleLabel && (
             <EditableLabel
               as="p"
-              value={customization?.pretitleLabel}
+              value={mergedCustomization.pretitleLabel}
               editable={editable}
               onChange={(v) => handleChange("pretitleLabel", v)}
               className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4"
             />
           )}
-          {customization?.titleLabel && (
+          {mergedCustomization.titleLabel && (
             <EditableLabel
               as="h2"
-              value={customization?.titleLabel}
+              value={mergedCustomization.titleLabel}
               editable={editable}
               onChange={(v) => handleChange("titleLabel", v)}
               className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic"
@@ -73,7 +79,7 @@ export function GallerySection({
             >
               <img
                 src={image?.src || "/placeholder.svg"}
-                alt={`${customization?.imageAltLabel} ${index + 1}`}
+                alt={`${mergedCustomization.imageAltLabel} ${index + 1}`}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>

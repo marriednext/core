@@ -39,6 +39,14 @@ const websiteBuilderSchema = z.object({
     email: z.string(),
   }),
   subscriptionPlan: z.string(),
+  websiteSections: z.array(
+    z.object({
+      id: z.string(),
+      enabled: z.boolean(),
+      order: z.number(),
+    })
+  ).nullable().optional(),
+  websiteLabels: z.record(z.string(), z.record(z.string(), z.string())).nullable().optional(),
 });
 
 type WebsiteBuilderResponse = z.infer<typeof websiteBuilderSchema>;
@@ -67,6 +75,8 @@ function transformToBuilderData(
     subdomain: response.subdomain || null,
     customDomain: response.customDomain || null,
     subscriptionPlan: response.subscriptionPlan,
+    websiteSections: response.websiteSections,
+    websiteLabels: response.websiteLabels,
   };
 }
 

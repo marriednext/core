@@ -13,15 +13,21 @@ function formatDate(dateString: string | null | undefined): string {
   });
 }
 
+const defaultFooterLabels = {
+  pretitleLabel: labels["lisastheme.footer.pretitle.label"],
+  signatureLabel: labels["lisastheme.footer.signature.label"],
+};
+
 export function FooterSection({
   data,
-  customization = {
-    pretitleLabel: labels["lisastheme.footer.pretitle.label"],
-    signatureLabel: labels["lisastheme.footer.signature.label"],
-  },
+  customization,
   editable = false,
   onCustomizationChange,
 }: FooterSectionProps) {
+  const mergedCustomization = {
+    ...defaultFooterLabels,
+    ...customization,
+  };
   const coupleName =
     data?.nameA && data?.nameB ? `${data?.nameA} & ${data?.nameB}` : "Us";
   const formattedDate = formatDate(data?.eventDate);
@@ -39,10 +45,10 @@ export function FooterSection({
   return (
     <footer className="py-20 bg-[#2c2c2c] text-white/80">
       <div className="max-w-4xl mx-auto px-6 text-center">
-        {customization?.pretitleLabel && (
+        {mergedCustomization.pretitleLabel && (
           <EditableLabel
             as="p"
-            value={customization?.pretitleLabel}
+            value={mergedCustomization.pretitleLabel}
             editable={editable}
             onChange={(v) => handleChange("pretitleLabel", v)}
             className="tracking-[0.4em] uppercase text-sm text-white/50 mb-4"
@@ -66,10 +72,10 @@ export function FooterSection({
           </p>
         )}
 
-        {customization?.signatureLabel && (
+        {mergedCustomization.signatureLabel && (
           <EditableLabel
             as="p"
-            value={customization?.signatureLabel}
+            value={mergedCustomization.signatureLabel}
             editable={editable}
             onChange={(v) => handleChange("signatureLabel", v)}
             className="mt-12 text-white/30 text-xs"

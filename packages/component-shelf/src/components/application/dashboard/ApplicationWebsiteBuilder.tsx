@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -125,6 +125,8 @@ export type WebsiteBuilderPhoto = {
   displayOrder: number;
 };
 
+export type WebsiteLabels = Record<string, Record<string, string>>;
+
 export type WebsiteBuilderData = {
   fieldNameA: string | null;
   fieldNameB: string | null;
@@ -135,6 +137,7 @@ export type WebsiteBuilderData = {
   fieldMapsShareUrl: string | null;
   photos?: WebsiteBuilderPhoto[];
   websiteSections?: WebsiteSection[] | null;
+  websiteLabels?: WebsiteLabels | null;
   subdomain?: string | null;
   customDomain?: string | null;
   subscriptionPlan?: string;
@@ -165,6 +168,13 @@ export function ApplicationWebsiteBuilder({
     mergeSectionsWithDefaults(data?.websiteSections)
   );
   const [isSavingSections, setIsSavingSections] = useState(false);
+  const [labelOverrides, setLabelOverrides] = useState<WebsiteLabels>(
+    () => data?.websiteLabels || {}
+  );
+  const labelSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  const pendingLabelChangesRef = useRef<WebsiteLabels>({});
 
   const defaultContent: WebsiteContent = {
     coupleNames: "Sarah & Michael",
@@ -239,7 +249,7 @@ export function ApplicationWebsiteBuilder({
       return `${subdomain}.marriednext.com`;
     }
 
-    return "marriednext.com/sarah-michael";
+    return "marriednext.com";
   };
 
   const previewUrl = getPreviewUrl();
@@ -304,6 +314,7 @@ export function ApplicationWebsiteBuilder({
       });
 
       setSections(mergeSectionsWithDefaults(data.websiteSections));
+      setLabelOverrides(data.websiteLabels || {});
     }
   }, [data, themeId]);
 
@@ -431,6 +442,66 @@ export function ApplicationWebsiteBuilder({
       setIsSavingSections(false);
     }
   };
+
+  const saveLabels = useCallback(async (labelsToSave: WebsiteLabels) => {
+    try {
+      const response = await fetch("/api/website-builder", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ websiteLabels: labelsToSave }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save labels");
+      }
+
+      pendingLabelChangesRef.current = {};
+    } catch (error) {
+      console.error("Error saving labels:", error);
+    }
+  }, []);
+
+  const handleCustomizationChange = useCallback(
+    (section: string, key: string, value: string) => {
+      setLabelOverrides((prev) => {
+        const updated = {
+          ...prev,
+          [section]: {
+            ...(prev[section] || {}),
+            [key]: value,
+          },
+        };
+        return updated;
+      });
+
+      pendingLabelChangesRef.current = {
+        ...pendingLabelChangesRef.current,
+        [section]: {
+          ...(pendingLabelChangesRef.current[section] || {}),
+          [key]: value,
+        },
+      };
+
+      setHasChanges(true);
+
+      if (labelSaveTimeoutRef.current) {
+        clearTimeout(labelSaveTimeoutRef.current);
+      }
+
+      labelSaveTimeoutRef.current = setTimeout(() => {
+        saveLabels(pendingLabelChangesRef.current);
+      }, 1000);
+    },
+    [saveLabels]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (labelSaveTimeoutRef.current) {
+        clearTimeout(labelSaveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -988,8 +1059,10 @@ export function ApplicationWebsiteBuilder({
                       : undefined
                   }
                   websiteSections={sections}
+                  websiteLabels={labelOverrides}
                   editable={true}
                   contained={true}
+                  onCustomizationChange={handleCustomizationChange}
                 />
               ) : (
                 <div className="flex items-center justify-center min-h-[600px]">

@@ -69,6 +69,7 @@ export async function GET() {
       },
       subscriptionPlan,
       websiteSections: wedding.websiteSections,
+      websiteLabels: wedding.websiteLabels,
     });
   } catch (error) {
     console.error("Error fetching website builder data:", error);
@@ -87,6 +88,22 @@ const websiteSectionsSchema = z.array(
   })
 );
 
+const websiteLabelsSchema = z.record(
+  z.string(),
+  z.record(z.string(), z.string())
+);
+
+const patchBodySchema = z
+  .object({
+    websiteSections: websiteSectionsSchema.optional(),
+    websiteLabels: websiteLabelsSchema.optional(),
+  })
+  .refine(
+    (data) =>
+      data.websiteSections !== undefined || data.websiteLabels !== undefined,
+    { message: "At least one of websiteSections or websiteLabels is required" }
+  );
+
 export async function PATCH(req: NextRequest) {
   try {
     const user = await currentUser();
@@ -102,23 +119,39 @@ export async function PATCH(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { websiteSections } = body;
+    const validated = patchBodySchema.parse(body);
 
-    if (!websiteSections) {
-      return NextResponse.json(
-        { error: "websiteSections is required" },
-        { status: 400 }
-      );
+    const updateData: {
+      websiteSections?: typeof validated.websiteSections;
+      websiteLabels?: typeof validated.websiteLabels;
+      updatedAt: string;
+    } = {
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (validated.websiteSections) {
+      updateData.websiteSections = validated.websiteSections;
     }
 
-    const validatedSections = websiteSectionsSchema.parse(websiteSections);
+    if (validated.websiteLabels) {
+      const existingLabels = weddingData.websiteLabels || {};
+      const mergedLabels = { ...existingLabels };
+
+      for (const [sectionId, labels] of Object.entries(
+        validated.websiteLabels
+      )) {
+        mergedLabels[sectionId] = {
+          ...(mergedLabels[sectionId] || {}),
+          ...labels,
+        };
+      }
+
+      updateData.websiteLabels = mergedLabels;
+    }
 
     await db
       .update(wedding)
-      .set({
-        websiteSections: validatedSections,
-        updatedAt: new Date().toISOString(),
-      })
+      .set(updateData)
       .where(eq(wedding.id, weddingData.id));
 
     await invalidateWeddingCache({
@@ -128,7 +161,8 @@ export async function PATCH(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      websiteSections: validatedSections,
+      websiteSections: validated.websiteSections,
+      websiteLabels: updateData.websiteLabels,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -137,9 +171,9 @@ export async function PATCH(req: NextRequest) {
         { status: 400 }
       );
     }
-    console.error("Error updating website sections:", error);
+    console.error("Error updating website builder data:", error);
     return NextResponse.json(
-      { error: "Failed to update website sections" },
+      { error: "Failed to update website builder data" },
       { status: 500 }
     );
   }

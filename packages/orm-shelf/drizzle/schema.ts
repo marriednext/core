@@ -27,7 +27,12 @@ export const tableType = pgEnum("table_type", [
   "circle",
 ]);
 export const userRole = pgEnum("user_role", ["spouse", "family", "planner"]);
-export const photoType = pgEnum("photo_type", ["hero", "story", "gallery", "memory"]);
+export const photoType = pgEnum("photo_type", [
+  "hero",
+  "story",
+  "gallery",
+  "memory",
+]);
 
 export const wedding = pgTable(
   "wedding",
@@ -74,6 +79,8 @@ export const wedding = pgTable(
         order: number;
       }[]
     >(),
+    websiteLabels:
+      jsonb("website_labels").$type<Record<string, Record<string, string>>>(),
   },
   (table) => [
     unique("weddings_subdomain_unique").on(table.subdomain),

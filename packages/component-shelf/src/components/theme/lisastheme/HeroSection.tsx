@@ -2,7 +2,7 @@
 
 import "style-shelf/tailwind";
 import { useEffect, useState } from "react";
-import type { HeroSectionProps } from "./types";
+import type { HeroSectionCustomization, HeroSectionProps } from "./types";
 import labels from "label-shelf/lisastheme";
 import { EditableLabel } from "../../ui/editable-label";
 
@@ -16,14 +16,20 @@ function formatDate(dateString: string | null | undefined): string {
   });
 }
 
+const defaultHeroLabels = {
+  subtitleLabel: labels["lisastheme.hero.pretext.label"],
+};
+
 export function HeroSection({
   data,
-  customization = {
-    subtitleLabel: labels["lisastheme.hero.pretext.label"],
-  },
+  customization,
   editable = false,
   onCustomizationChange,
 }: HeroSectionProps) {
+  const mergedCustomization = {
+    ...defaultHeroLabels,
+    ...customization,
+  };
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -33,7 +39,7 @@ export function HeroSection({
 
   const formattedDate = formatDate(data?.eventDate);
 
-  const handleChange = (key: keyof typeof customization, value: string) => {
+  const handleChange = (key: keyof HeroSectionCustomization, value: string) => {
     onCustomizationChange?.(key, value);
   };
 
@@ -65,10 +71,10 @@ export function HeroSection({
           mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
       >
-        {customization?.subtitleLabel && (
+        {mergedCustomization.subtitleLabel && (
           <EditableLabel
             as="p"
-            value={customization?.subtitleLabel}
+            value={mergedCustomization.subtitleLabel}
             editable={editable}
             onChange={(v) => handleChange("subtitleLabel", v)}
             className="text-white/90 tracking-[0.4em] uppercase text-sm mb-6"

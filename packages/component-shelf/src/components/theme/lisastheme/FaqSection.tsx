@@ -46,7 +46,7 @@ const defaultFaqItems: FaqItem[] = [
   },
 ];
 
-const defaultFaqCustomization: FaqSectionCustomization = {
+const defaultFaqLabels: FaqSectionCustomization = {
   pretitleLabel: labels["lisastheme.faq.section.pretitle.label"],
   titleLabel: labels["lisastheme.faq.section.title.label"],
   noteLabel: labels["lisastheme.faq.section.intro.label"],
@@ -56,10 +56,14 @@ const defaultFaqCustomization: FaqSectionCustomization = {
 
 export function FaqSection({
   data,
-  customization = defaultFaqCustomization,
+  customization,
   editable = false,
   onCustomizationChange,
 }: FaqSectionProps) {
+  const mergedCustomization = {
+    ...defaultFaqLabels,
+    ...customization,
+  };
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const faqItems = data?.faqs ?? defaultFaqItems;
 
@@ -71,19 +75,19 @@ export function FaqSection({
     <section id="faq" className="py-32 px-6 bg-[#faf9f6]">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-20">
-          {customization?.pretitleLabel && (
+          {mergedCustomization.pretitleLabel && (
             <EditableLabel
               as="p"
-              value={customization?.pretitleLabel}
+              value={mergedCustomization.pretitleLabel}
               editable={editable}
               onChange={(v) => handleChange("pretitleLabel", v)}
               className="text-sm tracking-[0.3em] uppercase text-[#745656] mb-4"
             />
           )}
-          {customization?.titleLabel && (
+          {mergedCustomization.titleLabel && (
             <EditableLabel
               as="h2"
-              value={customization?.titleLabel}
+              value={mergedCustomization.titleLabel}
               editable={editable}
               onChange={(v) => handleChange("titleLabel", v)}
               className="font-serif text-5xl md:text-6xl text-[#2c2c2c] mb-6"
@@ -126,23 +130,23 @@ export function FaqSection({
         </div>
 
         <div className="mt-16 pt-12 border-t border-[#745656]/20 text-center">
-          {customization?.noteLabel && (
+          {mergedCustomization.noteLabel && (
             <EditableLabel
               as="p"
-              value={customization?.noteLabel}
+              value={mergedCustomization.noteLabel}
               editable={editable}
               onChange={(v) => handleChange("noteLabel", v)}
               className="text-lg text-[#2c2c2c]/70 mb-4"
             />
           )}
-          {customization?.noteLinkLabel && (
+          {mergedCustomization.noteLinkLabel && (
             <a
-              href={customization?.noteLinkHref}
+              href={mergedCustomization.noteLinkHref}
               className="inline-flex items-center gap-2 text-[#745656] text-lg hover:underline underline-offset-4 transition-all"
             >
               <EditableLabel
                 as="span"
-                value={customization?.noteLinkLabel}
+                value={mergedCustomization.noteLinkLabel}
                 editable={editable}
                 onChange={(v) => handleChange("noteLinkLabel", v)}
               />

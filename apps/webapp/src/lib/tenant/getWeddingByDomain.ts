@@ -28,6 +28,7 @@ async function getWeddingFromDatabase(
       fieldNameB: wedding.fieldNameB,
       controlRsvpNameFormat: wedding.controlRsvpNameFormat,
       websiteSections: wedding.websiteSections,
+      websiteLabels: wedding.websiteLabels,
     })
     .from(wedding)
     .where(or(eq(wedding.subdomain, domain), eq(wedding.customDomain, domain)))
@@ -51,7 +52,13 @@ async function getWeddingFromDatabase(
 
   return {
     ...result,
-    photos: photos.length > 0 ? photos.map(photo => ({ ...photo, displayOrder: photo.displayOrder ?? 0 })) : undefined,
+    photos:
+      photos.length > 0
+        ? photos.map((photo) => ({
+            ...photo,
+            displayOrder: photo.displayOrder ?? 0,
+          }))
+        : undefined,
   };
 }
 

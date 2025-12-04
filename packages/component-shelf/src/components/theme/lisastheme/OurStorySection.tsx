@@ -34,7 +34,7 @@ const defaultMilestones: Milestone[] = [
   },
 ];
 
-const defaultOurStoryCustomization: OurStorySectionCustomization = {
+const defaultOurStoryLabels: OurStorySectionCustomization = {
   pretitleLabel: labels["lisastheme.ourstory.pretitle.label"],
   titleLabel: labels["lisastheme.ourstory.title.label"],
   sectionTextLabel: labels["lisastheme.ourstory.section.text.label"],
@@ -43,10 +43,14 @@ const defaultOurStoryCustomization: OurStorySectionCustomization = {
 
 export function OurStorySection({
   data,
-  customization = defaultOurStoryCustomization,
+  customization,
   editable = false,
   onCustomizationChange,
 }: OurStorySectionProps) {
+  const mergedCustomization = {
+    ...defaultOurStoryLabels,
+    ...customization,
+  };
   const coupleName =
     data?.nameA && data?.nameB ? `${data?.nameA} and ${data?.nameB}` : "Us";
   const milestones = data?.milestones ?? defaultMilestones;
@@ -62,19 +66,19 @@ export function OurStorySection({
     <section id="story" className="py-32 bg-[#f5f3eb]">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-20">
-          {customization?.pretitleLabel && (
+          {mergedCustomization.pretitleLabel && (
             <EditableLabel
               as="p"
-              value={customization?.pretitleLabel}
+              value={mergedCustomization.pretitleLabel}
               editable={editable}
               onChange={(v) => handleChange("pretitleLabel", v)}
               className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4"
             />
           )}
-          {customization?.titleLabel && (
+          {mergedCustomization.titleLabel && (
             <EditableLabel
               as="h2"
-              value={customization?.titleLabel}
+              value={mergedCustomization.titleLabel}
               editable={editable}
               onChange={(v) => handleChange("titleLabel", v)}
               className="font-serif text-5xl md:text-6xl text-[#2c2c2c] font-light italic"
@@ -96,19 +100,19 @@ export function OurStorySection({
             )}
           </div>
           <div className="space-y-8">
-            {customization?.sectionTextLabel && (
+            {mergedCustomization.sectionTextLabel && (
               <EditableLabel
                 as="p"
-                value={customization?.sectionTextLabel}
+                value={mergedCustomization.sectionTextLabel}
                 editable={editable}
                 onChange={(v) => handleChange("sectionTextLabel", v)}
                 className="text-xl md:text-2xl text-[#2c2c2c]/80 font-light leading-relaxed"
               />
             )}
-            {customization?.sectionSubtextLabel && (
+            {mergedCustomization.sectionSubtextLabel && (
               <EditableLabel
                 as="p"
-                value={customization?.sectionSubtextLabel}
+                value={mergedCustomization.sectionSubtextLabel}
                 editable={editable}
                 onChange={(v) => handleChange("sectionSubtextLabel", v)}
                 className="text-lg text-[#2c2c2c]/70 leading-relaxed"

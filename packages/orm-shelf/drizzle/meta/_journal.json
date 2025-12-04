@@ -15,6 +15,13 @@
       "when": 1764648020521,
       "tag": "0001_rapid_mephisto",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1733328000000,
+      "tag": "0002_add_website_labels",
+      "breakpoints": true
     }
   ]
 }

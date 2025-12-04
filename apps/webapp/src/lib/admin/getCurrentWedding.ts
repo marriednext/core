@@ -39,6 +39,7 @@ export async function getCurrentWedding() {
       fieldPreferredLocationZipCode: wedding.fieldPreferredLocationZipCode,
       fieldPreferredLocationCountry: wedding.fieldPreferredLocationCountry,
       websiteSections: wedding.websiteSections,
+      websiteLabels: wedding.websiteLabels,
     })
     .from(weddingUsers)
     .innerJoin(wedding, eq(weddingUsers.weddingId, wedding.id))

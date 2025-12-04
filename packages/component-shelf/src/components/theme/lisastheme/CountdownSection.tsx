@@ -4,21 +4,31 @@ import "style-shelf/tailwind";
 import { useState, useEffect } from "react";
 import { differenceInSeconds } from "date-fns";
 import labels from "label-shelf/lisastheme";
-import type { CountdownSectionProps, TimeLeft } from "./types";
+import type {
+  CountdownSectionCustomization,
+  CountdownSectionProps,
+  TimeLeft,
+} from "./types";
 import { EditableLabel } from "../../ui/editable-label";
+
+const defaultCountdownLabels = {
+  pretextLabel: labels["lisastheme.countdown.pretext.label"],
+  daysLabel: labels["lisastheme.countdown.days.label"],
+  hoursLabel: labels["lisastheme.countdown.hours.label"],
+  minutesLabel: labels["lisastheme.countdown.minutes.label"],
+  secondsLabel: labels["lisastheme.countdown.seconds.label"],
+};
 
 export function CountdownSection({
   data,
-  customization = {
-    pretextLabel: labels["lisastheme.countdown.pretext.label"],
-    daysLabel: labels["lisastheme.countdown.days.label"],
-    hoursLabel: labels["lisastheme.countdown.hours.label"],
-    minutesLabel: labels["lisastheme.countdown.minutes.label"],
-    secondsLabel: labels["lisastheme.countdown.seconds.label"],
-  },
+  customization,
   editable = false,
   onCustomizationChange,
 }: CountdownSectionProps) {
+  const mergedCustomization = {
+    ...defaultCountdownLabels,
+    ...customization,
+  };
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
     hours: 0,
@@ -62,29 +72,32 @@ export function CountdownSection({
     return () => clearInterval(timer);
   }, [data?.eventDate]);
 
-  const handleChange = (key: keyof typeof customization, value: string) => {
+  const handleChange = (
+    key: keyof CountdownSectionCustomization,
+    value: string
+  ) => {
     onCustomizationChange?.(key, value);
   };
 
   const timeUnits = [
     {
       value: timeLeft.days,
-      label: customization?.daysLabel,
+      label: mergedCustomization.daysLabel,
       key: "daysLabel" as const,
     },
     {
       value: timeLeft.hours,
-      label: customization?.hoursLabel,
+      label: mergedCustomization.hoursLabel,
       key: "hoursLabel" as const,
     },
     {
       value: timeLeft.minutes,
-      label: customization?.minutesLabel,
+      label: mergedCustomization.minutesLabel,
       key: "minutesLabel" as const,
     },
     {
       value: timeLeft.seconds,
-      label: customization?.secondsLabel,
+      label: mergedCustomization.secondsLabel,
       key: "secondsLabel" as const,
     },
   ];
@@ -92,10 +105,10 @@ export function CountdownSection({
   return (
     <section className="@container py-32 bg-[#faf9f6]">
       <div className="max-w-5xl mx-auto px-6 text-center">
-        {customization?.pretextLabel && (
+        {mergedCustomization.pretextLabel && (
           <EditableLabel
             as="p"
-            value={customization?.pretextLabel}
+            value={mergedCustomization.pretextLabel}
             editable={editable}
             onChange={(v) => handleChange("pretextLabel", v)}
             className="text-[#745656] tracking-[0.4em] uppercase text-sm mb-4"
