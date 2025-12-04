@@ -870,7 +870,7 @@ export function ApplicationWebsiteBuilder({
         )}
 
         {/* Right Panel - Preview */}
-        <div className="bg-card text-card-foreground flex flex-col rounded-xl border shadow-sm flex-1 min-w-0 overflow-hidden">
+        <div className="bg-card text-card-foreground flex flex-col rounded-xl border shadow-sm flex-1 min-w-0 overflow-hidden h-fit">
           <div className="border-b border-border py-3 px-4">
             <div className="flex flex-col gap-3">
               {/* Top row: Preview URL and view options */}
