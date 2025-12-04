@@ -25,6 +25,17 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../../components/ui/alert-dialog";
+import {
   Palette,
   ImageIcon,
   Layout,
@@ -514,10 +525,29 @@ export function ApplicationWebsiteBuilder({
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" onClick={handleReset}>
-            <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
-            Reset to Default
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" size="sm">
+                <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
+                Reset to Default
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Reset to Default Settings</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will restore all customizations to their original values.
+                  Any unsaved changes will be lost.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleReset}>
+                  Reset
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <Button variant="outline" size="sm" asChild>
             <a href="/templates">
               <LayoutTemplate className="h-3.5 w-3.5 mr-1.5" />
