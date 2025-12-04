@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useWebsiteBuilderStore } from "../../../stores/websiteBuilderStore";
+import {
+  useWebsiteBuilderStore,
+  areLabelsEqual,
+  areSectionsEqual,
+} from "../../../stores/websiteBuilderStore";
 import {
   Card,
   CardContent,
@@ -174,19 +178,19 @@ export function ApplicationWebsiteBuilder({
   const [recentlyUploadedPhotos, setRecentlyUploadedPhotos] = useState<
     Map<string, string>
   >(new Map());
-  const [sections, setSections] = useState<WebsiteSection[]>(() =>
-    mergeSectionsWithDefaults(data?.websiteSections)
-  );
-  const [isSavingSections, setIsSavingSections] = useState(false);
-  const [isSavingLabels, setIsSavingLabels] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const {
     pendingLabels,
+    pendingSections,
     initializeLabels,
+    initializeSections,
     updateLabel,
+    updateSection,
     commitLabels,
+    commitSections,
     discardChanges,
-    hasUnsavedChanges: hasUnsavedLabelChanges,
+    hasUnsavedChanges,
   } = useWebsiteBuilderStore();
 
   const defaultContent: WebsiteContent = {
@@ -327,10 +331,11 @@ export function ApplicationWebsiteBuilder({
         return newMap;
       });
 
-      setSections(mergeSectionsWithDefaults(data.websiteSections));
+      const mergedSections = mergeSectionsWithDefaults(data.websiteSections);
+      initializeSections(mergedSections);
       initializeLabels(data.websiteLabels || {});
     }
-  }, [data, themeId, initializeLabels]);
+  }, [data, themeId, initializeLabels, initializeSections]);
 
   const handleUploadPhoto = async (
     photoType: "hero" | "story" | "gallery",
@@ -428,33 +433,9 @@ export function ApplicationWebsiteBuilder({
     setHasChanges(true);
   };
 
-  const handleSectionToggle = async (sectionId: string, enabled: boolean) => {
-    const updatedSections = sections.map((section) =>
-      section.id === sectionId ? { ...section, enabled } : section
-    );
-    setSections(updatedSections);
+  const handleSectionToggle = (sectionId: string, enabled: boolean) => {
+    updateSection(sectionId, enabled);
     setHasChanges(true);
-
-    setIsSavingSections(true);
-    try {
-      const response = await fetch("/api/website-builder", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ websiteSections: updatedSections }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to save sections");
-      }
-    } catch (error) {
-      console.error("Error saving sections:", error);
-      const revertedSections = sections.map((section) =>
-        section.id === sectionId ? { ...section, enabled: !enabled } : section
-      );
-      setSections(revertedSections);
-    } finally {
-      setIsSavingSections(false);
-    }
   };
 
   const handleCustomizationChange = (
@@ -469,70 +450,66 @@ export function ApplicationWebsiteBuilder({
   const handleSaveChanges = async () => {
     if (!hasChanges) return;
 
-    const hasLabelChanges = hasUnsavedLabelChanges();
-    const hasSectionChanges = sections.some(
-      (section) =>
-        section.enabled !==
-        (data?.websiteSections?.find((s) => s.id === section.id)?.enabled ??
-          false)
-    );
-
-    if (hasLabelChanges) {
-      setIsSavingLabels(true);
-      try {
-        const response = await fetch("/api/website-builder", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ websiteLabels: pendingLabels }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to save labels");
-        }
-
-        const { websiteLabels } = await response.json();
-        commitLabels(websiteLabels || {});
-      } catch (error) {
-        console.error("Error saving labels:", error);
-        return;
-      } finally {
-        setIsSavingLabels(false);
-      }
+    const hasChangesToSave = hasUnsavedChanges();
+    if (!hasChangesToSave) {
+      setHasChanges(false);
+      return;
     }
 
-    if (hasSectionChanges) {
-      setIsSavingSections(true);
-      try {
-        const response = await fetch("/api/website-builder", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ websiteSections: sections }),
-        });
+    setIsSaving(true);
+    try {
+      const store = useWebsiteBuilderStore.getState();
+      const payload: {
+        websiteLabels?: WebsiteLabels;
+        websiteSections?: WebsiteSection[];
+      } = {};
 
-        if (!response.ok) {
-          throw new Error("Failed to save sections");
-        }
-      } catch (error) {
-        console.error("Error saving sections:", error);
-        return;
-      } finally {
-        setIsSavingSections(false);
+      if (!areLabelsEqual(store.savedLabels, store.pendingLabels)) {
+        payload.websiteLabels = store.pendingLabels;
       }
-    }
 
-    setHasChanges(false);
+      if (!areSectionsEqual(store.savedSections, store.pendingSections)) {
+        payload.websiteSections = store.pendingSections;
+      }
+
+      const response = await fetch("/api/website-builder", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save changes");
+      }
+
+      const result = await response.json();
+
+      if (
+        payload.websiteLabels !== undefined &&
+        result.websiteLabels !== undefined
+      ) {
+        commitLabels(result.websiteLabels);
+      }
+
+      if (
+        payload.websiteSections !== undefined &&
+        result.websiteSections !== undefined
+      ) {
+        commitSections(result.websiteSections);
+      }
+
+      setHasChanges(false);
+    } catch (error) {
+      console.error("Error saving changes:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   useEffect(() => {
-    const hasLabelChanges = hasUnsavedLabelChanges();
-    const hasSectionChanges = sections.some(
-      (section) =>
-        section.enabled !==
-        (data?.websiteSections?.find((s) => s.id === section.id)?.enabled ??
-          false)
-    );
-    setHasChanges(hasLabelChanges || hasSectionChanges);
-  }, [pendingLabels, sections, data?.websiteSections, hasUnsavedLabelChanges]);
+    const hasChangesToSave = hasUnsavedChanges();
+    setHasChanges(hasChangesToSave);
+  }, [pendingLabels, pendingSections, hasUnsavedChanges]);
 
   return (
     <div className="space-y-6">
@@ -578,11 +555,11 @@ export function ApplicationWebsiteBuilder({
           </Button>
           <Button
             size="sm"
-            disabled={!hasChanges || isSavingLabels || isSavingSections}
+            disabled={!hasChanges || isSaving}
             onClick={handleSaveChanges}
           >
             <Save className="h-4 w-4 mr-2" />
-            {isSavingLabels || isSavingSections ? "Saving..." : "Save Changes"}
+            {isSaving ? "Saving..." : "Save Changes"}
           </Button>
         </div>
       </div>
@@ -969,7 +946,7 @@ export function ApplicationWebsiteBuilder({
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      {sections
+                      {pendingSections
                         .sort((a, b) => a.order - b.order)
                         .map((section) => (
                           <div
@@ -984,7 +961,7 @@ export function ApplicationWebsiteBuilder({
                               onCheckedChange={(enabled) =>
                                 handleSectionToggle(section.id, enabled)
                               }
-                              disabled={isSavingSections}
+                              disabled={isSaving}
                             />
                           </div>
                         ))}
@@ -1098,7 +1075,7 @@ export function ApplicationWebsiteBuilder({
                       ? content.galleryImages
                       : undefined
                   }
-                  websiteSections={sections}
+                  websiteSections={pendingSections}
                   websiteLabels={pendingLabels}
                   editable={true}
                   contained={true}
