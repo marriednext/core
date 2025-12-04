@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { useWebsiteBuilderStore } from "../../../stores/websiteBuilderStore";
 import {
   Card,
   CardContent,
@@ -177,13 +178,16 @@ export function ApplicationWebsiteBuilder({
     mergeSectionsWithDefaults(data?.websiteSections)
   );
   const [isSavingSections, setIsSavingSections] = useState(false);
-  const [labelOverrides, setLabelOverrides] = useState<WebsiteLabels>(
-    () => data?.websiteLabels || {}
-  );
-  const labelSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  );
-  const pendingLabelChangesRef = useRef<WebsiteLabels>({});
+  const [isSavingLabels, setIsSavingLabels] = useState(false);
+
+  const {
+    pendingLabels,
+    initializeLabels,
+    updateLabel,
+    commitLabels,
+    discardChanges,
+    hasUnsavedChanges: hasUnsavedLabelChanges,
+  } = useWebsiteBuilderStore();
 
   const defaultContent: WebsiteContent = {
     coupleNames: "Sarah & Michael",
@@ -242,6 +246,7 @@ export function ApplicationWebsiteBuilder({
   const handleReset = () => {
     setContent(defaultContent);
     setStyles(defaultStyles);
+    discardChanges();
     setHasChanges(false);
   };
 
@@ -323,9 +328,9 @@ export function ApplicationWebsiteBuilder({
       });
 
       setSections(mergeSectionsWithDefaults(data.websiteSections));
-      setLabelOverrides(data.websiteLabels || {});
+      initializeLabels(data.websiteLabels || {});
     }
-  }, [data, themeId]);
+  }, [data, themeId, initializeLabels]);
 
   const handleUploadPhoto = async (
     photoType: "hero" | "story" | "gallery",
@@ -452,65 +457,82 @@ export function ApplicationWebsiteBuilder({
     }
   };
 
-  const saveLabels = useCallback(async (labelsToSave: WebsiteLabels) => {
-    try {
-      const response = await fetch("/api/website-builder", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ websiteLabels: labelsToSave }),
-      });
+  const handleCustomizationChange = (
+    section: string,
+    key: string,
+    value: string
+  ) => {
+    updateLabel(section, key, value);
+    setHasChanges(true);
+  };
 
-      if (!response.ok) {
-        throw new Error("Failed to save labels");
+  const handleSaveChanges = async () => {
+    if (!hasChanges) return;
+
+    const hasLabelChanges = hasUnsavedLabelChanges();
+    const hasSectionChanges = sections.some(
+      (section) =>
+        section.enabled !==
+        (data?.websiteSections?.find((s) => s.id === section.id)?.enabled ??
+          false)
+    );
+
+    if (hasLabelChanges) {
+      setIsSavingLabels(true);
+      try {
+        const response = await fetch("/api/website-builder", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ websiteLabels: pendingLabels }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to save labels");
+        }
+
+        const { websiteLabels } = await response.json();
+        commitLabels(websiteLabels || {});
+      } catch (error) {
+        console.error("Error saving labels:", error);
+        return;
+      } finally {
+        setIsSavingLabels(false);
       }
-
-      pendingLabelChangesRef.current = {};
-    } catch (error) {
-      console.error("Error saving labels:", error);
     }
-  }, []);
 
-  const handleCustomizationChange = useCallback(
-    (section: string, key: string, value: string) => {
-      setLabelOverrides((prev) => {
-        const updated = {
-          ...prev,
-          [section]: {
-            ...(prev[section] || {}),
-            [key]: value,
-          },
-        };
-        return updated;
-      });
+    if (hasSectionChanges) {
+      setIsSavingSections(true);
+      try {
+        const response = await fetch("/api/website-builder", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ websiteSections: sections }),
+        });
 
-      pendingLabelChangesRef.current = {
-        ...pendingLabelChangesRef.current,
-        [section]: {
-          ...(pendingLabelChangesRef.current[section] || {}),
-          [key]: value,
-        },
-      };
-
-      setHasChanges(true);
-
-      if (labelSaveTimeoutRef.current) {
-        clearTimeout(labelSaveTimeoutRef.current);
+        if (!response.ok) {
+          throw new Error("Failed to save sections");
+        }
+      } catch (error) {
+        console.error("Error saving sections:", error);
+        return;
+      } finally {
+        setIsSavingSections(false);
       }
+    }
 
-      labelSaveTimeoutRef.current = setTimeout(() => {
-        saveLabels(pendingLabelChangesRef.current);
-      }, 1000);
-    },
-    [saveLabels]
-  );
+    setHasChanges(false);
+  };
 
   useEffect(() => {
-    return () => {
-      if (labelSaveTimeoutRef.current) {
-        clearTimeout(labelSaveTimeoutRef.current);
-      }
-    };
-  }, []);
+    const hasLabelChanges = hasUnsavedLabelChanges();
+    const hasSectionChanges = sections.some(
+      (section) =>
+        section.enabled !==
+        (data?.websiteSections?.find((s) => s.id === section.id)?.enabled ??
+          false)
+    );
+    setHasChanges(hasLabelChanges || hasSectionChanges);
+  }, [pendingLabels, sections, data?.websiteSections, hasUnsavedLabelChanges]);
 
   return (
     <div className="space-y-6">
@@ -554,9 +576,13 @@ export function ApplicationWebsiteBuilder({
               Change Template
             </a>
           </Button>
-          <Button size="sm" disabled={!hasChanges}>
+          <Button
+            size="sm"
+            disabled={!hasChanges || isSavingLabels || isSavingSections}
+            onClick={handleSaveChanges}
+          >
             <Save className="h-4 w-4 mr-2" />
-            Save Changes
+            {isSavingLabels || isSavingSections ? "Saving..." : "Save Changes"}
           </Button>
         </div>
       </div>
@@ -1073,7 +1099,7 @@ export function ApplicationWebsiteBuilder({
                       : undefined
                   }
                   websiteSections={sections}
-                  websiteLabels={labelOverrides}
+                  websiteLabels={pendingLabels}
                   editable={true}
                   contained={true}
                   onCustomizationChange={handleCustomizationChange}
