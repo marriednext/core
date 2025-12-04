@@ -46,7 +46,7 @@
     "gsap": "3.13.0",
     "hamburger-react": "2.5.2",
     "lucide-react": "catalog:",
-    "next": "16.0.1",
+    "next": "16.0.7",
     "next-themes": "catalog:",
     "orm-shelf": "workspace:*",
     "postgres": "catalog:",
