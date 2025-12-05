@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/database/drizzle";
-import { guest } from "orm-shelf/schema";
+import { guest, invitation } from "orm-shelf/schema";
 import { eq, sql } from "drizzle-orm";
 import { getCurrentWedding } from "@/lib/admin/getCurrentWedding";
 import { buildSiteUrl, getInitials } from "@/lib/siteUtils";
@@ -21,19 +21,28 @@ export async function GET() {
       return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
     }
 
-    const [stats] = await db
-      .select({
-        totalGuests: sql<number>`count(*)::int`,
-        attendingGuests: sql<number>`count(*) filter (where ${guest.isAttending} = true)::int`,
-        declinedGuests: sql<number>`count(*) filter (where ${guest.isAttending} = false)::int`,
-        pendingGuests: sql<number>`count(*) filter (where ${guest.isAttending} is null)::int`,
-        respondedGuests: sql<number>`count(*) filter (where ${guest.isAttending} is not null)::int`,
-      })
-      .from(guest)
-      .where(eq(guest.weddingId, weddingData.id));
+    const [[guestStats], [invitationStats]] = await Promise.all([
+      db
+        .select({
+          totalGuests: sql<number>`count(*)::int`,
+          attendingGuests: sql<number>`count(*) filter (where ${guest.isAttending} = true)::int`,
+          declinedGuests: sql<number>`count(*) filter (where ${guest.isAttending} = false)::int`,
+          pendingGuests: sql<number>`count(*) filter (where ${guest.isAttending} is null)::int`,
+          respondedGuests: sql<number>`count(*) filter (where ${guest.isAttending} is not null)::int`,
+        })
+        .from(guest)
+        .where(eq(guest.weddingId, weddingData.id)),
+      db
+        .select({
+          totalInvitations: sql<number>`count(*)::int`,
+        })
+        .from(invitation)
+        .where(eq(invitation.weddingId, weddingData.id)),
+    ]);
 
-    const totalGuests = stats?.totalGuests ?? 0;
-    const respondedGuests = stats?.respondedGuests ?? 0;
+    const totalGuests = guestStats?.totalGuests ?? 0;
+    const respondedGuests = guestStats?.respondedGuests ?? 0;
+    const totalInvitations = invitationStats?.totalInvitations ?? 0;
     const responseRate =
       totalGuests > 0 ? Math.round((respondedGuests / totalGuests) * 100) : 0;
 
@@ -46,11 +55,12 @@ export async function GET() {
 
     return NextResponse.json({
       totalGuests,
+      totalInvitations,
       respondedGuests,
       responseRate,
-      attendingGuests: stats?.attendingGuests ?? 0,
-      declinedGuests: stats?.declinedGuests ?? 0,
-      pendingGuests: stats?.pendingGuests ?? 0,
+      attendingGuests: guestStats?.attendingGuests ?? 0,
+      declinedGuests: guestStats?.declinedGuests ?? 0,
+      pendingGuests: guestStats?.pendingGuests ?? 0,
       weddingDate: weddingData.fieldEventDate || null,
       coupleNames: {
         nameA: weddingData.fieldNameA || "",

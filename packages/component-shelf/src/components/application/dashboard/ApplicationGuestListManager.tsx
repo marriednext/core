@@ -42,6 +42,7 @@ import {
   Settings2,
   MoreHorizontal,
   Mail,
+  Send,
   Check,
   X,
   Clock,
@@ -193,8 +194,8 @@ function LoadingSkeleton() {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        {Array.from({ length: 5 }).map((_, i) => (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+        {Array.from({ length: 6 }).map((_, i) => (
           <Card key={i}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
@@ -396,7 +397,20 @@ export function ApplicationGuestListManager({
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  Total Invitations
+                </p>
+                <p className="text-2xl font-semibold">{totalInvitations}</p>
+              </div>
+              <Send className="h-8 w-8 text-muted-foreground/50" />
+            </div>
+          </CardContent>
+        </Card>
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">

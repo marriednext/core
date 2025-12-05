@@ -11,6 +11,7 @@ import { Progress } from "../../../components/ui/progress";
 import {
   Users,
   Mail,
+  Send,
   CheckCircle2,
   XCircle,
   Globe,
@@ -24,6 +25,7 @@ import {
 
 export interface HomeStatsData {
   totalGuests: number;
+  totalInvitations: number;
   respondedGuests: number;
   responseRate: number;
   attendingGuests: number;
@@ -123,6 +125,12 @@ export function ApplicationDashboardOverview({
 
   const stats = [
     {
+      name: "Total Invitations",
+      value: data?.totalInvitations ?? 0,
+      subtext: "to send out",
+      icon: Send,
+    },
+    {
       name: "Total Guests",
       value: data?.totalGuests ?? 0,
       subtext: "invited",
@@ -174,7 +182,7 @@ export function ApplicationDashboardOverview({
         </Button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map((stat) => (
           <Card key={stat.name}>
             <CardContent className="p-6">

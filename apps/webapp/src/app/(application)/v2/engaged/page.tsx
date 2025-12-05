@@ -14,6 +14,7 @@ import {
 
 const homeStatsSchema = z.object({
   totalGuests: z.number(),
+  totalInvitations: z.number(),
   respondedGuests: z.number(),
   responseRate: z.number(),
   attendingGuests: z.number(),
@@ -52,6 +53,7 @@ async function fetchHomeStats(): Promise<HomeStatsResponse> {
 function transformToOverviewData(response: HomeStatsResponse): HomeStatsData {
   return {
     totalGuests: response.totalGuests,
+    totalInvitations: response.totalInvitations,
     respondedGuests: response.respondedGuests,
     responseRate: response.responseRate,
     attendingGuests: response.attendingGuests,
