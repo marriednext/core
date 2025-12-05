@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../components/ui/dialog";
-import { User, UserPlus, Users, Plus } from "lucide-react";
+import { User, UserPlus, Users, Plus, Trash2 } from "lucide-react";
 import { useAddInvitationDialogStore } from "../../../stores/addInvitationDialogStore";
 
 export function AddInvitationDialog() {
@@ -28,12 +28,28 @@ export function AddInvitationDialog() {
 
   const [groupName, setGroupName] = useState("");
   const [guestName, setGuestName] = useState("");
+  const [guestNames, setGuestNames] = useState<string[]>([""]);
   const [email, setEmail] = useState("");
+
+  const addGuestName = () => {
+    setGuestNames([...guestNames, ""]);
+  };
+
+  const removeGuestName = (index: number) => {
+    setGuestNames(guestNames.filter((_, i) => i !== index));
+  };
+
+  const updateGuestName = (index: number, value: string) => {
+    const updated = [...guestNames];
+    updated[index] = value;
+    setGuestNames(updated);
+  };
 
   const handleClose = () => {
     closeDialog();
     setGroupName("");
     setGuestName("");
+    setGuestNames([""]);
     setEmail("");
     reset();
   };
@@ -43,7 +59,10 @@ export function AddInvitationDialog() {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => (open ? openDialog() : handleClose())}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => (open ? openDialog() : handleClose())}
+    >
       <DialogTrigger asChild>
         <Button size="sm" className="gap-2">
           <Plus className="h-4 w-4" />
@@ -106,18 +125,42 @@ export function AddInvitationDialog() {
 
           <div className="space-y-2">
             <Label htmlFor="guestName">
-              {invitationType === "group"
-                ? "Guest Names (one per line)"
-                : "Guest Name"}
+              {invitationType === "group" ? "Guest Names" : "Guest Name"}
             </Label>
             {invitationType === "group" ? (
-              <textarea
-                id="guestName"
-                className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                placeholder="John Smith&#10;Jane Smith&#10;Jimmy Smith"
-                value={guestName}
-                onChange={(e) => setGuestName(e.target.value)}
-              />
+              <div className="space-y-2">
+                {guestNames.map((name, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <Input
+                      id={`guestName-${index}`}
+                      placeholder="Full name"
+                      value={name}
+                      onChange={(e) => updateGuestName(index, e.target.value)}
+                    />
+                    {guestNames.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        className="shrink-0"
+                        onClick={() => removeGuestName(index)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full gap-2"
+                  onClick={addGuestName}
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Guest
+                </Button>
+              </div>
             ) : (
               <Input
                 id="guestName"
@@ -161,4 +204,3 @@ export function AddInvitationDialog() {
     </Dialog>
   );
 }
-
