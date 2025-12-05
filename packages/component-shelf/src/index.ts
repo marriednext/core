@@ -51,6 +51,7 @@ export { ApplicationDashboardOverview } from "./components/application/dashboard
 export type { HomeStatsData, ApplicationDashboardOverviewProps } from "./components/application/dashboard/ApplicationDashboardOverview";
 export { ApplicationDashboardSidebar } from "./components/application/dashboard/ApplicationDashboardSidebar";
 export { ApplicationGuestListManager } from "./components/application/dashboard/ApplicationGuestListManager";
+export type { GuestListInvitation, GuestListGuest, ApplicationGuestListManagerProps } from "./components/application/dashboard/ApplicationGuestListManager";
 export { ApplicationMemoriesGallery } from "./components/application/dashboard/ApplicationMemoriesGallery";
 export { ApplicationWebsiteBuilder } from "./components/application/dashboard/ApplicationWebsiteBuilder";
 export type { WebsiteBuilderData, ApplicationWebsiteBuilderProps } from "./components/application/dashboard/ApplicationWebsiteBuilder";

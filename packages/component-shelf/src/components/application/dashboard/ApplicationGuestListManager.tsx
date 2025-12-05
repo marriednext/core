@@ -35,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../../components/ui/select";
+import { Skeleton } from "../../../components/ui/skeleton";
 import {
   Users,
   Plus,
@@ -48,7 +49,6 @@ import {
   UserPlus,
   Trash2,
   Edit,
-  Send,
   Download,
   Upload,
   ChevronDown,
@@ -60,7 +60,7 @@ import {
 
 type RsvpLookupMethod = "FIRST_NAME_ONLY" | "FULL_NAME" | "EMAIL";
 
-type Guest = {
+export type GuestListGuest = {
   id: string;
   name: string;
   email?: string;
@@ -71,24 +71,24 @@ type Guest = {
   dietaryRestrictions?: string;
 };
 
-type Invitation = {
+export type GuestListInvitation = {
   id: string;
   groupName: string;
-  email?: string;
-  guests: Guest[];
-  status: "pending" | "sent" | "viewed" | "responded";
-  sentAt?: string;
-  respondedAt?: string;
+  email?: string | null;
+  guests: GuestListGuest[];
 };
 
-const mockInvitations: Invitation[] = [
+export interface ApplicationGuestListManagerProps {
+  invitations?: GuestListInvitation[];
+  isLoading?: boolean;
+  rsvpLink?: string;
+}
+
+const mockInvitations: GuestListInvitation[] = [
   {
     id: "1",
     groupName: "The Johnson Family",
     email: "johnson@email.com",
-    status: "responded",
-    sentAt: "2024-11-01",
-    respondedAt: "2024-11-05",
     guests: [
       {
         id: "1a",
@@ -109,9 +109,6 @@ const mockInvitations: Invitation[] = [
     id: "2",
     groupName: "Emily Chen",
     email: "emily.chen@email.com",
-    status: "responded",
-    sentAt: "2024-11-01",
-    respondedAt: "2024-11-03",
     guests: [
       {
         id: "2a",
@@ -127,8 +124,6 @@ const mockInvitations: Invitation[] = [
     id: "3",
     groupName: "The Williams Couple",
     email: "williams@email.com",
-    status: "viewed",
-    sentAt: "2024-11-02",
     guests: [
       {
         id: "3a",
@@ -148,8 +143,6 @@ const mockInvitations: Invitation[] = [
     id: "4",
     groupName: "Marcus Thompson",
     email: "marcus.t@email.com",
-    status: "sent",
-    sentAt: "2024-11-05",
     guests: [
       {
         id: "4a",
@@ -163,7 +156,6 @@ const mockInvitations: Invitation[] = [
     id: "5",
     groupName: "Sarah & Tom Miller",
     email: "millers@email.com",
-    status: "pending",
     guests: [
       { id: "5a", name: "Sarah Miller", isAttending: null, hasPlusOne: false },
       { id: "5b", name: "Tom Miller", isAttending: null, hasPlusOne: false },
@@ -172,17 +164,90 @@ const mockInvitations: Invitation[] = [
   {
     id: "6",
     groupName: "Jessica Brown",
-    status: "pending",
     guests: [
       { id: "6a", name: "Jessica Brown", isAttending: null, hasPlusOne: false },
     ],
   },
 ];
 
-export function ApplicationGuestListManager() {
-  const [invitations] = useState<Invitation[]>(mockInvitations);
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <Skeleton className="h-8 w-48 mb-2" />
+          <Skeleton className="h-4 w-72" />
+        </div>
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-9 w-24" />
+          <Skeleton className="h-9 w-24" />
+          <Skeleton className="h-9 w-32" />
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Card key={i}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Skeleton className="h-4 w-20 mb-2" />
+                  <Skeleton className="h-8 w-12" />
+                </div>
+                <Skeleton className="h-8 w-8 rounded" />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <CardHeader className="pb-3">
+            <Skeleton className="h-5 w-32 mb-2" />
+            <Skeleton className="h-4 w-48" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <Skeleton className="h-5 w-32 mb-2" />
+            <Skeleton className="h-4 w-48" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader className="pb-3">
+          <Skeleton className="h-6 w-24" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export function ApplicationGuestListManager({
+  invitations: propInvitations,
+  isLoading = false,
+  rsvpLink: propRsvpLink,
+}: ApplicationGuestListManagerProps) {
+  const invitations = propInvitations ?? mockInvitations;
+  const rsvpLinkValue = propRsvpLink ?? "marriednext.com/rsvp/sarah-michael";
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [attendanceFilter, setAttendanceFilter] = useState<string>("all");
   const [expandedInvitations, setExpandedInvitations] = useState<Set<string>>(
     new Set()
   );
@@ -193,7 +258,10 @@ export function ApplicationGuestListManager() {
     "single" | "plusone" | "group"
   >("single");
 
-  // Stats calculation
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
+
   const totalGuests = invitations.reduce((acc, inv) => {
     let count = inv.guests.length;
     inv.guests.forEach((g) => {
@@ -225,7 +293,6 @@ export function ApplicationGuestListManager() {
   ).length;
   const totalInvitations = invitations.length;
 
-  // Filtering
   const filteredInvitations = invitations.filter((inv) => {
     const matchesSearch =
       inv.groupName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -234,9 +301,18 @@ export function ApplicationGuestListManager() {
       ) ||
       inv.email?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesStatus = statusFilter === "all" || inv.status === statusFilter;
+    if (attendanceFilter === "all") {
+      return matchesSearch;
+    }
 
-    return matchesSearch && matchesStatus;
+    const hasMatchingGuest = inv.guests.some((g) => {
+      if (attendanceFilter === "confirmed") return g.isAttending === true;
+      if (attendanceFilter === "declined") return g.isAttending === false;
+      if (attendanceFilter === "not-responded") return g.isAttending === null;
+      return true;
+    });
+
+    return matchesSearch && hasMatchingGuest;
   });
 
   const toggleExpanded = (id: string) => {
@@ -249,31 +325,6 @@ export function ApplicationGuestListManager() {
     setExpandedInvitations(newExpanded);
   };
 
-  const getStatusBadge = (status: Invitation["status"]) => {
-    switch (status) {
-      case "responded":
-        return (
-          <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
-            Responded
-          </Badge>
-        );
-      case "viewed":
-        return (
-          <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
-            Viewed
-          </Badge>
-        );
-      case "sent":
-        return (
-          <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
-            Sent
-          </Badge>
-        );
-      case "pending":
-        return <Badge variant="secondary">Not Sent</Badge>;
-    }
-  };
-
   const getAttendanceIcon = (isAttending: boolean | null) => {
     if (isAttending === true)
       return <Check className="h-4 w-4 text-green-600" />;
@@ -281,11 +332,8 @@ export function ApplicationGuestListManager() {
     return <Clock className="h-4 w-4 text-muted-foreground" />;
   };
 
-  const rsvpLink = "marriednext.com/rsvp/sarah-michael";
-
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-serif text-2xl font-semibold text-foreground">
@@ -425,7 +473,6 @@ export function ApplicationGuestListManager() {
         </div>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <Card>
           <CardContent className="p-4">
@@ -442,7 +489,7 @@ export function ApplicationGuestListManager() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Attending</p>
+                <p className="text-sm text-muted-foreground">Confirmed</p>
                 <p className="text-2xl font-semibold text-green-600">
                   {attendingGuests}
                 </p>
@@ -468,7 +515,7 @@ export function ApplicationGuestListManager() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Awaiting</p>
+                <p className="text-sm text-muted-foreground">Not Responded</p>
                 <p className="text-2xl font-semibold text-amber-600">
                   {pendingGuests}
                 </p>
@@ -483,7 +530,10 @@ export function ApplicationGuestListManager() {
               <div>
                 <p className="text-sm text-muted-foreground">Response Rate</p>
                 <p className="text-2xl font-semibold">
-                  {Math.round((respondedInvitations / totalInvitations) * 100)}%
+                  {totalInvitations > 0
+                    ? Math.round((respondedInvitations / totalInvitations) * 100)
+                    : 0}
+                  %
                 </p>
               </div>
               <Mail className="h-8 w-8 text-muted-foreground/50" />
@@ -492,7 +542,6 @@ export function ApplicationGuestListManager() {
         </Card>
       </div>
 
-      {/* RSVP Link & Settings */}
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader className="pb-3">
@@ -506,7 +555,7 @@ export function ApplicationGuestListManager() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
-              <Input value={rsvpLink} readOnly className="font-mono text-sm" />
+              <Input value={rsvpLinkValue} readOnly className="font-mono text-sm" />
               <Button
                 variant="outline"
                 size="icon"
@@ -567,7 +616,6 @@ export function ApplicationGuestListManager() {
         </Card>
       </div>
 
-      {/* Guest List */}
       <Card>
         <CardHeader className="pb-3">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -582,16 +630,15 @@ export function ApplicationGuestListManager() {
                   className="pl-8"
                 />
               </div>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="All Status" />
+              <Select value={attendanceFilter} onValueChange={setAttendanceFilter}>
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder="All Guests" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="pending">Not Sent</SelectItem>
-                  <SelectItem value="sent">Sent</SelectItem>
-                  <SelectItem value="viewed">Viewed</SelectItem>
-                  <SelectItem value="responded">Responded</SelectItem>
+                  <SelectItem value="all">All Guests</SelectItem>
+                  <SelectItem value="confirmed">Confirmed</SelectItem>
+                  <SelectItem value="declined">Declined</SelectItem>
+                  <SelectItem value="not-responded">Not Responded</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -604,7 +651,6 @@ export function ApplicationGuestListManager() {
                 key={invitation.id}
                 className="rounded-lg border border-border bg-card overflow-hidden"
               >
-                {/* Invitation Header Row */}
                 <div
                   className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={() => toggleExpanded(invitation.id)}
@@ -638,18 +684,16 @@ export function ApplicationGuestListManager() {
                   </div>
 
                   <div className="flex items-center gap-3 shrink-0">
-                    {getStatusBadge(invitation.status)}
-
                     <div className="flex items-center gap-1">
                       {invitation.guests.map((guest) => (
                         <span
                           key={guest.id}
                           title={`${guest.name}: ${
                             guest.isAttending === true
-                              ? "Attending"
+                              ? "Confirmed"
                               : guest.isAttending === false
                               ? "Declined"
-                              : "Pending"
+                              : "Not Responded"
                           }`}
                         >
                           {getAttendanceIcon(guest.isAttending)}
@@ -671,12 +715,6 @@ export function ApplicationGuestListManager() {
                           <Edit className="h-4 w-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
-                        {invitation.status === "pending" && (
-                          <DropdownMenuItem>
-                            <Send className="h-4 w-4 mr-2" />
-                            Send Invitation
-                          </DropdownMenuItem>
-                        )}
                         {invitation.email && (
                           <DropdownMenuItem>
                             <Mail className="h-4 w-4 mr-2" />
@@ -693,7 +731,6 @@ export function ApplicationGuestListManager() {
                   </div>
                 </div>
 
-                {/* Expanded Guest Details */}
                 {expandedInvitations.has(invitation.id) && (
                   <div className="border-t border-border bg-muted/30 p-3">
                     <div className="space-y-2">
@@ -720,7 +757,7 @@ export function ApplicationGuestListManager() {
                             <div className="flex items-center gap-2">
                               {guest.isAttending === true && (
                                 <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
-                                  Attending
+                                  Confirmed
                                 </Badge>
                               )}
                               {guest.isAttending === false && (
@@ -729,11 +766,10 @@ export function ApplicationGuestListManager() {
                                 </Badge>
                               )}
                               {guest.isAttending === null && (
-                                <Badge variant="secondary">Pending</Badge>
+                                <Badge variant="secondary">Not Responded</Badge>
                               )}
                             </div>
                           </div>
-                          {/* Plus One */}
                           {guest.hasPlusOne && (
                             <div className="flex items-center gap-3 py-1.5 px-2 ml-6 rounded-md hover:bg-background transition-colors">
                               <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center text-accent-foreground">
@@ -750,7 +786,7 @@ export function ApplicationGuestListManager() {
                               <div className="flex items-center gap-2">
                                 {guest.plusOneAttending === true && (
                                   <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
-                                    Attending
+                                    Confirmed
                                   </Badge>
                                 )}
                                 {guest.plusOneAttending === false && (
@@ -760,7 +796,7 @@ export function ApplicationGuestListManager() {
                                 )}
                                 {guest.plusOneAttending === undefined &&
                                   guest.isAttending !== false && (
-                                    <Badge variant="secondary">Pending</Badge>
+                                    <Badge variant="secondary">Not Responded</Badge>
                                   )}
                               </div>
                             </div>
@@ -769,22 +805,6 @@ export function ApplicationGuestListManager() {
                       ))}
                     </div>
 
-                    {invitation.sentAt && (
-                      <div className="mt-3 pt-3 border-t border-border flex items-center gap-4 text-xs text-muted-foreground">
-                        <span>
-                          Sent:{" "}
-                          {new Date(invitation.sentAt).toLocaleDateString()}
-                        </span>
-                        {invitation.respondedAt && (
-                          <span>
-                            Responded:{" "}
-                            {new Date(
-                              invitation.respondedAt
-                            ).toLocaleDateString()}
-                          </span>
-                        )}
-                      </div>
-                    )}
                   </div>
                 )}
               </div>
