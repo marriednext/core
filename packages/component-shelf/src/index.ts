@@ -43,7 +43,6 @@ export { ApplicationThemeProvider } from "./components/application/ThemeProvider
 export { ApplicationBlogHome } from "./components/application/blog/ApplicationBlogHome";
 export { ApplicationRegistryEtiquetteArticle } from "./components/application/blog/ApplicationRegistryEtiquetteArticle";
 
-export { ApplicationBillingSettings } from "./components/application/dashboard/ApplicationBillingSettings";
 export { ApplicationDashboardHeader } from "./components/application/dashboard/ApplicationDashboardHeader";
 export { ApplicationDashboardLayout } from "./components/application/dashboard/ApplicationDashboardLayout";
 export type {

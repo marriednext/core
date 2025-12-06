@@ -11,7 +11,6 @@ import {
   Users,
   Layout,
   Camera,
-  CreditCard,
   Settings,
   BookOpen,
   ChevronRight,
@@ -119,19 +118,6 @@ const categories = [
       { title: "Guest photo uploads", slug: "guest-uploads" },
       { title: "Storage limits and upgrades", slug: "storage-limits" },
       { title: "Downloading your gallery", slug: "downloading-gallery" },
-    ],
-  },
-  {
-    id: "billing",
-    title: "Billing & Upgrades",
-    description: "Manage your subscription and purchases",
-    icon: CreditCard,
-    articleCount: 6,
-    articles: [
-      { title: "Understanding pricing tiers", slug: "pricing-tiers" },
-      { title: "Upgrading your account", slug: "upgrading" },
-      { title: "Managing payment methods", slug: "payment-methods" },
-      { title: "Cancellation and refunds", slug: "cancellation" },
     ],
   },
 ];

@@ -10,9 +10,7 @@ import {
   Grid3X3,
   Camera,
   Settings,
-  CreditCard,
   HelpCircle,
-  LogOut,
 } from "lucide-react";
 import { Sheet, SheetContent } from "../../../components/ui/sheet";
 
@@ -26,8 +24,7 @@ const mainNavItems = [
 
 const bottomNavItems = [
   { name: "Settings", href: "/v2/engaged/settings", icon: Settings },
-  { name: "Billing", href: "/v2/engaged/billing", icon: CreditCard },
-  { name: "Help", href: "/v2/engaged/help", icon: HelpCircle },
+  { name: "Help", href: "/help", icon: HelpCircle },
 ];
 
 function formatWeddingDate(dateString: string | null): string {
@@ -144,12 +141,6 @@ export function ApplicationDashboardSidebar({
                   </Link>
                 </li>
               ))}
-              <li>
-                <button className="group flex w-full gap-x-3 rounded-lg p-2.5 text-sm font-medium leading-6 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors">
-                  <LogOut className="h-5 w-5 shrink-0" />
-                  Log out
-                </button>
-              </li>
             </ul>
           </li>
         </ul>

@@ -844,12 +844,6 @@ export function ApplicationWeddingDetailsSettings({
                         .
                       </p>
                     </div>
-                    <Button className="gap-2" asChild>
-                      <a href="/dashboard/billing">
-                        <Crown className="h-4 w-4" />
-                        Upgrade for $49/year
-                      </a>
-                    </Button>
                   </div>
                 </div>
               </div>

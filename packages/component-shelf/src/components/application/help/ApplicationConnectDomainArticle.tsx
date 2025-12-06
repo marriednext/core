@@ -92,16 +92,6 @@ export function ApplicationConnectDomainArticle({
                   to purchase the domain itself separately from a registrar like
                   Namecheap, Google Domains, or Porkbun.
                 </p>
-                <Link href="/dashboard/billing">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-amber-300 hover:bg-amber-100 bg-transparent"
-                  >
-                    View Pricing
-                    <ChevronRight className="h-4 w-4 ml-1" />
-                  </Button>
-                </Link>
               </div>
             </div>
           </CardContent>
@@ -152,13 +142,7 @@ export function ApplicationConnectDomainArticle({
                   <span className="font-medium text-foreground">
                     Upgrade your account
                   </span>{" "}
-                  — Add the Custom Domain add-on from your{" "}
-                  <Link
-                    href="/dashboard/billing"
-                    className="text-primary hover:underline"
-                  >
-                    Billing page
-                  </Link>
+                  — Add the Custom Domain add-on from your account settings.
                 </span>
               </li>
               <li className="flex items-start gap-3">
