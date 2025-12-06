@@ -24,10 +24,10 @@ export async function GET() {
     const [[guestStats], [invitationStats]] = await Promise.all([
       db
         .select({
-          totalGuests: sql<number>`count(*)::int`,
+          totalGuests: sql<number>`(count(*) + count(*) filter (where ${guest.hasPlusOne} = true))::int`,
           attendingGuests: sql<number>`count(*) filter (where ${guest.isAttending} = true)::int`,
           declinedGuests: sql<number>`count(*) filter (where ${guest.isAttending} = false)::int`,
-          pendingGuests: sql<number>`count(*) filter (where ${guest.isAttending} is null)::int`,
+          pendingGuests: sql<number>`(count(*) filter (where ${guest.isAttending} is null) + count(*) filter (where ${guest.hasPlusOne} = true))::int`,
           respondedGuests: sql<number>`count(*) filter (where ${guest.isAttending} is not null)::int`,
         })
         .from(guest)

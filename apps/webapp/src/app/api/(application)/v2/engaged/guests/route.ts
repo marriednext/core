@@ -55,6 +55,24 @@ export async function GET() {
       })
     );
 
+    let guestCount = 0;
+    let plusOneCount = 0;
+    let attendingGuests = 0;
+    let declinedGuests = 0;
+
+    for (const inv of invitationsWithGuests) {
+      for (const g of inv.guests) {
+        guestCount++;
+        if (g.hasPlusOne) plusOneCount++;
+        if (g.isAttending === true) attendingGuests++;
+        if (g.isAttending === false) declinedGuests++;
+      }
+    }
+
+    const totalGuests = guestCount + plusOneCount;
+    const pendingGuests = totalGuests - attendingGuests - declinedGuests;
+    const totalInvitations = invitations.length;
+
     const subscriptionPlan = "Free";
     const rsvpLink = weddingData.subdomain
       ? `${weddingData.subdomain}.marriednext.com/rsvp`
@@ -62,6 +80,13 @@ export async function GET() {
 
     return NextResponse.json({
       invitations,
+      stats: {
+        totalGuests,
+        attendingGuests,
+        declinedGuests,
+        pendingGuests,
+        totalInvitations,
+      },
       rsvpLink,
       user: {
         fullName:

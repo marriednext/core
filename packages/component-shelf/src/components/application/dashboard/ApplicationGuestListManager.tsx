@@ -81,8 +81,17 @@ export type GuestListInvitation = {
   guests: GuestListGuest[];
 };
 
+export type GuestListStats = {
+  totalGuests: number;
+  attendingGuests: number;
+  declinedGuests: number;
+  pendingGuests: number;
+  totalInvitations: number;
+};
+
 export interface ApplicationGuestListManagerProps {
   invitations?: GuestListInvitation[];
+  stats?: GuestListStats;
   isLoading?: boolean;
   rsvpLink?: string;
   onAddInvitation?: (data: AddInvitationPayload) => void;
@@ -179,76 +188,9 @@ const mockInvitations: GuestListInvitation[] = [
   },
 ];
 
-function LoadingSkeleton() {
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <Skeleton className="h-8 w-48 mb-2" />
-          <Skeleton className="h-4 w-72" />
-        </div>
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-9 w-24" />
-          <Skeleton className="h-9 w-24" />
-          <Skeleton className="h-9 w-32" />
-        </div>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i}>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Skeleton className="h-4 w-20 mb-2" />
-                  <Skeleton className="h-8 w-12" />
-                </div>
-                <Skeleton className="h-8 w-8 rounded" />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
-          <CardHeader className="pb-3">
-            <Skeleton className="h-5 w-32 mb-2" />
-            <Skeleton className="h-4 w-48" />
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-10 w-full" />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-3">
-            <Skeleton className="h-5 w-32 mb-2" />
-            <Skeleton className="h-4 w-48" />
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-10 w-full" />
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader className="pb-3">
-          <Skeleton className="h-6 w-24" />
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-16 w-full" />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
 export function ApplicationGuestListManager({
   invitations: propInvitations,
+  stats: propStats,
   isLoading = false,
   rsvpLink: propRsvpLink,
   onAddInvitation,
@@ -274,40 +216,33 @@ export function ApplicationGuestListManager({
     null
   );
 
-  if (isLoading) {
-    return <LoadingSkeleton />;
-  }
+  const fallbackStats = (() => {
+    const total = invitations.reduce((acc, inv) => {
+      let count = inv.guests.length;
+      inv.guests.forEach((g) => {
+        if (g.hasPlusOne) count++;
+      });
+      return acc + count;
+    }, 0);
+    const attending = invitations.reduce(
+      (acc, inv) => acc + inv.guests.filter((g) => g.isAttending === true).length,
+      0
+    );
+    const declined = invitations.reduce(
+      (acc, inv) => acc + inv.guests.filter((g) => g.isAttending === false).length,
+      0
+    );
+    return {
+      totalGuests: total,
+      attendingGuests: attending,
+      declinedGuests: declined,
+      pendingGuests: total - attending - declined,
+      totalInvitations: invitations.length,
+    };
+  })();
 
-  const totalGuests = invitations.reduce((acc, inv) => {
-    let count = inv.guests.length;
-    inv.guests.forEach((g) => {
-      if (g.hasPlusOne && g.plusOneAttending !== false) count++;
-    });
-    return acc + count;
-  }, 0);
-
-  const attendingGuests = invitations.reduce((acc, inv) => {
-    let count = inv.guests.filter((g) => g.isAttending === true).length;
-    inv.guests.forEach((g) => {
-      if (g.isAttending && g.hasPlusOne && g.plusOneAttending === true) count++;
-    });
-    return acc + count;
-  }, 0);
-
-  const declinedGuests = invitations.reduce((acc, inv) => {
-    let count = inv.guests.filter((g) => g.isAttending === false).length;
-    inv.guests.forEach((g) => {
-      if (g.hasPlusOne && g.plusOneAttending === false) count++;
-    });
-    return acc + count;
-  }, 0);
-
-  const pendingGuests = totalGuests - attendingGuests - declinedGuests;
-
-  const respondedInvitations = invitations.filter((i) =>
-    i.guests.some((g) => g.isAttending !== null)
-  ).length;
-  const totalInvitations = invitations.length;
+  const { totalGuests, attendingGuests, declinedGuests, pendingGuests, totalInvitations } =
+    propStats ?? fallbackStats;
 
   const filteredInvitations = invitations.filter((inv) => {
     const matchesSearch =
@@ -402,29 +337,53 @@ export function ApplicationGuestListManager({
           <div className="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-border">
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Total Invitations</p>
-              <p className="text-2xl font-semibold mt-1">{totalInvitations}</p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold mt-1">{totalInvitations}</p>
+              )}
             </div>
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Total Guests</p>
-              <p className="text-2xl font-semibold mt-1">{totalGuests}</p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold mt-1">{totalGuests}</p>
+              )}
             </div>
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Attending</p>
-              <p className="text-2xl font-semibold text-green-600 mt-1">{attendingGuests}</p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold text-green-600 mt-1">{attendingGuests}</p>
+              )}
             </div>
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Declined</p>
-              <p className="text-2xl font-semibold text-red-500 mt-1">{declinedGuests}</p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold text-red-500 mt-1">{declinedGuests}</p>
+              )}
             </div>
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Awaiting</p>
-              <p className="text-2xl font-semibold text-amber-600 mt-1">{pendingGuests}</p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold text-amber-600 mt-1">{pendingGuests}</p>
+              )}
             </div>
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Response Rate</p>
-              <p className="text-2xl font-semibold mt-1">
-                {totalGuests > 0 ? Math.round(((attendingGuests + declinedGuests) / totalGuests) * 100) : 0}%
-              </p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold mt-1">
+                  {totalGuests > 0 ? Math.round(((attendingGuests + declinedGuests) / totalGuests) * 100) : 0}%
+                </p>
+              )}
             </div>
           </div>
         </CardContent>
@@ -541,7 +500,11 @@ export function ApplicationGuestListManager({
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {filteredInvitations.map((invitation) => (
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-16 w-full rounded-lg" />
+              ))
+            ) : filteredInvitations.map((invitation) => (
               <div
                 key={invitation.id}
                 className="rounded-lg border border-border bg-card overflow-hidden"
@@ -729,7 +692,7 @@ export function ApplicationGuestListManager({
               </div>
             ))}
 
-            {filteredInvitations.length === 0 && (
+            {!isLoading && filteredInvitations.length === 0 && (
               <div className="text-center py-12 text-muted-foreground">
                 <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="font-medium">No invitations found</p>

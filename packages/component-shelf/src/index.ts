@@ -59,6 +59,7 @@ export { ApplicationGuestListManager } from "./components/application/dashboard/
 export type {
   GuestListInvitation,
   GuestListGuest,
+  GuestListStats,
   ApplicationGuestListManagerProps,
 } from "./components/application/dashboard/ApplicationGuestListManager";
 export { AddInvitationDialog } from "./components/application/dashboard/AddInvitationDialog";

@@ -10,6 +10,7 @@ import {
   DashboardUserData,
   DashboardWeddingData,
   GuestListInvitation,
+  GuestListStats,
   AddInvitationPayload,
   useAddInvitationDialogStore,
   EditInvitationDialog,
@@ -31,8 +32,17 @@ const invitationSchema = z.object({
   guests: z.array(guestSchema),
 });
 
+const statsSchema = z.object({
+  totalGuests: z.number(),
+  attendingGuests: z.number(),
+  declinedGuests: z.number(),
+  pendingGuests: z.number(),
+  totalInvitations: z.number(),
+});
+
 const guestListResponseSchema = z.object({
   invitations: z.array(invitationSchema),
+  stats: statsSchema,
   rsvpLink: z.string(),
   user: z.object({
     fullName: z.string(),
@@ -95,6 +105,10 @@ function transformToInvitations(
       hasPlusOne: g.hasPlusOne,
     })),
   }));
+}
+
+function transformToStats(response: GuestListResponse): GuestListStats {
+  return response.stats;
 }
 
 async function addInvitation(payload: AddInvitationPayload): Promise<void> {
@@ -191,6 +205,7 @@ export default function GuestsPage() {
   const userData = data ? transformToUserData(data) : undefined;
   const weddingData = data ? transformToWeddingData(data) : undefined;
   const invitations = data ? transformToInvitations(data) : undefined;
+  const stats = data ? transformToStats(data) : undefined;
   const rsvpLink = data?.rsvpLink;
 
   return (
@@ -202,6 +217,7 @@ export default function GuestsPage() {
     >
       <ApplicationGuestListManager
         invitations={invitations}
+        stats={stats}
         isLoading={isLoading}
         rsvpLink={rsvpLink}
         onAddInvitation={(payload) => addInvitationMutation.mutate(payload)}

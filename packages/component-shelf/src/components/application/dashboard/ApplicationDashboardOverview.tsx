@@ -8,12 +8,9 @@ import {
 } from "../../../components/ui/card";
 import { Button, buttonVariants } from "../../../components/ui/button";
 import { Progress } from "../../../components/ui/progress";
+import { Skeleton } from "../../../components/ui/skeleton";
 import {
   Users,
-  Mail,
-  Send,
-  CheckCircle2,
-  XCircle,
   Globe,
   ExternalLink,
   ArrowRight,
@@ -123,7 +120,6 @@ export function ApplicationDashboardOverview({
       ? `${data.coupleNames.nameA} & ${data.coupleNames.nameB}`
       : "");
 
-
   const iframeUrl = data?.subdomain ? `/tenant/${data?.subdomain}` : null;
   console.log("iframeUrl", iframeUrl);
   return (
@@ -153,48 +149,70 @@ export function ApplicationDashboardOverview({
           <div className="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-border">
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Total Invitations</p>
-              <p className="text-2xl font-semibold mt-1">
-                {isLoading ? "-" : data?.totalInvitations ?? 0}
-              </p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold mt-1">
+                  {data?.totalInvitations ?? 0}
+                </p>
+              )}
             </div>
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Total Guests</p>
-              <p className="text-2xl font-semibold mt-1">
-                {isLoading ? "-" : data?.totalGuests ?? 0}
-              </p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold mt-1">
+                  {data?.totalGuests ?? 0}
+                </p>
+              )}
             </div>
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Attending</p>
-              <p className="text-2xl font-semibold text-green-600 mt-1">
-                {isLoading ? "-" : data?.attendingGuests ?? 0}
-              </p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold text-green-600 mt-1">
+                  {data?.attendingGuests ?? 0}
+                </p>
+              )}
             </div>
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Declined</p>
-              <p className="text-2xl font-semibold text-red-500 mt-1">
-                {isLoading ? "-" : data?.declinedGuests ?? 0}
-              </p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold text-red-500 mt-1">
+                  {data?.declinedGuests ?? 0}
+                </p>
+              )}
             </div>
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Awaiting</p>
-              <p className="text-2xl font-semibold text-amber-600 mt-1">
-                {isLoading ? "-" : data?.pendingGuests ?? 0}
-              </p>
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold text-amber-600 mt-1">
+                  {data?.pendingGuests ?? 0}
+                </p>
+              )}
             </div>
             <div className="flex-1 p-4 text-center">
               <p className="text-sm text-muted-foreground">Response Rate</p>
-              <p className="text-2xl font-semibold mt-1">
-                {isLoading
-                  ? "-"
-                  : data?.totalGuests && data.totalGuests > 0
+              {isLoading ? (
+                <Skeleton className="h-8 w-12 mx-auto mt-1" />
+              ) : (
+                <p className="text-2xl font-semibold mt-1">
+                  {data?.totalGuests && data.totalGuests > 0
                     ? Math.round(
                         ((data.attendingGuests + data.declinedGuests) /
                           data.totalGuests) *
                           100
                       )
                     : 0}
-                %
-              </p>
+                  %
+                </p>
+              )}
             </div>
           </div>
         </CardContent>
