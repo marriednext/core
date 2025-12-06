@@ -80,6 +80,12 @@ export type {
   WeddingDetailsData,
   ApplicationWeddingDetailsSettingsProps,
 } from "./components/application/dashboard/ApplicationWeddingDetailsSettings";
+export { ApplicationTeamPermissions } from "./components/application/dashboard/ApplicationTeamPermissions";
+export type {
+  Role,
+  Collaborator,
+  ApplicationTeamPermissionsProps,
+} from "./components/application/dashboard/ApplicationTeamPermissions";
 
 export { ApplicationConnectDomainArticle } from "./components/application/help/ApplicationConnectDomainArticle";
 export { ApplicationHelpCenter } from "./components/application/help/ApplicationHelpCenter";

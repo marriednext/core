@@ -11,6 +11,7 @@ import {
   Camera,
   Settings,
   HelpCircle,
+  Shield,
 } from "lucide-react";
 import { Sheet, SheetContent } from "../../../components/ui/sheet";
 
@@ -24,6 +25,7 @@ const mainNavItems = [
 
 const bottomNavItems = [
   { name: "Settings", href: "/v2/engaged/settings", icon: Settings },
+  { name: "Permissions", href: "/v2/engaged/permissions", icon: Shield },
   { name: "Help", href: "/help", icon: HelpCircle },
 ];
 

@@ -44,7 +44,8 @@ export async function GET() {
     const invitations: InvitationResponse[] = invitationsWithGuests.map(
       (inv) => ({
         id: inv.id,
-        groupName: inv.inviteGroupName || inv.guests[0]?.nameOnInvitation || "Unnamed",
+        groupName:
+          inv.inviteGroupName || inv.guests[0]?.nameOnInvitation || "Unnamed",
         email: inv.email,
         guests: inv.guests.map((g) => ({
           id: g.id,
@@ -217,4 +218,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
