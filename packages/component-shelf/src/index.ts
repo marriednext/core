@@ -85,6 +85,7 @@ export { ApplicationTeamPermissions } from "./components/application/dashboard/A
 export type {
   Role,
   Collaborator,
+  PendingInvitation,
   ApplicationTeamPermissionsProps,
 } from "./components/application/dashboard/ApplicationTeamPermissions";
 

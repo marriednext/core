@@ -1,10 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
 import { Badge } from "../../../components/ui/badge";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../../../components/ui/form";
 import {
   Dialog,
   DialogContent,
@@ -47,11 +57,26 @@ export interface Collaborator {
   joinedAt: string;
 }
 
+export interface PendingInvitation {
+  id: string;
+  email: string;
+  role: Role;
+  status: string;
+  sentAt: string;
+}
+
 const roleLabels: Record<Role, string> = {
   spouse: "Spouse",
   family_member: "Family Member",
   wedding_planner: "Wedding Planner",
 };
+
+const inviteFormSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  role: z.enum(["spouse", "family_member", "wedding_planner"]),
+});
+
+type InviteFormData = z.infer<typeof inviteFormSchema>;
 
 export interface ApplicationTeamPermissionsProps {
   currentUser: {
@@ -59,9 +84,12 @@ export interface ApplicationTeamPermissionsProps {
     role: Role;
   };
   collaborators: Collaborator[];
+  pendingInvitations?: PendingInvitation[];
   onInvite?: (email: string, role: Role) => void;
   onRemove?: (collaboratorId: string) => void;
+  onRevokeInvitation?: (invitationId: string) => void;
   onRoleChange?: (collaboratorId: string, newRole: Role) => void;
+  onInvitationRoleChange?: (invitationId: string, newRole: Role) => void;
   onUserRoleChange?: (newRole: Role) => void;
   isInviting?: boolean;
   isRemoving?: boolean;
@@ -70,9 +98,12 @@ export interface ApplicationTeamPermissionsProps {
 export function ApplicationTeamPermissions({
   currentUser,
   collaborators: propsCollaborators,
+  pendingInvitations = [],
   onInvite,
   onRemove,
+  onRevokeInvitation,
   onRoleChange,
+  onInvitationRoleChange,
   onUserRoleChange,
   isInviting = false,
   isRemoving = false,
@@ -82,24 +113,33 @@ export function ApplicationTeamPermissions({
     useState<Collaborator[]>(propsCollaborators);
   const [showInviteDialog, setShowInviteDialog] = useState(false);
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
+  const [showRevokeDialog, setShowRevokeDialog] = useState(false);
   const [selectedCollaborator, setSelectedCollaborator] =
     useState<Collaborator | null>(null);
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState<Role>("family_member");
+  const [selectedInvitation, setSelectedInvitation] =
+    useState<PendingInvitation | null>(null);
+
+  const inviteForm = useForm<InviteFormData>({
+    resolver: zodResolver(inviteFormSchema),
+    defaultValues: {
+      email: "",
+      role: "family_member",
+    },
+  });
 
   const collaborators =
     onInvite || onRemove || onRoleChange
       ? propsCollaborators
       : internalCollaborators;
 
-  const handleInvite = () => {
+  const handleInvite = (data: InviteFormData) => {
     if (onInvite) {
-      onInvite(inviteEmail, inviteRole);
+      onInvite(data.email, data.role);
     } else {
       const newCollaborator: Collaborator = {
-        id: `collab-${Date.now()}`,
-        email: inviteEmail,
-        role: inviteRole,
+        id: crypto.randomUUID(),
+        email: data.email,
+        role: data.role,
         joinedAt: new Date().toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
@@ -108,9 +148,15 @@ export function ApplicationTeamPermissions({
       };
       setInternalCollaborators([...internalCollaborators, newCollaborator]);
     }
-    setInviteEmail("");
-    setInviteRole("family_member");
+    inviteForm.reset();
     setShowInviteDialog(false);
+  };
+
+  const handleDialogChange = (open: boolean) => {
+    setShowInviteDialog(open);
+    if (!open) {
+      inviteForm.reset();
+    }
   };
 
   const handleRemove = () => {
@@ -139,6 +185,20 @@ export function ApplicationTeamPermissions({
     }
   };
 
+  const handleInvitationRoleChange = (invitationId: string, newRole: Role) => {
+    if (onInvitationRoleChange) {
+      onInvitationRoleChange(invitationId, newRole);
+    }
+  };
+
+  const handleRevokeInvitation = () => {
+    if (selectedInvitation && onRevokeInvitation) {
+      onRevokeInvitation(selectedInvitation.id);
+    }
+    setSelectedInvitation(null);
+    setShowRevokeDialog(false);
+  };
+
   const handleUserRoleChange = (newRole: Role) => {
     setUserRole(newRole);
     if (onUserRoleChange) {
@@ -158,7 +218,7 @@ export function ApplicationTeamPermissions({
             collaborators have full admin access.
           </p>
         </div>
-        <Dialog open={showInviteDialog} onOpenChange={setShowInviteDialog}>
+        <Dialog open={showInviteDialog} onOpenChange={handleDialogChange}>
           <DialogTrigger asChild>
             <Button className="shrink-0">Invite Collaborator</Button>
           </DialogTrigger>
@@ -173,46 +233,73 @@ export function ApplicationTeamPermissions({
                 guest lists, and content.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="font-medium">
-                  Email Address
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="collaborator@example.com"
-                  value={inviteEmail}
-                  onChange={(e) => setInviteEmail(e.target.value)}
-                  className="h-12"
+            <Form {...inviteForm}>
+              <form
+                onSubmit={inviteForm.handleSubmit(handleInvite)}
+                className="space-y-4 py-4"
+              >
+                <FormField
+                  control={inviteForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium">
+                        Email Address
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="collaborator@example.com"
+                          className="h-12"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div className="space-y-2">
-                <Label className="font-medium">Role</Label>
-                <Select
-                  value={inviteRole}
-                  onValueChange={(v) => setInviteRole(v as Role)}
+                <FormField
+                  control={inviteForm.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium">Role</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent
+                          position="popper"
+                          className="z-100"
+                          onCloseAutoFocus={(e) => e.preventDefault()}
+                        >
+                          <SelectItem value="spouse">Spouse</SelectItem>
+                          <SelectItem value="family_member">
+                            Family Member
+                          </SelectItem>
+                          <SelectItem value="wedding_planner">
+                            Wedding Planner
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  disabled={isInviting}
+                  className="w-full h-12"
                 >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="spouse">Spouse</SelectItem>
-                    <SelectItem value="family_member">Family Member</SelectItem>
-                    <SelectItem value="wedding_planner">
-                      Wedding Planner
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <Button
-              onClick={handleInvite}
-              disabled={!inviteEmail || isInviting}
-              className="w-full h-12"
-            >
-              Send Invitation
-            </Button>
+                  Send Invitation
+                </Button>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </div>
@@ -328,6 +415,87 @@ export function ApplicationTeamPermissions({
         </div>
       )}
 
+      {pendingInvitations.length > 0 && (
+        <div className="space-y-3">
+          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+            Pending Invitations
+          </p>
+          <div className="space-y-3">
+            {pendingInvitations.map((invitation) => (
+              <div
+                key={invitation.id}
+                className="p-5 rounded-lg border border-dashed border-amber-500/50 bg-amber-50/50"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-foreground">
+                        {invitation.email}
+                      </p>
+                      <Badge
+                        variant="outline"
+                        className="border-amber-500 text-amber-700 bg-amber-100 text-xs px-2 py-0.5"
+                      >
+                        PENDING
+                      </Badge>
+                    </div>
+                    <p className="text-muted-foreground">
+                      {roleLabels[invitation.role]}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Invited: {invitation.sentAt}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Select
+                      value={invitation.role}
+                      onValueChange={(v) =>
+                        handleInvitationRoleChange(invitation.id, v as Role)
+                      }
+                    >
+                      <SelectTrigger className="w-[160px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="spouse">Spouse</SelectItem>
+                        <SelectItem value="family_member">
+                          Family Member
+                        </SelectItem>
+                        <SelectItem value="wedding_planner">
+                          Wedding Planner
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-10 w-10 bg-transparent"
+                        >
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive"
+                          onClick={() => {
+                            setSelectedInvitation(invitation);
+                            setShowRevokeDialog(true);
+                          }}
+                        >
+                          Revoke Invitation
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <AlertDialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -348,6 +516,31 @@ export function ApplicationTeamPermissions({
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Remove
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showRevokeDialog} onOpenChange={setShowRevokeDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif">
+              Revoke Invitation?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to revoke the invitation sent to{" "}
+              {selectedInvitation?.email}? They will no longer be able to join
+              your wedding team using this invitation.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleRevokeInvitation}
+              disabled={isRemoving}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Revoke
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

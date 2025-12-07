@@ -1,15 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import {
   ApplicationDashboardLayout,
   ApplicationTeamPermissions,
-  type Collaborator,
   type Role,
+  type PendingInvitation,
   DashboardUserData,
   DashboardWeddingData,
 } from "component-shelf";
@@ -62,6 +61,49 @@ async function fetchPermissions(): Promise<PermissionsResponse> {
   return permissionsSchema.parse(data);
 }
 
+async function inviteCollaborator(payload: { email: string; role: Role }) {
+  const res = await fetch("/api/v2/engaged/permissions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("Failed to invite collaborator");
+  }
+  return res.json();
+}
+
+async function removeCollaborator(payload: {
+  collaboratorId?: string;
+  invitationId?: string;
+}) {
+  const res = await fetch("/api/v2/engaged/permissions", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("Failed to remove collaborator");
+  }
+  return res.json();
+}
+
+async function updateRoles(payload: {
+  currentUser?: { role: Role };
+  collaborators?: { id: string; role: Role }[];
+  invitations?: { id: string; role: Role }[];
+}) {
+  const res = await fetch("/api/v2/engaged/permissions", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("Failed to update roles");
+  }
+  return res.json();
+}
+
 function transformToUserData(response: PermissionsResponse): DashboardUserData {
   return {
     fullName: response.user.fullName,
@@ -85,50 +127,63 @@ function transformToWeddingData(
 
 export default function PermissionsPage() {
   const pathname = usePathname();
-  const { data, isLoading } = useQuery({
+  const queryClient = useQueryClient();
+
+  const { data } = useQuery({
     queryKey: ["permissions"],
     queryFn: fetchPermissions,
+  });
+
+  const inviteMutation = useMutation({
+    mutationFn: inviteCollaborator,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["permissions"] });
+    },
+  });
+
+  const removeMutation = useMutation({
+    mutationFn: removeCollaborator,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["permissions"] });
+    },
+  });
+
+  const roleChangeMutation = useMutation({
+    mutationFn: updateRoles,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["permissions"] });
+    },
   });
 
   const userData = data ? transformToUserData(data) : undefined;
   const weddingData = data ? transformToWeddingData(data) : undefined;
 
-  const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
-
-  useEffect(() => {
-    if (data && !isLoading) {
-      setCollaborators(data.collaborators);
-    }
-  }, [data, isLoading]);
-
   const handleInvite = (email: string, role: Role) => {
-    const newCollaborator: Collaborator = {
-      id: `collab-${Date.now()}`,
-      email,
-      role,
-      joinedAt: new Date().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      }),
-    };
-    setCollaborators([...collaborators, newCollaborator]);
+    inviteMutation.mutate({ email, role });
   };
 
   const handleRemove = (collaboratorId: string) => {
-    setCollaborators(collaborators.filter((c) => c.id !== collaboratorId));
+    removeMutation.mutate({ collaboratorId });
+  };
+
+  const handleRevokeInvitation = (invitationId: string) => {
+    removeMutation.mutate({ invitationId });
   };
 
   const handleRoleChange = (collaboratorId: string, newRole: Role) => {
-    setCollaborators(
-      collaborators.map((c) =>
-        c.id === collaboratorId ? { ...c, role: newRole } : c
-      )
-    );
+    roleChangeMutation.mutate({
+      collaborators: [{ id: collaboratorId, role: newRole }],
+    });
+  };
+
+  const handleInvitationRoleChange = (invitationId: string, newRole: Role) => {
+    roleChangeMutation.mutate({
+      invitations: [{ id: invitationId, role: newRole }],
+    });
   };
 
   const handleUserRoleChange = (newRole: Role) => {
-    console.log("User role changed to:", newRole);
+    roleChangeMutation.mutate({ currentUser: { role: newRole } });
   };
 
   const currentUser = data
@@ -150,11 +205,16 @@ export default function PermissionsPage() {
     >
       <ApplicationTeamPermissions
         currentUser={currentUser}
-        collaborators={collaborators}
+        collaborators={data?.collaborators ?? []}
+        pendingInvitations={data?.invitations ?? []}
         onInvite={handleInvite}
         onRemove={handleRemove}
+        onRevokeInvitation={handleRevokeInvitation}
         onRoleChange={handleRoleChange}
+        onInvitationRoleChange={handleInvitationRoleChange}
         onUserRoleChange={handleUserRoleChange}
+        isInviting={inviteMutation.isPending}
+        isRemoving={removeMutation.isPending}
       />
     </ApplicationDashboardLayout>
   );
