@@ -58,6 +58,15 @@ Enviroment variable required for a good time (no errors)
 - UPSTASH_REDIS_REST_URL (Used as a cache layer for the tenant app)
 - UPSTASH_REDIS_REST_TOKEN
 
+## Setting up Clerk
+
+In Clerk we need to enable the ability to capture the First and Last name of the Engaged users. You'll receive application errors in the invitation flow if you don't have the proper settings enabled.
+
+1. Go to the "Configure" tab
+2. Select "User & authentication" from the "Configure" sidebar
+3. Select the "User model" tab
+4. Enable the "First and last name" switch. (We DO NOT require first and last name)
+
 ## Troubleshooting
 
 If you need a sanity check, run the following command to clear all auto-generated assets.
@@ -68,20 +77,6 @@ pnpm run clean
 
 _Don't forget to reinstall the project dependencies before running the dev server or production build_
 
-### Font issues
+### Clerk `form_param_unknown` errors when Accepting Invitations
 
-If you're running into errors related to the local fonts i.e.
-
-```
-Module not found: Can't resolve './fonts/EB_Garamond/static/EBGaramond-Bold.ttf'
-```
-
-its because you don't have the font assets in the style-shelf/dist directory. To resolve run
-
-```shell
-pnpm run build
-```
-
-then you should be good to restart the development server.
-
-> Heads up: this error will fail silently in the Vite app, (component-shelf) you'll just see fall-back fonts.
+You need to enable the "First and last name" switch in the Clerk Dashboard. See [Setting Up Clerk](#setting-up-clerk) for more information.
