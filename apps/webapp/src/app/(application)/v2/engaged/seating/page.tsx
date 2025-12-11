@@ -7,6 +7,7 @@ import {
   ApplicationDashboardLayout,
   ApplicationSeatingPlannerCore,
 } from "component-shelf";
+import { ComingSoonOverlay } from "@/components/ComingSoonOverlay";
 
 export default function SeatingPage() {
   const pathname = usePathname();
@@ -20,7 +21,8 @@ export default function SeatingPage() {
       onLogout={() => signOut({ redirectUrl: "/" })}
       onInviteClick={() => router.push("/v2/engaged/permissions")}
     >
-      <ApplicationSeatingPlannerCore isAuthenticated={true} />
+      {/* <ApplicationSeatingPlannerCore isAuthenticated={true} /> */}
+      <ComingSoonOverlay />
     </ApplicationDashboardLayout>
   );
 }

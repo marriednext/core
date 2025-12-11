@@ -7,6 +7,7 @@ import {
   ApplicationMemoriesGallery,
   ApplicationDashboardLayout,
 } from "component-shelf";
+import { ComingSoonOverlay } from "@/components/ComingSoonOverlay";
 
 export default function MemoriesPage() {
   const pathname = usePathname();
@@ -20,7 +21,8 @@ export default function MemoriesPage() {
       onLogout={() => signOut({ redirectUrl: "/" })}
       onInviteClick={() => router.push("/v2/engaged/permissions")}
     >
-      <ApplicationMemoriesGallery />
+      {/* <ApplicationMemoriesGallery /> */}
+      <ComingSoonOverlay />
     </ApplicationDashboardLayout>
   );
 }
