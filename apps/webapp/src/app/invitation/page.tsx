@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSignUp, useUser, useClerk } from "@clerk/nextjs";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -25,7 +25,7 @@ const invitationSchema = z.object({
 
 type InvitationFormData = z.infer<typeof invitationSchema>;
 
-export default function InvitationPage() {
+function InvitationContent() {
   const { isSignedIn } = useUser();
   const router = useRouter();
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -242,5 +242,28 @@ export default function InvitationPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function InvitationPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-gradient-to-br from-rose-50 via-white to-amber-50">
+          <div className="w-full max-w-md text-center">
+            <div className="p-8 bg-white/60 backdrop-blur-md border border-white/30 rounded-2xl shadow-xl">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-rose-100 flex items-center justify-center">
+                <HeartIcon className="w-8 h-8 text-rose-500" />
+              </div>
+              <h1 className="text-2xl font-semibold text-stone-800 mb-3">
+                Loading...
+              </h1>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <InvitationContent />
+    </Suspense>
   );
 }

@@ -40,7 +40,7 @@ const addInvitationSchema = z.object({
   invitationType: z.enum(["single", "plusone", "group"]),
   groupName: z.string().optional(),
   guestName: z.string().optional(),
-  guestNames: z.array(z.string()).optional(),
+  guestNames: z.array(z.object({ value: z.string() })),
   email: z
     .union([z.string().email("Invalid email"), z.literal(""), z.null()])
     .optional(),
@@ -57,7 +57,7 @@ const defaultValues: AddInvitationFormData = {
   invitationType: "single",
   groupName: "",
   guestName: "",
-  guestNames: [""],
+  guestNames: [{ value: "" }],
   email: "",
 };
 
@@ -89,7 +89,7 @@ export function AddInvitationDialog({
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove } = useFieldArray<AddInvitationFormData>({
     control: form.control,
     name: "guestNames",
   });
@@ -156,7 +156,9 @@ export function AddInvitationDialog({
   const handleSubmit = (data: AddInvitationFormData) => {
     const guests =
       data.invitationType === "group"
-        ? (data.guestNames || []).filter((name) => name.trim() !== "")
+        ? (data.guestNames || [])
+            .map((item) => item.value)
+            .filter((name) => name.trim() !== "")
         : data.guestName?.trim()
         ? [data.guestName.trim()]
         : [];
@@ -275,7 +277,7 @@ export function AddInvitationDialog({
                   <FormField
                     key={field.id}
                     control={form.control}
-                    name={`guestNames.${index}`}
+                    name={`guestNames.${index}.value`}
                     render={({ field }) => (
                       <FormItem>
                         <div className="flex items-center gap-2">
@@ -304,7 +306,7 @@ export function AddInvitationDialog({
                   variant="outline"
                   size="sm"
                   className="w-full gap-2"
-                  onClick={() => append("")}
+                  onClick={() => append({ value: "" })}
                 >
                   <Plus className="h-4 w-4" />
                   Add Guest

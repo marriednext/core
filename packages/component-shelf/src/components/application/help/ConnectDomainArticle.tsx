@@ -15,7 +15,6 @@ import {
   Copy,
   Check,
   Play,
-  ChevronRight,
   Sparkles,
 } from "lucide-react";
 

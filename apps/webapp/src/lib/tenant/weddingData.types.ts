@@ -29,7 +29,7 @@ export type WeddingData = {
   fieldOurStory: unknown;
   fieldNameA: string | null;
   fieldNameB: string | null;
-  controlRsvpNameFormat: "FIRST_NAME_ONLY" | "FULL_NAME";
+  controlRsvpNameFormat: "FIRST_NAME_ONLY" | "FULL_NAME" | "EMAIL";
   photos?: WeddingPhoto[];
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: Record<string, Record<string, string>> | null;

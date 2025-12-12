@@ -17,7 +17,6 @@ import {
   UserPlus,
   Mail,
   LogIn,
-  ChevronRight,
 } from "lucide-react";
 
 interface ApplicationInviteCollaboratorArticleProps {

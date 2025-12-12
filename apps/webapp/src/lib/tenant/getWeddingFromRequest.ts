@@ -5,7 +5,7 @@ import { getHostType } from "../rewrites/multitenancy";
 
 export async function getWeddingFromRequest(request: Request): Promise<{
   id: string;
-  controlRsvpNameFormat: "FIRST_NAME_ONLY" | "FULL_NAME";
+  controlRsvpNameFormat: "FIRST_NAME_ONLY" | "FULL_NAME" | "EMAIL";
 } | null> {
   const hostHeader = request.headers.get("host") || "";
   const { isTenantHost, firstLabel } = getHostType(hostHeader);

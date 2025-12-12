@@ -14,7 +14,6 @@ import {
   Users,
   Clock,
   CheckCircle2,
-  UserMinus,
   MoreVertical,
   AlertTriangle,
 } from "lucide-react";

@@ -1,6 +1,6 @@
 import type { DbInvitationWithGuests } from "orm-shelf/types";
 
-export type RsvpNameFormat = "FIRST_NAME_ONLY" | "FULL_NAME";
+export type RsvpNameFormat = "FIRST_NAME_ONLY" | "FULL_NAME" | "EMAIL";
 
 export type GuestSelection = {
   name: string;

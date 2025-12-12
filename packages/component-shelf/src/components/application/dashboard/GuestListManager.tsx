@@ -194,7 +194,6 @@ export function ApplicationGuestListManager({
   invitations: propInvitations,
   stats: propStats,
   isLoading = false,
-  rsvpLink: propRsvpLink,
   onAddInvitation,
   isAddingInvitation = false,
   onEditInvitation,
@@ -207,7 +206,6 @@ export function ApplicationGuestListManager({
 }: ApplicationGuestListManagerProps) {
   const { openDialog } = useEditInvitationDialogStore();
   const invitations = propInvitations ?? mockInvitations;
-  const rsvpLinkValue = propRsvpLink ?? "marriednext.com/rsvp/sarah-michael";
   const rsvpLookupMethod = propRsvpLookupMethod ?? "FULL_NAME";
 
   const [searchQuery, setSearchQuery] = useState("");

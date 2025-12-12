@@ -44,7 +44,7 @@ function mapDatabaseRoleToComponentRole(
 
 function mapComponentRoleToDatabaseRole(
   componentRole: "spouse" | "family_member" | "wedding_planner"
-): string {
+): "spouse" | "family" | "planner" {
   if (componentRole === "family_member") return "family";
   if (componentRole === "wedding_planner") return "planner";
   return "spouse";

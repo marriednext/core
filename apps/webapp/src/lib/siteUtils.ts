@@ -30,8 +30,3 @@ export function getInitials(
   const last = lastName?.[0] || "";
   return (first + last).toUpperCase() || "U";
 }
-
-
-
-
-
