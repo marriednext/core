@@ -17,6 +17,8 @@ interface NavbarProps {
   >;
   loginUrl?: string;
   signUpUrl?: string;
+  isAuthenticated?: boolean;
+  dashboardUrl?: string;
 }
 
 export function Navbar({
@@ -25,6 +27,8 @@ export function Navbar({
   >,
   loginUrl = "/sign-in",
   signUpUrl = "/register",
+  isAuthenticated = false,
+  dashboardUrl = "/engaged",
 }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -105,12 +109,20 @@ export function Navbar({
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href={loginUrl}>Log in</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link href={signUpUrl}>Get Started</Link>
-            </Button>
+            {isAuthenticated ? (
+              <Button size="sm" asChild>
+                <Link href={dashboardUrl}>Dashboard</Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href={loginUrl}>Log in</Link>
+                </Button>
+                <Button size="sm" asChild>
+                  <Link href={signUpUrl}>Get Started</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           <button
@@ -174,22 +186,35 @@ export function Navbar({
               </Link>
 
               <div className="flex flex-col gap-2 pt-4 mt-2 border-t border-border">
-                <Button variant="ghost" size="sm" asChild>
-                  <Link
-                    href={loginUrl}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Log in
-                  </Link>
-                </Button>
-                <Button size="sm" asChild>
-                  <Link
-                    href={signUpUrl}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Get Started
-                  </Link>
-                </Button>
+                {isAuthenticated ? (
+                  <Button size="sm" asChild>
+                    <Link
+                      href={dashboardUrl}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link
+                        href={loginUrl}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Log in
+                      </Link>
+                    </Button>
+                    <Button size="sm" asChild>
+                      <Link
+                        href={signUpUrl}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Get Started
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>

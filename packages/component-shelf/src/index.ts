@@ -30,6 +30,7 @@ export type { TenantHomePageTypes } from "./stories/TenantHomePage/TenantHomePag
 export { default as WheelSvg } from "./stories/WheelSvg";
 
 export { Navbar } from "./components/application/NavBar";
+export { Navbar as ApplicationNavbar } from "./components/application/NavBar";
 export { HeroSection } from "./components/application/HeroSection";
 export { FeaturesSection } from "./components/application/FeaturesSection";
 export { ApplicationHowItWorksSection } from "./components/application/HowItWorksSection";
