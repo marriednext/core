@@ -47,9 +47,13 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     if (user) {
-      console.log("Clerk publicMetadata:", user.publicMetadata);
+      // console.log("Clerk publicMetadata:", user.publicMetadata);
+
+      if (user.publicMetadata?.onboardingComplete) {
+        router.push("/engaged");
+      }
     }
-  }, [user]);
+  }, [user, router]);
 
   const { data: invitationData, isLoading: isCheckingInvitation } = useQuery({
     queryKey: ["onboarding-invitation"],
