@@ -44,67 +44,17 @@ export function Navbar({
           </Link>
 
           <div className="hidden md:flex items-center gap-6">
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors outline-none">
-                Product
-                <ChevronDown className="h-4 w-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56">
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/#features"
-                    className="flex items-center gap-3 cursor-pointer"
-                  >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10">
-                      <Heart className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <div className="font-medium">Features</div>
-                      <div className="text-xs text-muted-foreground">
-                        Everything included
-                      </div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/templates"
-                    className="flex items-center gap-3 cursor-pointer"
-                  >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10">
-                      <Layout className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <div className="font-medium">Templates</div>
-                      <div className="text-xs text-muted-foreground">
-                        Beautiful designs
-                      </div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
             <Link
-              href="/#pricing"
+              href="/#features"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Pricing
+              Features
             </Link>
             <Link
               href="/blog"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               Blog
-            </Link>
-            <Link
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="View source code on GitHub"
-            >
-              <Github className="h-5 w-5" />
             </Link>
           </div>
 

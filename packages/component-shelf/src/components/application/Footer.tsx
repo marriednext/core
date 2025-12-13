@@ -18,17 +18,17 @@ export function ApplicationFooter() {
             </p>
             <div className="mt-4 flex gap-4">
               <a
-                href="https://github.com"
+                href="https://github.com/matthewbub/marriednext.com"
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Github className="h-5 w-5" />
               </a>
-              <a
+              {/* <a
                 href="https://twitter.com"
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Twitter className="h-5 w-5" />
-              </a>
+              </a> */}
             </div>
           </div>
 
@@ -44,7 +44,7 @@ export function ApplicationFooter() {
                   Features
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="/templates"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -67,7 +67,7 @@ export function ApplicationFooter() {
                 >
                   Seating Planner
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -84,7 +84,7 @@ export function ApplicationFooter() {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/documentation"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Documentation
@@ -98,14 +98,14 @@ export function ApplicationFooter() {
                   Wedding Blog
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="#"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Community
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -122,10 +122,10 @@ export function ApplicationFooter() {
               </li>
               <li>
                 <a
-                  href="https://github.com"
+                  href="https://github.com/matthewbub/marriednext.com"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Open Source
+                  Public Source
                 </a>
               </li>
               <li>
@@ -153,7 +153,7 @@ export function ApplicationFooter() {
             © 2025 Married Next. Made with love for couples everywhere.
           </p>
           <p className="text-sm text-muted-foreground">
-            Free to start • Open source • Transparent pricing
+            Free to start • Public source • Transparent pricing
           </p>
         </div>
       </div>

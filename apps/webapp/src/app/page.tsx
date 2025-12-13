@@ -26,10 +26,10 @@ export default function Home() {
       <HeroSection />
       <FeaturesSection />
       <ApplicationHowItWorksSection />
-      <ApplicationSeatingPlannerSection />
-      <ApplicationMemoriesSection />
-      <ApplicationPricingSection />
-      <ApplicationCtaSection />
+      {/* <ApplicationSeatingPlannerSection /> */}
+      {/* <ApplicationMemoriesSection /> */}
+      {/* <ApplicationPricingSection /> */}
+      <ApplicationCtaSection Link={Link} signUpUrl="/register" />
       <ApplicationFooter />
     </div>
   );
