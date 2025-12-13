@@ -2,6 +2,12 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { getHostType } from "@/lib/rewrites/multitenancy";
 
+interface ClerkPublicMetadata {
+  onboardingComplete?: boolean;
+  weddingId?: string;
+  role?: string;
+}
+
 const isOnboardingRoute = createRouteMatcher(["/engaged/onboarding"]);
 const isOnboardingApiRoute = createRouteMatcher(["/api/onboarding(.*)"]);
 const isPublicRoute = createRouteMatcher([
@@ -44,7 +50,8 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     }
 
     // if the user is authenticated and the onboarding is not complete, redirect to the onboarding flow
-    if (isAuthenticated && !sessionClaims?.publicMetadata?.onboardingComplete) {
+    const metadata = sessionClaims?.publicMetadata as ClerkPublicMetadata;
+    if (isAuthenticated && !metadata?.onboardingComplete) {
       const onboardingUrl = new URL("/engaged/onboarding", req.url);
       return NextResponse.redirect(onboardingUrl);
     }
