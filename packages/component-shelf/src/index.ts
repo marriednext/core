@@ -29,9 +29,9 @@ export type { TenantHomePageTypes } from "./stories/TenantHomePage/TenantHomePag
 
 export { default as WheelSvg } from "./stories/WheelSvg";
 
-export { ApplicationNavbar } from "./components/application/NavBar";
-export { ApplicationHeroSection } from "./components/application/HeroSection";
-export { ApplicationFeaturesSection } from "./components/application/FeaturesSection";
+export { Navbar } from "./components/application/NavBar";
+export { HeroSection } from "./components/application/HeroSection";
+export { FeaturesSection } from "./components/application/FeaturesSection";
 export { ApplicationHowItWorksSection } from "./components/application/HowItWorksSection";
 export { ApplicationSeatingPlannerSection } from "./components/application/SeatingPlannerSection";
 export { ApplicationMemoriesSection } from "./components/application/MemoriesSection";

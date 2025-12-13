@@ -1,11 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import {
   MarriedNextMarketingNavigation,
-  ApplicationNavbar,
-  ApplicationHeroSection,
-  ApplicationFeaturesSection,
+  Navbar,
+  HeroSection,
+  FeaturesSection,
   ApplicationHowItWorksSection,
   ApplicationSeatingPlannerSection,
   ApplicationMemoriesSection,
@@ -14,7 +15,6 @@ import {
   ApplicationFooter,
 } from "component-shelf";
 import "style-shelf/tailwind";
-import "style-shelf/tailwind";
 
 export default function Home() {
   const { isSignedIn } = useUser();
@@ -22,9 +22,9 @@ export default function Home() {
   return (
     <div>
       {/* <MarriedNextMarketingNavigation isAuthenticated={isSignedIn} /> */}
-      <ApplicationNavbar isAuthenticated={isSignedIn} />
-      <ApplicationHeroSection />
-      <ApplicationFeaturesSection />
+      <Navbar Link={Link} loginUrl="/sign-in" signUpUrl="/register" />
+      <HeroSection />
+      <FeaturesSection />
       <ApplicationHowItWorksSection />
       <ApplicationSeatingPlannerSection />
       <ApplicationMemoriesSection />

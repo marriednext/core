@@ -1,7 +1,7 @@
-import { Button } from "../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ArrowRight, Github } from "lucide-react";
 
-export function ApplicationHeroSection() {
+export function HeroSection() {
   return (
     <section className="pt-32 pb-20 px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
@@ -9,7 +9,7 @@ export function ApplicationHeroSection() {
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-sm mb-6">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              Free to Start • Open Source
+              Free to Start • Public Source
             </div>
 
             <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight text-foreground leading-[1.1] text-balance">
@@ -17,9 +17,8 @@ export function ApplicationHeroSection() {
             </h1>
 
             <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
-              Beautiful websites. Smart guest lists. Seamless RSVPs. The
-              all-in-one wedding planning platform couples actually love — free
-              to start, with optional upgrades when you need them.
+              Beautiful websites. Smart guest lists. Seamless RSVPs. The all-in-one wedding planning platform couples
+              actually love — free to start, with optional upgrades when you need them.
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
@@ -27,38 +26,26 @@ export function ApplicationHeroSection() {
                 Start Planning Free
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="gap-2 bg-transparent"
-              >
+              <Button variant="outline" size="lg" className="gap-2 bg-transparent">
                 <Github className="h-4 w-4" />
-                View on GitHub
+                View Source Code
               </Button>
             </div>
 
             <div className="mt-12 flex items-center gap-8">
               <div>
-                <p className="text-3xl font-serif font-semibold text-foreground">
-                  $0
-                </p>
+                <p className="text-3xl font-serif font-semibold text-foreground">$0</p>
                 <p className="text-sm text-muted-foreground">To get started</p>
               </div>
               <div className="w-px h-10 bg-border" />
               <div>
-                <p className="text-3xl font-serif font-semibold text-foreground">
-                  100%
-                </p>
-                <p className="text-sm text-muted-foreground">Open source</p>
+                <p className="text-3xl font-serif font-semibold text-foreground">Public</p>
+                <p className="text-sm text-muted-foreground">Source code</p>
               </div>
               <div className="w-px h-10 bg-border" />
               <div>
-                <p className="text-3xl font-serif font-semibold text-foreground">
-                  All-in-One
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Website to seating
-                </p>
+                <p className="text-3xl font-serif font-semibold text-foreground">All-in-One</p>
+                <p className="text-sm text-muted-foreground">Website to RSVP</p>
               </div>
             </div>
           </div>
@@ -77,12 +64,8 @@ export function ApplicationHeroSection() {
                   <span className="text-lg">💌</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-foreground">
-                    RSVP Received
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Sarah & James are attending!
-                  </p>
+                  <p className="text-sm font-medium text-foreground">RSVP Received</p>
+                  <p className="text-xs text-muted-foreground">Sarah & James are attending!</p>
                 </div>
               </div>
             </div>
@@ -92,12 +75,8 @@ export function ApplicationHeroSection() {
                   <span className="text-lg">✨</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-foreground">
-                    85 Guests
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Confirmed so far
-                  </p>
+                  <p className="text-sm font-medium text-foreground">85 Guests</p>
+                  <p className="text-xs text-muted-foreground">Confirmed so far</p>
                 </div>
               </div>
             </div>

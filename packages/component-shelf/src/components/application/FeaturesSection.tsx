@@ -1,39 +1,52 @@
-import { Globe, Users, CheckCircle, Palette, Code, Heart } from "lucide-react"
+import {
+  Globe,
+  Users,
+  CheckCircle,
+  Code,
+  Heart,
+  CalendarHeart,
+} from "lucide-react";
 
 const features = [
   {
     icon: Globe,
     title: "Beautiful Website",
-    description: "Stunning templates designed for elegance, not generic AI slop. Your story, beautifully told.",
+    description:
+      "Stunning templates designed for elegance, not generic AI slop. Your story, beautifully told.",
+  },
+  {
+    icon: CalendarHeart,
+    title: "Save the Date",
+    description:
+      "Collect early responses and contact info before sending formal invitations. Know who's coming.",
   },
   {
     icon: Users,
     title: "Smart Guest List",
-    description: "Track RSVPs, manage plus-ones, dietary requirements, and group invitations effortlessly.",
+    description:
+      "Track RSVPs, manage plus-ones, dietary requirements, and group invitations effortlessly.",
   },
   {
     icon: CheckCircle,
     title: "Seamless RSVPs",
-    description: "Guests respond in seconds. You get organized responses instantly.",
-  },
-  {
-    icon: Palette,
-    title: "Seating Planner",
-    description: "Drag-and-drop seating arrangements that make table planning actually enjoyable.",
+    description:
+      "Guests respond in seconds. You get organized responses instantly.",
   },
   {
     icon: Code,
-    title: "Open Source",
-    description: "Full transparency. Community-driven. Your data stays yours, always.",
+    title: "Public Source",
+    description:
+      "Full transparency. Source code available to view. Your data stays yours, always.",
   },
   {
     icon: Heart,
     title: "Collaborative",
-    description: "Plan together. Invite your partner, wedding party, or parents to help.",
+    description:
+      "Plan together. Invite your partner, wedding party, or parents to help.",
   },
-]
+];
 
-export function ApplicationFeaturesSection() {
+export function FeaturesSection() {
   return (
     <section id="features" className="py-24 px-6 lg:px-8 bg-secondary/50">
       <div className="mx-auto max-w-7xl">
@@ -42,7 +55,8 @@ export function ApplicationFeaturesSection() {
             Everything you need, nothing you don't
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            One platform that replaces scattered spreadsheets, expensive software, and endless stress.
+            One platform that replaces scattered spreadsheets, expensive
+            software, and endless stress.
           </p>
         </div>
 
@@ -55,12 +69,16 @@ export function ApplicationFeaturesSection() {
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
                 <feature.icon className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="font-serif text-xl font-medium text-foreground mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+              <h3 className="font-serif text-xl font-medium text-foreground mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
