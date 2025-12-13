@@ -1,4 +1,4 @@
-import { Heart, Github, Twitter } from "lucide-react";
+import { Heart, Github } from "lucide-react";
 
 export function ApplicationFooter() {
   return (

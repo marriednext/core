@@ -3,13 +3,7 @@
 import { useState } from "react";
 import type { ComponentType, AnchorHTMLAttributes } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu";
-import { Menu, X, Heart, ChevronDown, Layout, Github } from "lucide-react";
+import { Menu, X, Heart } from "lucide-react";
 
 interface NavbarProps {
   Link?: ComponentType<
@@ -128,10 +122,9 @@ export function Navbar({
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-2 py-2 text-sm text-foreground hover:bg-muted rounded-md flex items-center gap-2"
+                className="px-2 py-2 text-sm text-foreground hover:bg-muted rounded-md"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <Github className="h-4 w-4" />
                 Public Source
               </Link>
 

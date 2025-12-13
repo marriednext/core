@@ -3,14 +3,10 @@
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import {
-  MarriedNextMarketingNavigation,
   Navbar,
   HeroSection,
   FeaturesSection,
   ApplicationHowItWorksSection,
-  ApplicationSeatingPlannerSection,
-  ApplicationMemoriesSection,
-  ApplicationPricingSection,
   ApplicationCtaSection,
   ApplicationFooter,
 } from "component-shelf";
@@ -22,7 +18,12 @@ export default function Home() {
   return (
     <div>
       {/* <MarriedNextMarketingNavigation isAuthenticated={isSignedIn} /> */}
-      <Navbar Link={Link} loginUrl="/sign-in" signUpUrl="/register" />
+      <Navbar
+        Link={Link}
+        loginUrl="/sign-in"
+        signUpUrl="/register"
+        isAuthenticated={isSignedIn}
+      />
       <HeroSection />
       <FeaturesSection />
       <ApplicationHowItWorksSection />

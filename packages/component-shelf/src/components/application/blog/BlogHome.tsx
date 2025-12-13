@@ -3,20 +3,14 @@ import { Card, CardContent } from "../../../components/ui/card";
 import { Badge } from "../../../components/ui/badge";
 import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
-import {
-  Search,
-  Calendar,
-  Clock,
-  ArrowRight,
-  Gift,
-  Users,
-  Globe,
-  Camera,
-  Heart,
-  Sparkles,
-} from "lucide-react";
+import { Search, Calendar, Clock, ArrowRight, Gift } from "lucide-react";
 
-const categories = [
+type CategoryType = {
+  name: string;
+  count: number;
+};
+
+const categories: CategoryType[] | [] = [
   // { name: "All", count: 12 },
   // { name: "Planning", count: 5 },
   // { name: "Etiquette", count: 3 },
@@ -35,7 +29,17 @@ const featuredPost = {
   icon: Gift,
 };
 
-const posts = [
+type PostType = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  readTime: string;
+  icon: React.ComponentType<{ className?: string; strokeWidth: number }>;
+};
+
+const posts: PostType[] | [] = [
   //   {
   //     slug: "seating-chart-tips",
   //     title: "How to Create a Stress-Free Seating Chart",
