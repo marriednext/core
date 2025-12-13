@@ -6,13 +6,6 @@ Create and deploy your wedding website in minutes. Manage your guest list and co
 
 This repository contains the full source code for marriednext.com, as well as the tenants of marriednext.com.
 
-## Tests
-
-```bash
-pnpm run test # vitest test suites
-pnpm run test-storybook # storybook interaction & a11y tests
-```
-
 ## Development
 
 **Prerequisites**
@@ -67,6 +60,24 @@ In Clerk we need to enable the ability to capture the First and Last name of the
 3. Select the "User model" tab
 4. Enable the "First and last name" switch. (We DO NOT require first and last name)
 
+**Configure Clerk's JWT Template**:
+
+1. Go to your Clerk Dashboard
+2. Navigate to Configure → Sessions → Customize session token
+3. Add this JSON template:
+
+```json
+{
+  "metadata": {
+    "onboardingComplete": "{{user.public_metadata.onboardingComplete}}",
+    "weddingId": "{{user.public_metadata.weddingId}}",
+    "role": "{{user.public_metadata.role}}"
+  }
+}
+```
+
+4. Save the template
+
 ## Troubleshooting
 
 If you need a sanity check, run the following command to clear all auto-generated assets.
@@ -80,3 +91,7 @@ _Don't forget to reinstall the project dependencies before running the dev serve
 ### Clerk `form_param_unknown` errors when Accepting Invitations
 
 You need to enable the "First and last name" switch in the Clerk Dashboard. See [Setting Up Clerk](#setting-up-clerk) for more information.
+
+### Stuck on the /onboarding screen
+
+You need to **Configure Clerk's JWT Template** as documented in the [Setting up Clerk](#setting-up-clerk) section
