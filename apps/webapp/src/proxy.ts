@@ -1,6 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { getHostType } from "@/lib/rewrites/multitenancy";
+import { edgeDb } from "@/database/edge";
+import { logs } from "orm-shelf/schema";
 
 interface ClerkPublicMetadata {
   onboardingComplete?: boolean;
@@ -51,7 +53,38 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
 
     // if the user is authenticated and the onboarding is not complete, redirect to the onboarding flow
     const metadata = sessionClaims?.publicMetadata as ClerkPublicMetadata;
+
+    const logData = {
+      isAuthenticated,
+      userId: sessionClaims?.sub,
+      onboardingComplete: metadata?.onboardingComplete,
+      onboardingCompleteType: typeof metadata?.onboardingComplete,
+      fullMetadata: metadata,
+      url: req.url,
+    };
+
+    console.log("[ONBOARDING DEBUG]", logData);
+
+    edgeDb
+      .insert(logs)
+      .values({ info: logData })
+      .catch((error) => {
+        console.error("[ONBOARDING DEBUG] Failed to log to database:", error);
+      });
+
     if (isAuthenticated && !metadata?.onboardingComplete) {
+      console.log("[ONBOARDING DEBUG] Redirecting to onboarding");
+      edgeDb
+        .insert(logs)
+        .values({
+          info: { ...logData, action: "redirect_to_onboarding" },
+        })
+        .catch((error) => {
+          console.error(
+            "[ONBOARDING DEBUG] Failed to log redirect to database:",
+            error
+          );
+        });
       const onboardingUrl = new URL("/engaged/onboarding", req.url);
       return NextResponse.redirect(onboardingUrl);
     }

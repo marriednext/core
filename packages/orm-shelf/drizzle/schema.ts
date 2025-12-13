@@ -281,3 +281,9 @@ export const weddingPhotos = pgTable(
       .onDelete("cascade"),
   ]
 );
+
+export const logs = pgTable("logs", {
+  id: uuid().defaultRandom().primaryKey().notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
+  info: jsonb("info").$type<Record<string, any>>(),
+});
