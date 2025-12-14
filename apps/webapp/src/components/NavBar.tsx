@@ -98,13 +98,6 @@ export default function NavBar() {
                   Guest List
                 </Link>
                 <Link
-                  href="/registry"
-                  className="text-lg font-medium hover:text-violet-700 transition"
-                  onClick={() => setOpen(false)}
-                >
-                  Registry
-                </Link>
-                <Link
                   href="/documentation"
                   className="text-lg font-medium hover:text-violet-700 transition"
                   onClick={() => setOpen(false)}

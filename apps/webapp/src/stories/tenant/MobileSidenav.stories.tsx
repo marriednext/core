@@ -8,7 +8,6 @@ const mockNavLinks = [
   { href: "/wedding-party", label: "Wedding Party" },
   { href: "/q-and-a", label: "Q + A" },
   { href: "/travel", label: "Travel" },
-  { href: "/registry", label: "Registry" },
 ];
 
 const mockGetNavItemClass = (href: string) =>
