@@ -282,6 +282,7 @@ export const weddingPhotos = pgTable(
   ]
 );
 
+// don't use this unless explicitly stated. (its used as a tool to debug in prod lol)
 export const logs = pgTable("logs", {
   id: uuid().defaultRandom().primaryKey().notNull(),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
