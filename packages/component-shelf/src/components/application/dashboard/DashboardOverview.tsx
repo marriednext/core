@@ -14,7 +14,6 @@ import {
   Globe,
   ExternalLink,
   ArrowRight,
-  Sparkles,
   Camera,
   Grid3X3,
   CalendarHeart,
@@ -47,38 +46,38 @@ export interface ApplicationDashboardOverviewProps {
   Link?: React.ComponentType<React.AnchorHTMLAttributes<HTMLAnchorElement>>;
 }
 
-const recentActivity = [
-  {
-    name: "Emma Thompson",
-    action: "accepted the invitation",
-    time: "2 hours ago",
-    status: "accepted",
-  },
-  {
-    name: "James Wilson",
-    action: "declined the invitation",
-    time: "5 hours ago",
-    status: "declined",
-  },
-  {
-    name: "Oliver & Sophie Brown",
-    action: "accepted with +1",
-    time: "Yesterday",
-    status: "accepted",
-  },
-  {
-    name: "Charlotte Davis",
-    action: "updated dietary requirements",
-    time: "Yesterday",
-    status: "updated",
-  },
-  {
-    name: "William Taylor",
-    action: "is awaiting response",
-    time: "2 days ago",
-    status: "pending",
-  },
-];
+// const recentActivity = [
+//   {
+//     name: "Emma Thompson",
+//     action: "accepted the invitation",
+//     time: "2 hours ago",
+//     status: "accepted",
+//   },
+//   {
+//     name: "James Wilson",
+//     action: "declined the invitation",
+//     time: "5 hours ago",
+//     status: "declined",
+//   },
+//   {
+//     name: "Oliver & Sophie Brown",
+//     action: "accepted with +1",
+//     time: "Yesterday",
+//     status: "accepted",
+//   },
+//   {
+//     name: "Charlotte Davis",
+//     action: "updated dietary requirements",
+//     time: "Yesterday",
+//     status: "updated",
+//   },
+//   {
+//     name: "William Taylor",
+//     action: "is awaiting response",
+//     time: "2 days ago",
+//     status: "pending",
+//   },
+// ];
 
 const quickActions = [
   {
@@ -429,7 +428,7 @@ export function ApplicationDashboardOverview({
           </Card>
 
           {/* Recent Activity */}
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle className="text-lg">Recent Activity</CardTitle>
               <CardDescription>Latest guest responses</CardDescription>
@@ -467,10 +466,10 @@ export function ApplicationDashboardOverview({
                 View All Activity
               </Button>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Upgrade CTA */}
-          <Card className="bg-gradient-to-br from-primary/10 via-accent/5 to-transparent border-primary/20">
+          {/* <Card className="bg-gradient-to-br from-primary/10 via-accent/5 to-transparent border-primary/20">
             <CardContent className="p-6">
               <div className="flex items-center gap-2 mb-3">
                 <Sparkles className="h-5 w-5 text-primary" />
@@ -489,7 +488,7 @@ export function ApplicationDashboardOverview({
                 Upgrade for $29
               </Button>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>
