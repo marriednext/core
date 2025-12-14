@@ -11,6 +11,7 @@ import { eq } from "drizzle-orm";
 import { updateWeddingCache } from "@/lib/admin/invalidateWeddingCache";
 import { RESERVED_SUBDOMAINS } from "@/lib/rewrites/multitenancy";
 import { UserRole } from "@/components/permissions/permissions.types";
+import * as Sentry from "@sentry/nextjs";
 
 const SUBDOMAIN_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -112,6 +113,8 @@ export async function POST(req: NextRequest) {
       .values({
         subdomain,
         fieldDisplayName: displayName,
+        fieldNameA: partner1Name,
+        fieldNameB: partner2Name,
         fieldEventDate: weddingDate,
         createdByClerkUserId: userId,
       })
@@ -170,6 +173,7 @@ export async function POST(req: NextRequest) {
     }
 
     console.error("Error completing onboarding:", error);
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: "Failed to complete onboarding" },
       { status: 500 }
