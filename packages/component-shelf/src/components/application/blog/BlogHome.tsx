@@ -233,7 +233,7 @@ export function ApplicationBlogHome({ Link = "a" }: ApplicationBlogHomeProps) {
         </div>
 
         {/* Newsletter CTA */}
-        <Card className="mt-16 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+        <Card className="mt-16 border-primary/20 bg-linear-to-br from-primary/5 to-transparent">
           <CardContent className="p-8 md:p-12 text-center">
             <h2 className="font-serif text-2xl md:text-3xl font-medium text-foreground mb-3">
               Get Planning Tips in Your Inbox
