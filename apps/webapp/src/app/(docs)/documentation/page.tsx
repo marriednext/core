@@ -9,7 +9,6 @@ import {
 import {
   BookOpen,
   Shield,
-  Zap,
   ArrowRight,
   Rocket,
   Users,
@@ -46,16 +45,6 @@ const documentationSections = [
     category: "Developer",
     color: "text-blue-600 dark:text-blue-400",
     bgColor: "bg-blue-50 dark:bg-blue-950/30",
-  },
-  {
-    title: "Multitenant Tricks Next.js",
-    href: "/documentation/developer/multitenant-tricks-nextjs",
-    description:
-      "How we achieve fast tenant app performance using Redis caching and React Server Components",
-    icon: Zap,
-    category: "Developer",
-    color: "text-orange-600 dark:text-orange-400",
-    bgColor: "bg-orange-50 dark:bg-orange-950/30",
   },
 ];
 
