@@ -25,6 +25,7 @@ const isPublicRoute = createRouteMatcher([
   "/invitation",
   "/register",
   "/sign-in",
+  "/sign-up",
   "/api/tenant/rsvp/(.*)",
   "/documentation",
   "/documentation/(.*)",
