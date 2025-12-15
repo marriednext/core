@@ -97,6 +97,12 @@ export { ApplicationRemoveCollaboratorArticle } from "./components/application/h
 
 export { ApplicationSeatingPlannerCore } from "./components/application/seating/SeatingPlannerCore";
 
+export { default as ApplicationOnboardingPage } from "./components/application/onboarding";
+export type {
+  OnboardingPageProps as ApplicationOnboardingPageProps,
+  Step3FormData as ApplicationOnboardingStep3FormData,
+} from "./components/application/onboarding";
+
 export { ApplicationTemplatesCta } from "./components/application/templates/TemplatesCta";
 export { ApplicationTemplatesGrid } from "./components/application/templates/TemplatesGrid";
 export { ApplicationTemplatesHero } from "./components/application/templates/TemplatesHero";

@@ -44,6 +44,8 @@
     "@radix-ui/react-toggle": "catalog:",
     "@radix-ui/react-toggle-group": "catalog:",
     "@radix-ui/react-tooltip": "catalog:",
+    "@reduxjs/toolkit": "catalog:",
+    "react-redux": "catalog:",
     "@tailwindcss/postcss": "catalog:",
     "@tailwindcss/vite": "4.1.17",
     "class-variance-authority": "catalog:",
