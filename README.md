@@ -78,6 +78,27 @@ In Clerk we need to enable the ability to capture the First and Last name of the
 
 4. Save the template
 
+**Configure Domain Paths**
+
+1. Go to your Clerk Dashboard
+2. Navigate to **Configure** → **Developers** → **Paths**
+3. Configure the **Application Paths**:
+   - **Home Url:** `marriednext.com/engaged`
+4. Configure the **Component Paths**:
+   - **Sign In**
+     - Select "Sign-in page on application domain"
+     - Set value to `marriednext.com/sign-in`
+   - **Sign Up**
+     - Select "Sign-up page on application domain"
+     - Set value to `marriednext.com/register`
+   - **Signed Out**
+     - Select "Path on application domain"
+     - Set value to `marriednext.com/sign-in`
+
+Make sure you have the paths configured
+
+![https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/marketing/ClerkDomainPaths.png](https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/marketing/ClerkDomainPaths.png)
+
 ## Troubleshooting
 
 If you need a sanity check, run the following command to clear all auto-generated assets.
