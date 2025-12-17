@@ -1,7 +1,7 @@
 "use client";
 
 import { WeddingDataProvider } from "@/contexts/WeddingDataContext";
-import type { WeddingData } from "@/lib/tenant/weddingData.types";
+import type { WeddingData } from "@/lib/wedding/types";
 
 export function TenantLayoutContent({
   children,

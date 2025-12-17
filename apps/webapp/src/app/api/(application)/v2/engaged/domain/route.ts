@@ -4,12 +4,12 @@ import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/database/drizzle";
 import { wedding } from "orm-shelf/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { getCurrentWedding } from "@/lib/admin/getCurrentWedding";
+import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
 import {
   updateWeddingCache,
   invalidateWeddingCache,
-} from "@/lib/admin/invalidateWeddingCache";
-import { RESERVED_SUBDOMAINS } from "@/lib/rewrites/multitenancy";
+} from "@/lib/wedding/cache";
+import { RESERVED_SUBDOMAINS } from "@/lib/routing/multitenancy";
 
 const SUBDOMAIN_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 

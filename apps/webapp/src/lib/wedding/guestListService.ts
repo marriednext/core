@@ -123,3 +123,4 @@ export async function getGuestListData(
     throw new DatabaseError("Failed to fetch guest list data", error);
   }
 }
+

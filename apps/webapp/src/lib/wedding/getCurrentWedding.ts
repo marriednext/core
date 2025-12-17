@@ -49,3 +49,5 @@ export async function getCurrentWedding() {
   console.log("result wedding id", result?.id);
   return result || null;
 }
+
+

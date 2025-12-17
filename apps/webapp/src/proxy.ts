@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import { getHostType } from "@/lib/rewrites/multitenancy";
+import { getHostType } from "@/lib/routing/multitenancy";
 
 interface ClerkMetadata {
   onboardingComplete?: boolean;

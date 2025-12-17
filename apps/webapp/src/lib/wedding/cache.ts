@@ -1,5 +1,5 @@
 import { redis } from "@/database/redis";
-import type { WeddingData } from "@/lib/tenant/weddingData.types";
+import type { WeddingData } from "@/lib/wedding/types";
 import { WEDDING_CACHE_TTL } from "@/lib/cache/constants";
 
 export async function invalidateWeddingCache(weddingData: {
@@ -44,3 +44,4 @@ export async function updateWeddingCache(weddingData: WeddingData) {
     await Promise.all(updates);
   }
 }
+

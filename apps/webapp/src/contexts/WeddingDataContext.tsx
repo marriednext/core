@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { WeddingData } from "@/lib/tenant/weddingData.types";
+import type { WeddingData } from "@/lib/wedding/types";
 
 const WeddingDataContext = createContext<WeddingData | null>(null);
 

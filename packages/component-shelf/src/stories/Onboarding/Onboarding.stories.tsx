@@ -19,8 +19,8 @@ const MockLink = ({
   children,
   className,
 }: {
-  href: string;
-  children: React.ReactNode;
+  href?: string;
+  children?: React.ReactNode;
   className?: string;
 }) => (
   <a href={href} className={className}>
@@ -64,4 +64,5 @@ export const WithTakenSubdomain: Story = {
     },
   },
 };
+
 

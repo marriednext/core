@@ -1,7 +1,7 @@
 "use client";
 import type { ApplicationLinkComponent } from "../link-types";
 import type { DashboardWeddingData } from "./DashboardLayout";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import {
   Heart,
   LayoutDashboard,

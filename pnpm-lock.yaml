@@ -219,7 +219,7 @@ importers:
         specifier: 2.6.1
         version: 2.6.1
 
-  apps/landing-page-redesign (1):
+  apps/landing-page-redesign:
     dependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0
@@ -12847,7 +12847,7 @@ snapshots:
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.0.3
-      vitest: 4.0.9(@types/node@24.10.0)(@vitest/browser-playwright@4.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.1)(yaml@2.8.1)
+      vitest: 4.0.9(@types/node@24.10.0)(@vitest/browser-playwright@4.0.14)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.1)(yaml@2.8.1)
       ws: 8.18.3
     transitivePeerDependencies:
       - bufferutil
@@ -12868,7 +12868,7 @@ snapshots:
       magicast: 0.5.1
       std-env: 3.10.0
       tinyrainbow: 3.0.3
-      vitest: 4.0.9(@types/node@24.10.0)(@vitest/browser-playwright@4.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.1)(yaml@2.8.1)
+      vitest: 4.0.9(@types/node@24.10.0)(@vitest/browser-playwright@4.0.14)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.1)(yaml@2.8.1)
     optionalDependencies:
       '@vitest/browser': 4.0.9(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.1)(yaml@2.8.1))(vitest@4.0.9)
     transitivePeerDependencies:

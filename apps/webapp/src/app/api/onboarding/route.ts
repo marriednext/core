@@ -8,11 +8,11 @@ import {
   collaboratorInvitations,
 } from "orm-shelf/schema";
 import { eq } from "drizzle-orm";
-import { updateWeddingCache } from "@/lib/admin/invalidateWeddingCache";
-import { RESERVED_SUBDOMAINS } from "@/lib/rewrites/multitenancy";
-import { UserRole } from "@/components/permissions/permissions.types";
+import { updateWeddingCache } from "@/lib/wedding/cache";
+import { RESERVED_SUBDOMAINS } from "@/lib/routing/multitenancy";
+import { Role } from "component-shelf";
 import * as Sentry from "@sentry/nextjs";
-import { addSubdomainToVercel } from "@/lib/vercel/domainService";
+import { addSubdomainToVercel } from "@/lib/infrastructure/vercel/domainService";
 
 const SUBDOMAIN_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -184,7 +184,7 @@ export async function POST(req: NextRequest) {
       publicMetadata: {
         onboardingComplete: true,
         weddingId: newWedding.id,
-        role: "spouse" as UserRole,
+        role: "spouse" as Role,
       },
     });
 

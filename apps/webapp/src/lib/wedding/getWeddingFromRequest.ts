@@ -1,7 +1,7 @@
 import { db } from "@/database/drizzle";
 import { wedding } from "orm-shelf/schema";
 import { eq, or } from "drizzle-orm";
-import { getHostType } from "@/lib/rewrites/multitenancy";
+import { getHostType } from "@/lib/routing/multitenancy";
 
 export async function getWeddingFromRequest(request: Request): Promise<{
   id: string;
@@ -21,8 +21,8 @@ export async function getWeddingFromRequest(request: Request): Promise<{
       .where(
         or(
           eq(wedding.subdomain, subdomain),
-          eq(wedding.customDomain, hostHeader),
-        ),
+          eq(wedding.customDomain, hostHeader)
+        )
       )
       .limit(1);
 
@@ -31,3 +31,4 @@ export async function getWeddingFromRequest(request: Request): Promise<{
 
   return null;
 }
+

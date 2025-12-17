@@ -4,8 +4,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/database/drizzle";
 import { wedding } from "orm-shelf/schema";
 import { eq } from "drizzle-orm";
-import { getCurrentWedding } from "@/lib/admin/getCurrentWedding";
-import { updateWeddingCache } from "@/lib/admin/invalidateWeddingCache";
+import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
+import { updateWeddingCache } from "@/lib/wedding/cache";
 
 const rsvpSettingsSchema = z
   .object({

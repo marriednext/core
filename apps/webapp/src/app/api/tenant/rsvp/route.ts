@@ -3,7 +3,7 @@ import { z } from "zod";
 import { db } from "@/database/drizzle";
 import { guest, invitation } from "orm-shelf/schema";
 import { eq } from "drizzle-orm";
-import { getWeddingFromRequest } from "@/lib/tenant/getWeddingFromRequest";
+import { getWeddingFromRequest } from "@/lib/wedding/getWeddingFromRequest";
 
 const guestSelectionSchema = z.object({
   name: z.string(),

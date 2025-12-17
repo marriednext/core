@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Infant } from "next/font/google";
 import "style-shelf/tailwind";
 import { notFound } from "next/navigation";
-import { getWeddingByDomain } from "@/lib/tenant/getWeddingByDomain";
+import { getWeddingByDomain } from "@/lib/wedding/getWeddingByDomain";
 import { TenantLayoutContent } from "./TenantLayoutContent";
 
 const cormorantInfant = Cormorant_Infant({

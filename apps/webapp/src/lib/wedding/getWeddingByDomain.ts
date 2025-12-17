@@ -2,7 +2,7 @@ import { db } from "@/database/drizzle";
 import { redis } from "@/database/redis";
 import { wedding, weddingPhotos } from "orm-shelf/schema";
 import { eq, or, asc } from "drizzle-orm";
-import type { WeddingData } from "@/lib/tenant/weddingData.types";
+import type { WeddingData } from "@/lib/wedding/types";
 import { WEDDING_CACHE_TTL } from "@/lib/cache/constants";
 
 async function getWeddingFromDatabase(
@@ -80,3 +80,5 @@ export async function getWeddingByDomain(
 
   return weddingData;
 }
+
+

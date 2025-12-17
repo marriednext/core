@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { ComponentType, AnchorHTMLAttributes } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import { Menu, X, Heart } from "lucide-react";
 
 interface NavbarProps {

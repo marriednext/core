@@ -3,3 +3,4 @@ export function extractWeddingId(
 ): string | undefined {
   return (sessionClaims?.metadata as { weddingId?: string })?.weddingId;
 }
+

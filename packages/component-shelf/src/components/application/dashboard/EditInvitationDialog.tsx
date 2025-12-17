@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Badge } from "../../../components/ui/badge";
@@ -84,7 +84,7 @@ export function EditInvitationDialog({
     useEditInvitationDialogStore();
 
   const form = useForm<InvitationFormData>({
-    resolver: zodResolver(invitationSchema),
+    resolver: zodResolver(invitationSchema as any),
     defaultValues: invitation
       ? {
           ...invitation,

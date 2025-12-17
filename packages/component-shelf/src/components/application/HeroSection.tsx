@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import { ArrowRight, Github } from "lucide-react";
 
 export function HeroSection() {
@@ -17,8 +17,9 @@ export function HeroSection() {
             </h1>
 
             <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
-              Beautiful websites. Smart guest lists. Seamless RSVPs. The all-in-one wedding planning platform couples
-              actually love — free to start, with optional upgrades when you need them.
+              Beautiful websites. Smart guest lists. Seamless RSVPs. The
+              all-in-one wedding planning platform couples actually love — free
+              to start, with optional upgrades when you need them.
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
@@ -26,7 +27,11 @@ export function HeroSection() {
                 Start Planning Free
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="lg" className="gap-2 bg-transparent">
+              <Button
+                variant="outline"
+                size="lg"
+                className="gap-2 bg-transparent"
+              >
                 <Github className="h-4 w-4" />
                 View Source Code
               </Button>
@@ -34,17 +39,23 @@ export function HeroSection() {
 
             <div className="mt-12 flex items-center gap-8">
               <div>
-                <p className="text-3xl font-serif font-semibold text-foreground">$0</p>
+                <p className="text-3xl font-serif font-semibold text-foreground">
+                  $0
+                </p>
                 <p className="text-sm text-muted-foreground">To get started</p>
               </div>
               <div className="w-px h-10 bg-border" />
               <div>
-                <p className="text-3xl font-serif font-semibold text-foreground">Public</p>
+                <p className="text-3xl font-serif font-semibold text-foreground">
+                  Public
+                </p>
                 <p className="text-sm text-muted-foreground">Source code</p>
               </div>
               <div className="w-px h-10 bg-border" />
               <div>
-                <p className="text-3xl font-serif font-semibold text-foreground">All-in-One</p>
+                <p className="text-3xl font-serif font-semibold text-foreground">
+                  All-in-One
+                </p>
                 <p className="text-sm text-muted-foreground">Website to RSVP</p>
               </div>
             </div>
@@ -64,8 +75,12 @@ export function HeroSection() {
                   <span className="text-lg">💌</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-foreground">RSVP Received</p>
-                  <p className="text-xs text-muted-foreground">Sarah & James are attending!</p>
+                  <p className="text-sm font-medium text-foreground">
+                    RSVP Received
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Sarah & James are attending!
+                  </p>
                 </div>
               </div>
             </div>
@@ -75,8 +90,12 @@ export function HeroSection() {
                   <span className="text-lg">✨</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-foreground">85 Guests</p>
-                  <p className="text-xs text-muted-foreground">Confirmed so far</p>
+                  <p className="text-sm font-medium text-foreground">
+                    85 Guests
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Confirmed so far
+                  </p>
                 </div>
               </div>
             </div>

@@ -1001,3 +1001,4 @@ export function getHostType(hostHeader: string) {
 
   return { isTenantHost, firstLabel };
 }
+

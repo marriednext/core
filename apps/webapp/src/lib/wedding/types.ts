@@ -47,3 +47,5 @@ export type OurStorySection = {
   photoUrl: string;
   text: string;
 };
+
+
