@@ -27,7 +27,6 @@ export function Step1CoupleNames() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Step1FormData>({
     defaultValues: {
@@ -35,9 +34,6 @@ export function Step1CoupleNames() {
       fieldNameB: formData.fieldNameB,
     },
   });
-
-  const nameA = watch("fieldNameA");
-  const nameB = watch("fieldNameB");
 
   const onSubmit = (data: Step1FormData) => {
     dispatch(updateFormData(data));
@@ -106,20 +102,6 @@ export function Step1CoupleNames() {
               )}
             </div>
           </div>
-
-          {nameA && nameB && (
-            <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 text-center">
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <Sparkles className="h-4 w-4 text-primary" />
-                <span className="text-xs text-muted-foreground uppercase tracking-wide">
-                  Preview
-                </span>
-              </div>
-              <p className="font-serif text-xl text-foreground">
-                {nameA} <span className="text-primary">&</span> {nameB}
-              </p>
-            </div>
-          )}
 
           <div className="flex justify-end pt-4">
             <Button type="submit" size="lg" className="gap-2">

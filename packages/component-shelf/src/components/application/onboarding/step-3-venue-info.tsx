@@ -7,6 +7,7 @@ import {
   prevStep,
   updateFormData,
   completeOnboarding,
+  type OnboardingState,
 } from "../../../lib/store/onboarding-slice";
 import {
   Card,
@@ -30,13 +31,14 @@ export type Step3FormData = {
   fieldPreferredLocationCountry: string;
 };
 
+export type OnboardingFormData = OnboardingState["formData"];
+
 export type Step3VenueInfoProps = {
-  onSubmit?: (data: Step3FormData) => void | Promise<void>;
+  onSubmit?: (data: OnboardingFormData) => void | Promise<void>;
+  onSkip?: (data: OnboardingFormData) => void | Promise<void>;
 };
 
-export function Step3VenueInfo({
-  onSubmit: onSubmitProp,
-}: Step3VenueInfoProps) {
+export function Step3VenueInfo({ onSubmit, onSkip }: Step3VenueInfoProps) {
   const dispatch = useAppDispatch();
   const formData = useAppSelector((state) => state.onboarding.formData);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,7 +46,7 @@ export function Step3VenueInfo({
   const {
     register,
     handleSubmit,
-    // formState: { errors },
+    formState: { errors },
   } = useForm<Step3FormData>({
     defaultValues: {
       fieldLocationName: formData.fieldLocationName,
@@ -59,16 +61,18 @@ export function Step3VenueInfo({
     },
   });
 
-  const handleSubmitForm = async (data: Step3FormData) => {
+  const handleFormSubmit = async (data: Step3FormData) => {
     setIsSubmitting(true);
     dispatch(updateFormData(data));
+    const completeFormData = { ...formData, ...data };
+    await onSubmit?.(completeFormData);
+    dispatch(completeOnboarding());
+    setIsSubmitting(false);
+  };
 
-    if (onSubmitProp) {
-      await onSubmitProp(data);
-    } else {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-    }
-
+  const handleSkip = async () => {
+    setIsSubmitting(true);
+    await onSkip?.(formData);
     dispatch(completeOnboarding());
     setIsSubmitting(false);
   };
@@ -92,7 +96,7 @@ export function Step3VenueInfo({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(handleSubmitForm)} className="space-y-6">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="fieldLocationName" className="text-base">
@@ -199,6 +203,17 @@ export function Step3VenueInfo({
                 />
               </div>
             </div>
+          </div>
+
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={handleSkip}
+              disabled={isSubmitting}
+              className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+            >
+              I don't have a location picked yet — skip this step
+            </button>
           </div>
 
           <div className="flex justify-between pt-4">

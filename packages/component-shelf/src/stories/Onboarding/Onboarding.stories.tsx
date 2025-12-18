@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import OnboardingPage from "../../components/application/onboarding";
-import type { Step3FormData } from "../../components/application/onboarding";
+import type { OnboardingFormData } from "../../components/application/onboarding";
 
 const meta = {
   title: "Application/Onboarding",
@@ -34,9 +34,13 @@ export const Default: Story = {
       console.log("Navigate to dashboard");
     },
     link: MockLink,
-    onSubmit: async (data: Step3FormData) => {
+    onSubmit: async (data: OnboardingFormData) => {
       console.log("Form submitted:", data);
       await new Promise((resolve) => setTimeout(resolve, 1000));
+    },
+    onSkip: async (data: OnboardingFormData) => {
+      console.log("Venue step skipped, form data:", data);
+      await new Promise((resolve) => setTimeout(resolve, 500));
     },
     validateSubdomain: async (subdomain: string) => {
       console.log("Validating subdomain:", subdomain);
@@ -55,8 +59,11 @@ export const WithTakenSubdomain: Story = {
       console.log("Navigate to dashboard");
     },
     link: MockLink,
-    onSubmit: async (data: Step3FormData) => {
+    onSubmit: async (data: OnboardingFormData) => {
       console.log("Form submitted:", data);
+    },
+    onSkip: async (data: OnboardingFormData) => {
+      console.log("Venue step skipped, form data:", data);
     },
     validateSubdomain: async () => {
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -64,5 +71,3 @@ export const WithTakenSubdomain: Story = {
     },
   },
 };
-
-

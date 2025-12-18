@@ -3,7 +3,7 @@
 import { useAppSelector } from "../../../lib/store/hooks";
 import { Step1CoupleNames } from "./step-1-couple-names";
 import { Step2WeddingDetails } from "./step-2-wedding-details";
-import { Step3VenueInfo, type Step3FormData } from "./step-3-venue-info";
+import { Step3VenueInfo, type OnboardingFormData } from "./step-3-venue-info";
 import { OnboardingComplete } from "./onboarding-complete";
 import { Heart, Calendar, MapPin, Check } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
@@ -17,7 +17,8 @@ const steps = [
 export type OnboardingFlowProps = {
   onHandleGoToDashboard: () => void;
   link: React.ComponentType<ComponentPropsWithoutRef<"a">>;
-  onSubmit?: (data: Step3FormData) => void | Promise<void>;
+  onSubmit?: (data: OnboardingFormData) => void | Promise<void>;
+  onSkip?: (data: OnboardingFormData) => void | Promise<void>;
   validateSubdomain: (
     subdomain: string
   ) => Promise<{ valid: boolean; error?: string }>;
@@ -27,6 +28,7 @@ export function OnboardingFlow({
   onHandleGoToDashboard,
   link: Link,
   onSubmit,
+  onSkip,
   validateSubdomain,
 }: OnboardingFlowProps) {
   const { currentStep, isComplete } = useAppSelector(
@@ -138,7 +140,9 @@ export function OnboardingFlow({
           {currentStep === 2 && (
             <Step2WeddingDetails validateSubdomain={validateSubdomain} />
           )}
-          {currentStep === 3 && <Step3VenueInfo onSubmit={onSubmit} />}
+          {currentStep === 3 && (
+            <Step3VenueInfo onSubmit={onSubmit} onSkip={onSkip} />
+          )}
         </div>
       </main>
     </div>

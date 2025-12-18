@@ -12,7 +12,6 @@ import { updateWeddingCache } from "@/lib/wedding/cache";
 import { RESERVED_SUBDOMAINS } from "@/lib/routing/multitenancy";
 import { Role } from "component-shelf";
 import * as Sentry from "@sentry/nextjs";
-import { addSubdomainToVercel } from "@/lib/infrastructure/vercel/domainService";
 
 const SUBDOMAIN_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -105,30 +104,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: "This subdomain is already taken", success: false },
         { status: 409 }
-      );
-    }
-
-    const vercelResult = await addSubdomainToVercel(subdomain);
-    if (!vercelResult.success) {
-      Sentry.captureMessage(
-        "Wedding creation failed due to Vercel domain error",
-        {
-          level: "warning",
-          extra: {
-            subdomain,
-            userId,
-            vercelError: vercelResult.error,
-          },
-        }
-      );
-
-      return NextResponse.json(
-        {
-          error:
-            "Failed to register your wedding subdomain. Please try a different subdomain or contact support.",
-          success: false,
-        },
-        { status: 500 }
       );
     }
 

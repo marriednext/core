@@ -3,6 +3,7 @@
 
 @source "../../component-shelf/src/**/*.{js,ts,jsx,tsx}";
 @source "../../component-shelf/src/components/**/*.{js,ts,jsx,tsx}";
+@source "../../component-shelf/src/components/application/**/*.{js,ts,jsx,tsx}";
 @source "../../../apps/webapp/src/**/*.{js,ts,jsx,tsx}";
 
 @custom-variant dark (&:is(.dark *));
