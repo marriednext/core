@@ -4,7 +4,7 @@ import { db } from "@/database/drizzle";
 import { guest, invitation } from "orm-shelf/schema";
 import { eq, sql } from "drizzle-orm";
 import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
-import { buildSiteUrl, getInitials } from "@/lib/utils/site";
+import { buildSiteUrl, getInitials } from "../../lib/utils/site";
 
 export async function GET() {
   try {

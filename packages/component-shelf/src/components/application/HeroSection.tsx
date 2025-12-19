@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import {
   ArrowRight,
   Github,
@@ -111,10 +111,6 @@ export function HeroSection() {
               </p>
             </div>
           </div>
-
-          {/* Decorative elements */}
-          <div className="absolute -z-10 top-0 left-1/4 w-72 h-72 bg-accent/10 rounded-full blur-3xl" />
-          <div className="absolute -z-10 bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
         </div>
       </div>
     </section>
