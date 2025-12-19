@@ -19,7 +19,7 @@ export default function MemoriesPage() {
       Link={Link}
       pathname={pathname}
       onLogout={() => signOut({ redirectUrl: "/" })}
-      onInviteClick={() => router.push("/v2/engaged/permissions")}
+      onInviteClick={() => router.push("/engaged/permissions")}
     >
       {/* <ApplicationMemoriesGallery /> */}
       <ComingSoonOverlay />
