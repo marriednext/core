@@ -99,6 +99,10 @@ Make sure you have the paths configured
 
 ![https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/marketing/ClerkDomainPaths.png](https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/marketing/ClerkDomainPaths.png)
 
+## Cron Jobs
+
+We run basic health checks on all 3rd party services for telemetry into their uptime relative to our services. All errors are reported to Sentry
+
 ## Troubleshooting
 
 If you need a sanity check, run the following command to clear all auto-generated assets.

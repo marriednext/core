@@ -16,6 +16,21 @@ const dirname =
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  optimizeDeps: {
+    include: [
+      "react-redux",
+      "@reduxjs/toolkit",
+      "react-hook-form",
+      "@radix-ui/react-label",
+      "storybook/test",
+      "lucide-react",
+      "clsx",
+      "tailwind-merge",
+      "@radix-ui/react-slot",
+      "class-variance-authority",
+      "date-fns",
+    ],
+  },
   test: {
     projects: [
       {

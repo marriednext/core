@@ -1,5 +1,4 @@
 // https://clerk.com/docs/reference/frontend-api
-// {"data":{"status":"healthy"}}
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
