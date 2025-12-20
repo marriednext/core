@@ -748,6 +748,9 @@ importers:
       gsap:
         specifier: 'catalog:'
         version: 3.13.0
+      hamburger-react:
+        specifier: 2.5.2
+        version: 2.5.2(react@19.2.3)
       input-otp:
         specifier: 'catalog:'
         version: 1.4.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)

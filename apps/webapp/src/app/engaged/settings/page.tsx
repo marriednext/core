@@ -244,7 +244,7 @@ export default function SettingsPage() {
         Link={Link}
         pathname={pathname}
         onLogout={() => signOut({ redirectUrl: "/" })}
-        onInviteClick={() => router.push("/v2/engaged/permissions")}
+        onInviteClick={() => router.push("/engaged/permissions")}
       >
         <div className="max-w-4xl mx-auto space-y-6">
           <div className="animate-pulse space-y-4">
@@ -263,7 +263,7 @@ export default function SettingsPage() {
       Link={Link}
       pathname={pathname}
       onLogout={() => signOut({ redirectUrl: "/" })}
-      onInviteClick={() => router.push("/v2/engaged/permissions")}
+      onInviteClick={() => router.push("/engaged/permissions")}
     >
       <ApplicationWeddingDetailsSettings
         weddingDetails={weddingDetails!}

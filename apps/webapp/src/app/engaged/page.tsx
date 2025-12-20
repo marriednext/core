@@ -110,7 +110,7 @@ export default function DashboardPage() {
       Link={Link}
       pathname={pathname}
       onLogout={() => signOut({ redirectUrl: "/" })}
-      onInviteClick={() => router.push("/v2/engaged/permissions")}
+      onInviteClick={() => router.push("/engaged/permissions")}
     >
       <ApplicationDashboardOverview data={overviewData} isLoading={isLoading} />
     </ApplicationDashboardLayout>

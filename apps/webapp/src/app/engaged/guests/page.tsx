@@ -248,7 +248,7 @@ export default function GuestsPage() {
       Link={Link}
       pathname={pathname}
       onLogout={() => signOut({ redirectUrl: "/" })}
-      onInviteClick={() => router.push("/v2/engaged/permissions")}
+      onInviteClick={() => router.push("/engaged/permissions")}
     >
       <ApplicationGuestListManager
         invitations={invitations}
