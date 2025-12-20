@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { z } from "zod/v4";
 import {
   Card,
   CardContent,
@@ -124,7 +124,7 @@ export function ApplicationWeddingDetailsSettings({
   isSavingDomain = false,
 }: ApplicationWeddingDetailsSettingsProps) {
   const form = useForm<WeddingDetailsFormData>({
-    resolver: zodResolver(weddingDetailsSchema),
+    resolver: zodResolver(weddingDetailsSchema as any),
     defaultValues: {
       displayName: weddingDetails.displayName,
       nameA: weddingDetails.nameA,
@@ -146,7 +146,7 @@ export function ApplicationWeddingDetailsSettings({
   });
 
   const domainForm = useForm<DomainSettingsFormData>({
-    resolver: zodResolver(domainSettingsSchema),
+    resolver: zodResolver(domainSettingsSchema as any),
     defaultValues: {
       subdomain: initialDomainSettings.subdomain,
       customDomain: "",

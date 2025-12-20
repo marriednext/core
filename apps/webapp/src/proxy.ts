@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import { getHostType } from "@/lib/rewrites/multitenancy";
+import { getHostType } from "@/lib/routing/multitenancy";
 
 interface ClerkMetadata {
   onboardingComplete?: boolean;
@@ -33,7 +33,7 @@ function nextResponseRewrite(req: NextRequest, url: string) {
   return NextResponse.rewrite(new URL(url, req.url));
 }
 
-export default clerkMiddleware(async (auth, req: NextRequest) => {
+export default clerkMiddleware(async (auth, req) => {
   const hostHeader = req.headers.get("host") || "";
   const pathname = req.nextUrl.pathname;
   const { isTenantHost, firstLabel } = getHostType(hostHeader);

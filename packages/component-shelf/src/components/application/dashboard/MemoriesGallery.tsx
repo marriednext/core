@@ -25,7 +25,7 @@ import {
   ZoomIn,
   Heart,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 
 // Mock data for photos
 const mockPhotos = [

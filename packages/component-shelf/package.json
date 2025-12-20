@@ -5,7 +5,8 @@
   "type": "module",
   "main": "./src/index.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./ui": "./src/components/ui/index.ts"
   },
   "scripts": {
     "dev": "pnpm run storybook",
@@ -13,7 +14,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test": "vitest run"
   },
   "dependencies": {
     "@hookform/resolvers": "catalog:",
@@ -44,12 +46,16 @@
     "@radix-ui/react-toggle": "catalog:",
     "@radix-ui/react-toggle-group": "catalog:",
     "@radix-ui/react-tooltip": "catalog:",
+    "@reduxjs/toolkit": "catalog:",
+    "react-redux": "catalog:",
     "@tailwindcss/postcss": "catalog:",
     "@tailwindcss/vite": "4.1.17",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "date-fns": "catalog:",
     "cmdk": "catalog:",
+    "gsap": "catalog:",
+    "hamburger-react": "2.5.2",
     "embla-carousel-react": "catalog:",
     "input-otp": "catalog:",
     "label-shelf": "workspace:*",

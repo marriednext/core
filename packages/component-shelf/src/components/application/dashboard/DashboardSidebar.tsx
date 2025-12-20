@@ -1,7 +1,7 @@
 "use client";
 import type { ApplicationLinkComponent } from "../link-types";
 import type { DashboardWeddingData } from "./DashboardLayout";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import {
   Heart,
   LayoutDashboard,
@@ -15,15 +15,15 @@ import {
 import { Sheet, SheetContent } from "../../../components/ui/sheet";
 
 const mainNavItems = [
-  { name: "Overview", href: "/v2/engaged", icon: LayoutDashboard },
-  { name: "Website", href: "/v2/engaged/website", icon: Globe },
-  { name: "Guests & RSVPs", href: "/v2/engaged/guests", icon: Users },
-  { name: "Seating", href: "/v2/engaged/seating", icon: Grid3X3 },
-  { name: "Memories", href: "/v2/engaged/memories", icon: Camera },
+  { name: "Overview", href: "/engaged", icon: LayoutDashboard },
+  { name: "Website", href: "/engaged/website", icon: Globe },
+  { name: "Guests & RSVPs", href: "/engaged/guests", icon: Users },
+  { name: "Seating", href: "/engaged/seating", icon: Grid3X3 },
+  { name: "Memories", href: "/engaged/memories", icon: Camera },
 ];
 
 const bottomNavItems = [
-  { name: "Settings", href: "/v2/engaged/settings", icon: Settings },
+  { name: "Settings", href: "/engaged/settings", icon: Settings },
   { name: "Help", href: "/help", icon: HelpCircle },
 ];
 

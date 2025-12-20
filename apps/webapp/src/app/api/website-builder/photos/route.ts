@@ -4,8 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/database/drizzle";
 import { weddingPhotos } from "orm-shelf/schema";
 import { eq, and } from "drizzle-orm";
-import { getCurrentWedding } from "@/lib/admin/getCurrentWedding";
-import { uploadPhoto, deletePhoto, type PhotoType } from "@/lib/blob/upload";
+import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
+import { uploadPhoto, deletePhoto, type PhotoType } from "@/lib/infrastructure/blob/upload";
 import { randomUUID } from "crypto";
 
 const uploadSchema = z.object({

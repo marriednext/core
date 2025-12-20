@@ -2,6 +2,7 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "test:storybook": "pnpm --filter component-shelf test",
     "clean:root": "rimraf package-lock.json pnpm-lock.json dist node_modules .turbo",
     "clean:webapp": "rimraf apps/webapp/node_modules apps/webapp/.turbo apps/webapp/dist apps/webapp/package-lock.json apps/webapp/pnpm-lock.json apps/webapp/.next",
     "clean:style-shelf": "rimraf packages/style-shelf/node_modules packages/style-shelf/.turbo packages/style-shelf/dist packages/style-shelf/package-lock.json packages/style-shelf/pnpm-lock.json",

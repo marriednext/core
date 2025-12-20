@@ -107,7 +107,7 @@ export function StickyNav({
           : "bg-transparent py-6"
       )}
     >
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-center gap-12">
+      <div className="max-w-6xl mx-auto px-6 hidden md:flex items-center justify-center gap-12">
         {navItems.map((item) => (
           <a
             key={item.href}

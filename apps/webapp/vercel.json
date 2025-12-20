@@ -1,0 +1,17 @@
+{
+  "crons": [
+    {
+      "path": "/api/heartbeat/clerk",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/heartbeat/porkbun",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/heartbeat/vercel",
+      "schedule": "*/5 * * * *"
+    }
+  ]
+}
+

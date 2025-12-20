@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { db, getInvitationsWithGuests } from "@/database/drizzle";
-import { getCurrentWedding } from "@/lib/admin/getCurrentWedding";
-import { buildSiteUrl, getInitials } from "@/lib/siteUtils";
+import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
+import { buildSiteUrl, getInitials } from "@/lib/utils/site";
 import { z } from "zod";
 import { guest, invitation } from "orm-shelf/schema";
 import { and, eq, inArray } from "drizzle-orm";

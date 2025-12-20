@@ -83,25 +83,25 @@ const quickActions = [
   {
     name: "Edit Website",
     icon: Globe,
-    href: "/v2/engaged/website",
+    href: "/engaged/website",
     color: "bg-primary/10 text-primary",
   },
   {
     name: "Add Guests",
     icon: Users,
-    href: "/v2/engaged/guests",
+    href: "/engaged/guests",
     color: "bg-accent/10 text-accent",
   },
   {
     name: "Seating Chart",
     icon: Grid3X3,
-    href: "/v2/engaged/seating",
+    href: "/engaged/seating",
     color: "bg-chart-2/20 text-chart-2",
   },
   {
     name: "Upload Photos",
     icon: Camera,
-    href: "/v2/engaged/memories",
+    href: "/engaged/memories",
     color: "bg-chart-4/20 text-chart-4",
   },
 ];
@@ -241,7 +241,7 @@ export function ApplicationDashboardOverview({
                 </CardDescription>
               </div>
               <LinkComponent
-                href="/v2/engaged/website"
+                href="/engaged/website"
                 className={buttonVariants({ variant: "outline", size: "sm" })}
               >
                 Customize
@@ -358,7 +358,7 @@ export function ApplicationDashboardOverview({
                   className="w-full bg-transparent"
                   asChild
                 >
-                  <a href="/v2/engaged/save-the-date">
+                  <a href="/engaged/save-the-date">
                     Get Started
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </a>
@@ -392,7 +392,7 @@ export function ApplicationDashboardOverview({
                   className="w-full bg-transparent"
                   asChild
                 >
-                  <a href="/v2/engaged/seating">
+                  <a href="/engaged/seating">
                     Open Planner
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </a>

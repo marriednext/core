@@ -13,6 +13,7 @@ import { FaqSection } from "./FaqSection";
 import { RsvpSection } from "./RsvpSection";
 import { FooterSection } from "./FooterSection";
 import { mergeSectionsWithDefaults } from "./sections";
+import SideNavigation from "../defaults/SideNavigation";
 
 export function LisasTheme({
   fieldNameA,
@@ -164,6 +165,19 @@ export function LisasTheme({
         editable={editable}
         contained={contained}
         onCustomizationChange={handleSectionChange("stickyNav")}
+      />
+      <SideNavigation
+        navLinks={[
+          { label: "Home", href: "#home" },
+          { label: "Story", href: "#story" },
+          { label: "Details", href: "#details" },
+          { label: "Gallery", href: "#gallery" },
+          { label: "RSVP", href: "#rsvp" },
+        ]}
+        getNavItemClass={() =>
+          "text-stone-700 hover:text-stone-900 transition-colors"
+        }
+        ariaLabel="Main navigation"
       />
       {isSectionEnabled("hero") && (
         <HeroSection

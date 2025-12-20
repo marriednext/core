@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type { HeroSectionCustomization, HeroSectionProps } from "./types";
 import labels from "label-shelf/lisastheme";
 import { EditableLabel } from "../../ui/editable-label";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 
 function formatDate(dateString: string | null | undefined): string {
   if (!dateString) return "";

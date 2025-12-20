@@ -5,10 +5,8 @@ import { useSignUp, useUser, useClerk } from "@clerk/nextjs";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { z } from "zod/v3";
+import { Button, Input, Label } from "component-shelf/ui";
 import { HeartIcon, SparklesIcon } from "lucide-react";
 import clsx from "clsx";
 

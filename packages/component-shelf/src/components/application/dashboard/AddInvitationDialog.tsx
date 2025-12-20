@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { toast } from "sonner";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
@@ -82,7 +82,7 @@ export function AddInvitationDialog({
   const wasSubmittingRef = useRef(false);
 
   const form = useForm<AddInvitationFormData>({
-    resolver: zodResolver(addInvitationSchema),
+    resolver: zodResolver(addInvitationSchema as any),
     defaultValues: {
       ...defaultValues,
       invitationType,
