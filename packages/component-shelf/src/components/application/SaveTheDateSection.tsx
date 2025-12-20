@@ -30,7 +30,7 @@ type DemoGuest = {
 
 export function SaveTheDateSection() {
   const [demoStep, setDemoStep] = useState<"intro" | "form" | "success">(
-    "intro"
+    "intro",
   );
   const [guests, setGuests] = useState<DemoGuest[]>([
     {
@@ -61,7 +61,7 @@ export function SaveTheDateSection() {
   const handleGuestResponse = (
     guestId: string,
     field: keyof DemoGuest,
-    value: any
+    value: any,
   ) => {
     const guest = guests.find((g) => g.id === guestId);
 
@@ -70,7 +70,7 @@ export function SaveTheDateSection() {
     }
 
     setGuests((prev) =>
-      prev.map((g) => (g.id === guestId ? { ...g, [field]: value } : g))
+      prev.map((g) => (g.id === guestId ? { ...g, [field]: value } : g)),
     );
   };
 
@@ -219,14 +219,14 @@ export function SaveTheDateSection() {
             <div className="absolute -top-4 -right-4 w-24 h-24 border-2 border-dashed border-primary/20 rounded-lg rotate-6" />
             <div className="absolute -bottom-4 -left-4 w-20 h-20 border-2 border-dashed border-primary/20 rounded-full" />
 
-            <div className="absolute -top-8 right-8 text-primary/40 rotate-45">
+            <div className="absolute -top-8 right-8 text-stone-400 rotate-45">
               <Pencil className="h-8 w-8" />
             </div>
 
             <div
               className={cn(
                 "relative bg-card rounded-2xl border-2 border-dashed border-primary/30 shadow-xl transition-transform duration-300",
-                demoStep === "intro" ? "rotate-1" : "rotate-0"
+                demoStep === "intro" ? "rotate-1" : "rotate-0",
               )}
             >
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-amber-100 border border-amber-300 rounded-full text-xs font-medium text-amber-800 uppercase tracking-wide">
@@ -298,7 +298,7 @@ export function SaveTheDateSection() {
                                 "text-xs px-2 py-1 rounded-full",
                                 guest.isAttending
                                   ? "bg-green-100 text-green-700"
-                                  : "bg-red-100 text-red-700"
+                                  : "bg-red-100 text-red-700",
                               )}
                             >
                               {guest.isAttending
@@ -336,7 +336,7 @@ export function SaveTheDateSection() {
                               handleGuestResponse(
                                 guest.id,
                                 "isAttending",
-                                false
+                                false,
                               )
                             }
                           >
@@ -366,7 +366,7 @@ export function SaveTheDateSection() {
                                 handleGuestResponse(
                                   guest.id,
                                   "dietaryRestrictions",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                               placeholder="Any allergies or restrictions..."
@@ -398,7 +398,7 @@ export function SaveTheDateSection() {
                                   handleGuestResponse(
                                     guest.id,
                                     "plusOneName",
-                                    e.target.value
+                                    e.target.value,
                                   )
                                 }
                                 placeholder="Guest name"
@@ -418,7 +418,7 @@ export function SaveTheDateSection() {
                                     handleGuestResponse(
                                       guest.id,
                                       "plusOneAttending",
-                                      true
+                                      true,
                                     )
                                   }
                                 >
@@ -438,7 +438,7 @@ export function SaveTheDateSection() {
                                     handleGuestResponse(
                                       guest.id,
                                       "plusOneAttending",
-                                      false
+                                      false,
                                     )
                                   }
                                 >
@@ -509,7 +509,7 @@ export function SaveTheDateSection() {
                       ))}
                       {guests
                         .filter(
-                          (g) => g.hasPlusOne && g.isAttending && g.plusOneName
+                          (g) => g.hasPlusOne && g.isAttending && g.plusOneName,
                         )
                         .map((guest) => (
                           <div
