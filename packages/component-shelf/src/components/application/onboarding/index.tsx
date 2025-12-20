@@ -5,7 +5,6 @@ import type { OnboardingFormData, Step3FormData } from "./step-3-venue-info";
 export type { Step3FormData };
 
 export type OnboardingPageProps = {
-  onHandleGoToDashboard: OnboardingFlowProps["onHandleGoToDashboard"];
   link: OnboardingFlowProps["link"];
   onSubmit?: OnboardingFlowProps["onSubmit"];
   onSkip?: OnboardingFlowProps["onSkip"];
@@ -15,7 +14,6 @@ export type OnboardingPageProps = {
 export { type OnboardingFormData };
 
 export default function OnboardingPage({
-  onHandleGoToDashboard,
   link,
   onSubmit,
   onSkip,
@@ -24,7 +22,6 @@ export default function OnboardingPage({
   return (
     <StoreProvider>
       <OnboardingFlow
-        onHandleGoToDashboard={onHandleGoToDashboard}
         link={link}
         onSubmit={onSubmit}
         onSkip={onSkip}

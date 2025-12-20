@@ -15,7 +15,6 @@ const steps = [
 ];
 
 export type OnboardingFlowProps = {
-  onHandleGoToDashboard: () => void;
   link: React.ComponentType<ComponentPropsWithoutRef<"a">>;
   onSubmit?: (data: OnboardingFormData) => void | Promise<void>;
   onSkip?: (data: OnboardingFormData) => void | Promise<void>;
@@ -25,7 +24,6 @@ export type OnboardingFlowProps = {
 };
 
 export function OnboardingFlow({
-  onHandleGoToDashboard,
   link: Link,
   onSubmit,
   onSkip,
@@ -36,7 +34,7 @@ export function OnboardingFlow({
   );
 
   if (isComplete) {
-    return <OnboardingComplete onHandleGoToDashboard={onHandleGoToDashboard} />;
+    return <OnboardingComplete link={Link} />;
   }
 
   return (

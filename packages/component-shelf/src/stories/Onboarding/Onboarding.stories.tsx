@@ -30,9 +30,6 @@ const MockLink = ({
 
 export const Default: Story = {
   args: {
-    onHandleGoToDashboard: () => {
-      console.log("Navigate to dashboard");
-    },
     link: MockLink,
     onSubmit: async (data: OnboardingFormData) => {
       console.log("Form submitted:", data);
@@ -55,9 +52,6 @@ export const Default: Story = {
 
 export const WithTakenSubdomain: Story = {
   args: {
-    onHandleGoToDashboard: () => {
-      console.log("Navigate to dashboard");
-    },
     link: MockLink,
     onSubmit: async (data: OnboardingFormData) => {
       console.log("Form submitted:", data);

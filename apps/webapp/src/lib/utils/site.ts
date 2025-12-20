@@ -1,3 +1,24 @@
+export const SUBDOMAIN_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+export async function validateSubdomain(
+  subdomain: string
+): Promise<{ valid: boolean; error?: string }> {
+  if (subdomain.length < 3) {
+    return { valid: false, error: "Subdomain must be at least 3 characters" };
+  }
+  if (subdomain.length > 63) {
+    return { valid: false, error: "Subdomain must be at most 63 characters" };
+  }
+  if (!SUBDOMAIN_REGEX.test(subdomain)) {
+    return {
+      valid: false,
+      error:
+        "Subdomain can only contain lowercase letters, numbers, and hyphens",
+    };
+  }
+  return { valid: true };
+}
+
 export function buildSiteUrl(
   subdomain: string | null,
   customDomain: string | null,
@@ -30,4 +51,3 @@ export function getInitials(
   const last = lastName?.[0] || "";
   return (first + last).toUpperCase() || "U";
 }
-
