@@ -13,7 +13,7 @@ const onboardingSchema = z.object({
   fieldNameA: z.string().min(1, "Partner 1 name is required"),
   fieldNameB: z.string().min(1, "Partner 2 name is required"),
   subdomain: subdomainSchema,
-  fieldEventDate: z.string().min(1, "Wedding date is required"),
+  fieldEventDate: z.string().optional(),
   fieldEventTime: z.string().optional(),
   fieldLocationName: z.string().optional(),
   fieldPreferredLocationAddressLine1: z.string().optional(),
@@ -86,16 +86,20 @@ export async function POST(req: NextRequest) {
         fieldDisplayName: `${fieldNameA} & ${fieldNameB}`,
         fieldNameA,
         fieldNameB,
-        fieldEventDate,
-        fieldEventTime,
-        fieldLocationName,
-        fieldPreferredLocationAddressLine1,
-        fieldPreferredLocationAddressLine2,
-        fieldPreferredLocationCity,
-        fieldPreferredLocationState,
-        fieldPreferredLocationZipCode,
-        fieldPreferredLocationCountry,
         createdByClerkUserId: userId,
+        ...(fieldEventDate && { fieldEventDate }),
+        ...(fieldEventTime && { fieldEventTime }),
+        ...(fieldLocationName && { fieldLocationName }),
+        ...(fieldPreferredLocationAddressLine1 && {
+          fieldPreferredLocationAddressLine1,
+        }),
+        ...(fieldPreferredLocationAddressLine2 && {
+          fieldPreferredLocationAddressLine2,
+        }),
+        ...(fieldPreferredLocationCity && { fieldPreferredLocationCity }),
+        ...(fieldPreferredLocationState && { fieldPreferredLocationState }),
+        ...(fieldPreferredLocationZipCode && { fieldPreferredLocationZipCode }),
+        ...(fieldPreferredLocationCountry && { fieldPreferredLocationCountry }),
       })
       .returning();
 
