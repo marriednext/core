@@ -10,6 +10,7 @@ import {
   addSubdomainToVercel,
   getDomainConfig,
 } from "@/lib/infrastructure/vercel/domainService";
+import { createCnameRecord } from "@/lib/infrastructure/porkbun/dnsService";
 
 const SUBDOMAIN_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -77,24 +78,25 @@ export async function POST(req: NextRequest) {
 
     const configResult = await getDomainConfig(vercelResult.domain!);
 
-    const cnameRecord = {
-      type: "CNAME",
-      name: subdomain,
-      value: (configResult?.recommendedCNAME?.[0]?.value as string) || "",
-    };
-    // TODO: add cname to Porkbun
+    const cnameValue =
+      (configResult?.recommendedCNAME?.[0]?.value as string) || "";
+    const porkbunResult = await createCnameRecord(subdomain, cnameValue);
+
+    if (!porkbunResult.success) {
+      return NextResponse.json(
+        {
+          error:
+            "Failed to configure DNS. Please try again or contact support.",
+          success: false,
+        },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(
       {
         success: true,
         domain: vercelResult.domain,
-        config: configResult.success
-          ? {
-              configuredBy: configResult.configuredBy,
-              acceptedChallenges: configResult.acceptedChallenges,
-              misconfigured: configResult.misconfigured,
-            }
-          : null,
       },
       { status: 201 }
     );
