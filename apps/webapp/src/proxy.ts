@@ -9,7 +9,10 @@ interface ClerkMetadata {
 }
 
 const isOnboardingRoute = createRouteMatcher(["/engaged/onboarding"]);
-const isOnboardingApiRoute = createRouteMatcher(["/api/onboarding(.*)"]);
+const isOnboardingApiRoute = createRouteMatcher([
+  "/api/onboarding(.*)",
+  "/api/domains(.*)",
+]);
 const isPublicRoute = createRouteMatcher([
   "/",
   "/welcome",

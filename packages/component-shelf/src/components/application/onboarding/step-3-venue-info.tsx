@@ -206,7 +206,7 @@ export function Step3VenueInfo({ onSubmit, onSkip }: Step3VenueInfoProps) {
               type="button"
               onClick={handleSkip}
               disabled={isSubmitting}
-              className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+              className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 underline"
             >
               I don't have a location picked yet — skip this step
             </button>

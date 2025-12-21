@@ -6,7 +6,10 @@ import { wedding } from "orm-shelf/schema";
 import { eq } from "drizzle-orm";
 import { RESERVED_SUBDOMAINS } from "@/lib/routing/multitenancy";
 import * as Sentry from "@sentry/nextjs";
-import { addSubdomainToVercel } from "@/lib/infrastructure/vercel/domainService";
+import {
+  addSubdomainToVercel,
+  getDomainConfig,
+} from "@/lib/infrastructure/vercel/domainService";
 
 const SUBDOMAIN_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -28,7 +31,6 @@ const domainSchema = z.object({
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth();
-
     if (!userId) {
       return NextResponse.json(
         { error: "Unauthorized", success: false },
@@ -39,7 +41,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validatedData = domainSchema.parse(body);
     const { subdomain } = validatedData;
-
     const existingBySubdomain = await db
       .select({ id: wedding.id })
       .from(wedding)
@@ -74,10 +75,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const configResult = await getDomainConfig(vercelResult.domain!);
+
+    const cnameRecord = {
+      type: "CNAME",
+      name: subdomain,
+      value: (configResult?.recommendedCNAME?.[0]?.value as string) || "",
+    };
+    // TODO: add cname to Porkbun
+
     return NextResponse.json(
       {
         success: true,
         domain: vercelResult.domain,
+        config: configResult.success
+          ? {
+              configuredBy: configResult.configuredBy,
+              acceptedChallenges: configResult.acceptedChallenges,
+              misconfigured: configResult.misconfigured,
+            }
+          : null,
       },
       { status: 201 }
     );
@@ -101,8 +118,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
-
-
-
-

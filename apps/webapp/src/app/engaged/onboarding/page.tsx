@@ -29,9 +29,22 @@ async function checkSubdomainAvailability(
 
 export default function OnboardingPage() {
   const handleSubmit = async (data: ApplicationOnboardingFormData) => {
-    // TODO: api/domains
-    // TODO: api/onboarding
     console.log("Form submitted:", data);
+    const domainResponse = await fetch("/api/domains", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ subdomain: data.subdomain }),
+    });
+
+    const domainResult = await domainResponse.json();
+
+    if (!domainResult.success) {
+      console.error("Domain registration failed:", domainResult.error);
+      return;
+    }
+
+    // TODO: api/onboarding
+    console.log("Domain registered:", domainResult);
   };
 
   return (

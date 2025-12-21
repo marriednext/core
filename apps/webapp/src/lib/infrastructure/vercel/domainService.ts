@@ -11,6 +11,27 @@ export interface DomainAdditionResult {
   error?: string;
 }
 
+interface RecommendedRecord {
+  rank: number;
+  value: string | string[];
+}
+
+export interface DomainConfigResult {
+  success: boolean;
+  configuredBy?: "CNAME" | "A" | "http" | "dns-01" | null;
+  nameservers?: string[];
+  serviceType?: "external" | "zeit.world" | "na";
+  cnames?: string[];
+  aValues?: string[];
+  conflicts?: string[];
+  acceptedChallenges?: ("dns-01" | "http-01")[];
+  recommendedIPv4?: RecommendedRecord[];
+  recommendedCNAME?: RecommendedRecord[];
+  ipStatus?: string | null;
+  misconfigured?: boolean;
+  error?: string;
+}
+
 export async function addSubdomainToVercel(
   subdomain: string
 ): Promise<DomainAdditionResult> {
@@ -91,6 +112,78 @@ export async function addSubdomainToVercel(
     return {
       success: false,
       domain: fullDomain,
+      error: errorMessage,
+    };
+  }
+}
+
+export async function getDomainConfig(
+  domain: string
+): Promise<DomainConfigResult> {
+  if (!VERCEL_BEARER_TOKEN) {
+    const error = "Vercel bearer token is not configured";
+    Sentry.captureException(new Error(error), {
+      level: "error",
+      tags: {
+        service: "vercel-domain",
+        action: "get-domain-config",
+      },
+    });
+    return { success: false, error };
+  }
+
+  try {
+    const url = `${VERCEL_API_BASE}/v6/domains/${domain}/config`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${VERCEL_BEARER_TOKEN}`,
+      },
+    });
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        `Vercel API error: ${response.status} - ${JSON.stringify(responseData)}`
+      );
+    }
+
+    console.log("responseData", responseData);
+
+    return {
+      success: true,
+      configuredBy: responseData.configuredBy,
+      nameservers: responseData.nameservers,
+      serviceType: responseData.serviceType,
+      cnames: responseData.cnames,
+      aValues: responseData.aValues,
+      conflicts: responseData.conflicts,
+      acceptedChallenges: responseData.acceptedChallenges,
+      recommendedIPv4: responseData.recommendedIPv4,
+      recommendedCNAME: responseData.recommendedCNAME,
+      ipStatus: responseData.ipStatus,
+      misconfigured: responseData.misconfigured,
+    };
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+
+    Sentry.captureException(error, {
+      level: "error",
+      tags: {
+        service: "vercel-domain",
+        action: "get-domain-config",
+      },
+      extra: {
+        domain,
+        errorMessage,
+      },
+    });
+
+    return {
+      success: false,
       error: errorMessage,
     };
   }
