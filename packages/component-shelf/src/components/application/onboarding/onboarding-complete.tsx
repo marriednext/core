@@ -4,15 +4,14 @@ import { useAppSelector } from "../../../lib/store/hooks";
 import { Card, CardContent } from "../../ui/card";
 import { Button } from "../../ui/button";
 import { Check, Sparkles, ArrowRight } from "lucide-react";
+import type { ComponentPropsWithoutRef } from "react";
 
 export function OnboardingComplete({
-  onHandleGoToDashboard,
+  link: Link,
 }: {
-  onHandleGoToDashboard: () => void;
+  link: React.ComponentType<ComponentPropsWithoutRef<"a">>;
 }) {
   const formData = useAppSelector((state) => state.onboarding.formData);
-
-  const handleGoToDashboard = () => onHandleGoToDashboard;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-background relative overflow-hidden">
@@ -61,9 +60,11 @@ export function OnboardingComplete({
               </p>
             </div>
 
-            <Button size="lg" onClick={handleGoToDashboard} className="gap-2">
-              Go to Dashboard
-              <ArrowRight className="h-4 w-4" />
+            <Button size="lg" asChild className="gap-2">
+              <Link href="/engaged">
+                Go to Dashboard
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </Button>
           </CardContent>
         </Card>

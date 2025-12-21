@@ -30,9 +30,6 @@ const MockLink = ({
 
 export const Default: Story = {
   args: {
-    onHandleGoToDashboard: () => {
-      console.log("Navigate to dashboard");
-    },
     link: MockLink,
     onSubmit: async (data: OnboardingFormData) => {
       console.log("Form submitted:", data);
@@ -42,22 +39,19 @@ export const Default: Story = {
       console.log("Venue step skipped, form data:", data);
       await new Promise((resolve) => setTimeout(resolve, 500));
     },
-    validateSubdomain: async (subdomain: string) => {
-      console.log("Validating subdomain:", subdomain);
+    onSubdomainBlur: async (subdomain: string) => {
+      console.log("Checking subdomain availability:", subdomain);
       await new Promise((resolve) => setTimeout(resolve, 500));
       if (subdomain === "taken") {
-        return { valid: false, error: "This subdomain is already taken" };
+        return { available: false, error: "This subdomain is already taken" };
       }
-      return { valid: true };
+      return { available: true };
     },
   },
 };
 
 export const WithTakenSubdomain: Story = {
   args: {
-    onHandleGoToDashboard: () => {
-      console.log("Navigate to dashboard");
-    },
     link: MockLink,
     onSubmit: async (data: OnboardingFormData) => {
       console.log("Form submitted:", data);
@@ -65,9 +59,9 @@ export const WithTakenSubdomain: Story = {
     onSkip: async (data: OnboardingFormData) => {
       console.log("Venue step skipped, form data:", data);
     },
-    validateSubdomain: async () => {
+    onSubdomainBlur: async () => {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      return { valid: false, error: "This subdomain is already taken" };
+      return { available: false, error: "This subdomain is already taken" };
     },
   },
 };

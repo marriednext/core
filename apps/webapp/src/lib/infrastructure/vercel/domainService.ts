@@ -11,47 +11,51 @@ export interface DomainAdditionResult {
   error?: string;
 }
 
+interface RecommendedRecord {
+  rank: number;
+  value: string | string[];
+}
+
+export interface DomainConfigResult {
+  success: boolean;
+  configuredBy?: "CNAME" | "A" | "http" | "dns-01" | null;
+  nameservers?: string[];
+  serviceType?: "external" | "zeit.world" | "na";
+  cnames?: string[];
+  aValues?: string[];
+  conflicts?: string[];
+  acceptedChallenges?: ("dns-01" | "http-01")[];
+  recommendedIPv4?: RecommendedRecord[];
+  recommendedCNAME?: RecommendedRecord[];
+  ipStatus?: string | null;
+  misconfigured?: boolean;
+  error?: string;
+}
+
 export async function addSubdomainToVercel(
   subdomain: string
 ): Promise<DomainAdditionResult> {
-  console.log("[Vercel API] Starting addSubdomainToVercel", { subdomain });
-
-  if (!VERCEL_PROJECT_ID) {
-    const error = "VERCEL_PROJECT_ID environment variable is not configured";
-    console.error("[Vercel API] Missing VERCEL_PROJECT_ID");
+  if (!VERCEL_PROJECT_ID || !VERCEL_BEARER_TOKEN) {
+    const error = "Vercel environment variables are not configured";
     Sentry.captureException(new Error(error), {
       level: "error",
       tags: {
         service: "vercel-domain",
         action: "add-subdomain",
       },
-    });
-    return { success: false, error };
-  }
-
-  if (!VERCEL_BEARER_TOKEN) {
-    const error = "VERCEL_BEARER_TOKEN environment variable is not configured";
-    console.error("[Vercel API] Missing VERCEL_BEARER_TOKEN");
-    Sentry.captureException(new Error(error), {
-      level: "error",
-      tags: {
-        service: "vercel-domain",
-        action: "add-subdomain",
+      extra: {
+        VERCEL_PROJECT_ID_SET: !!VERCEL_PROJECT_ID,
+        VERCEL_BEARER_TOKEN_SET: !!VERCEL_BEARER_TOKEN,
       },
     });
     return { success: false, error };
   }
 
   const fullDomain = `${subdomain}.${BASE_DOMAIN}`;
-  console.log("[Vercel API] Full domain to add:", fullDomain);
-  console.log("[Vercel API] Project ID:", VERCEL_PROJECT_ID);
 
   try {
     const url = `${VERCEL_API_BASE}/v10/projects/${VERCEL_PROJECT_ID}/domains`;
     const body = { name: fullDomain };
-
-    console.log("[Vercel API] Making request to:", url);
-    console.log("[Vercel API] Request body:", body);
 
     const response = await fetch(url, {
       method: "POST",
@@ -62,25 +66,13 @@ export async function addSubdomainToVercel(
       body: JSON.stringify(body),
     });
 
-    console.log("[Vercel API] Response status:", response.status);
-    console.log("[Vercel API] Response status text:", response.statusText);
-
     const responseData = await response.json();
-    console.log(
-      "[Vercel API] Response data:",
-      JSON.stringify(responseData, null, 2)
-    );
 
     if (!response.ok) {
       throw new Error(
         `Vercel API error: ${response.status} - ${JSON.stringify(responseData)}`
       );
     }
-
-    console.log("[Vercel API] Domain added successfully:", {
-      name: responseData.name,
-      verified: responseData.verified,
-    });
 
     Sentry.captureMessage("Subdomain added to Vercel successfully", {
       level: "info",
@@ -101,14 +93,6 @@ export async function addSubdomainToVercel(
       domain: responseData.name,
     };
   } catch (error) {
-    console.error("[Vercel API] Error caught:", error);
-    console.error("[Vercel API] Error type:", error?.constructor?.name);
-    console.error("[Vercel API] Error details:", {
-      message: error instanceof Error ? error.message : "Unknown error",
-      stack: error instanceof Error ? error.stack : undefined,
-      fullError: JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
-    });
-
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
 
@@ -128,6 +112,78 @@ export async function addSubdomainToVercel(
     return {
       success: false,
       domain: fullDomain,
+      error: errorMessage,
+    };
+  }
+}
+
+export async function getDomainConfig(
+  domain: string
+): Promise<DomainConfigResult> {
+  if (!VERCEL_BEARER_TOKEN) {
+    const error = "Vercel bearer token is not configured";
+    Sentry.captureException(new Error(error), {
+      level: "error",
+      tags: {
+        service: "vercel-domain",
+        action: "get-domain-config",
+      },
+    });
+    return { success: false, error };
+  }
+
+  try {
+    const url = `${VERCEL_API_BASE}/v6/domains/${domain}/config`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${VERCEL_BEARER_TOKEN}`,
+      },
+    });
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        `Vercel API error: ${response.status} - ${JSON.stringify(responseData)}`
+      );
+    }
+
+    console.log("responseData", responseData);
+
+    return {
+      success: true,
+      configuredBy: responseData.configuredBy,
+      nameservers: responseData.nameservers,
+      serviceType: responseData.serviceType,
+      cnames: responseData.cnames,
+      aValues: responseData.aValues,
+      conflicts: responseData.conflicts,
+      acceptedChallenges: responseData.acceptedChallenges,
+      recommendedIPv4: responseData.recommendedIPv4,
+      recommendedCNAME: responseData.recommendedCNAME,
+      ipStatus: responseData.ipStatus,
+      misconfigured: responseData.misconfigured,
+    };
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+
+    Sentry.captureException(error, {
+      level: "error",
+      tags: {
+        service: "vercel-domain",
+        action: "get-domain-config",
+      },
+      extra: {
+        domain,
+        errorMessage,
+      },
+    });
+
+    return {
+      success: false,
       error: errorMessage,
     };
   }

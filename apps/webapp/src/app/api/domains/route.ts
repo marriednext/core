@@ -4,31 +4,21 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/database/drizzle";
 import { wedding } from "orm-shelf/schema";
 import { eq } from "drizzle-orm";
-import { RESERVED_SUBDOMAINS } from "@/lib/routing/multitenancy";
 import * as Sentry from "@sentry/nextjs";
-import { addSubdomainToVercel } from "@/lib/infrastructure/vercel/domainService";
-
-const SUBDOMAIN_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+import {
+  addSubdomainToVercel,
+  getDomainConfig,
+} from "@/lib/infrastructure/vercel/domainService";
+import { createCnameRecord } from "@/lib/infrastructure/porkbun/dnsService";
+import { subdomainSchema } from "@/lib/utils/site";
 
 const domainSchema = z.object({
-  subdomain: z
-    .string()
-    .min(3, "Subdomain must be at least 3 characters")
-    .max(63, "Subdomain must be at most 63 characters")
-    .regex(
-      SUBDOMAIN_REGEX,
-      "Subdomain can only contain lowercase letters, numbers, and hyphens"
-    )
-    .refine(
-      (subdomain) => !RESERVED_SUBDOMAINS.includes(subdomain),
-      "This subdomain is reserved and cannot be used"
-    ),
+  subdomain: subdomainSchema,
 });
 
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth();
-
     if (!userId) {
       return NextResponse.json(
         { error: "Unauthorized", success: false },
@@ -39,7 +29,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validatedData = domainSchema.parse(body);
     const { subdomain } = validatedData;
-
     const existingBySubdomain = await db
       .select({ id: wedding.id })
       .from(wedding)
@@ -74,6 +63,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const configResult = await getDomainConfig(vercelResult.domain!);
+
+    const cnameValue =
+      (configResult?.recommendedCNAME?.[0]?.value as string) || "";
+    const porkbunResult = await createCnameRecord(subdomain, cnameValue);
+
+    if (!porkbunResult.success) {
+      return NextResponse.json(
+        {
+          error:
+            "Failed to configure DNS. Please try again or contact support.",
+          success: false,
+        },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: true,
@@ -101,8 +107,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
-
-
-
-
