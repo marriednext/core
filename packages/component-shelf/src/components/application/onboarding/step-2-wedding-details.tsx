@@ -59,6 +59,7 @@ export function Step2WeddingDetails({ onSubdomainBlur }: Step2Props) {
     watch,
     setError,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useForm<Step2FormData>({
     defaultValues: {
@@ -101,6 +102,7 @@ export function Step2WeddingDetails({ onSubdomainBlur }: Step2Props) {
   const handleSubdomainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "");
     e.target.value = formatted;
+    setValue("subdomain", formatted);
     clearErrors("subdomain");
     setSubdomainStatus("idle");
     setSubdomainError(null);

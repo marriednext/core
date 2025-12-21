@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
-import { ApplicationOnboardingPage } from "component-shelf";
+import {
+  ApplicationOnboardingPage,
+  type ApplicationOnboardingFormData,
+} from "component-shelf";
 
 const LinkWrapper = ({
   href = "/",
@@ -11,6 +14,32 @@ const LinkWrapper = ({
   return <Link href={href || "/"} {...props} />;
 };
 
+async function checkSubdomainAvailability(
+  subdomain: string
+): Promise<{ available: boolean; error?: string }> {
+  const response = await fetch("/api/domains/check", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ subdomain }),
+  });
+
+  const data = await response.json();
+  return { available: data.available, error: data.error };
+}
+
 export default function OnboardingPage() {
-  return <ApplicationOnboardingPage link={LinkWrapper} />;
+  const handleSubmit = async (data: ApplicationOnboardingFormData) => {
+    // TODO: api/domains
+    // TODO: api/onboarding
+    console.log("Form submitted:", data);
+  };
+
+  return (
+    <ApplicationOnboardingPage
+      link={LinkWrapper}
+      onSubdomainBlur={checkSubdomainAvailability}
+      onSubmit={handleSubmit}
+      onSkip={handleSubmit}
+    />
+  );
 }

@@ -78,6 +78,7 @@ export { ApplicationSeatingPlannerCore } from "./components/application/seating/
 export { default as ApplicationOnboardingPage } from "./components/application/onboarding";
 export type {
   OnboardingPageProps as ApplicationOnboardingPageProps,
+  OnboardingFormData as ApplicationOnboardingFormData,
   Step3FormData as ApplicationOnboardingStep3FormData,
 } from "./components/application/onboarding";
 
