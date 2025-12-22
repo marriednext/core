@@ -91,7 +91,7 @@ export function HeroSection({ Link = "a" }: HeroSectionProps) {
 
             <div className="group relative bg-background rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center mb-4">
-                <Calendar className="w-6 h-6 text-accent-foreground" />
+                <Calendar className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-serif text-lg font-medium text-foreground mb-2">
                 Save the Date
@@ -103,7 +103,7 @@ export function HeroSection({ Link = "a" }: HeroSectionProps) {
 
             <div className="group relative bg-background rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-secondary-foreground" />
+                <Users className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-serif text-lg font-medium text-foreground mb-2">
                 Guest List
@@ -115,7 +115,7 @@ export function HeroSection({ Link = "a" }: HeroSectionProps) {
 
             <div className="group relative bg-background rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center mb-4">
-                <Heart className="w-6 h-6 text-rose-600" />
+                <Heart className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-serif text-lg font-medium text-foreground mb-2">
                 Plan Together
