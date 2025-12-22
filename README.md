@@ -4,22 +4,20 @@ Create and deploy your wedding website in minutes. Manage your guest list and co
 
 ## Tech Stack
 
-| Layer           | Technology                                                                |
-| --------------- | ------------------------------------------------------------------------- |
-| Framework       | [Next.js 16](https://nextjs.org/)                                         |
-| Language        | [TypeScript](https://www.typescriptlang.org/)                             |
-| Database        | [Neon](https://neon.tech/) (PostgreSQL)                                   |
-| ORM             | [Drizzle](https://orm.drizzle.team/)                                      |
-| Auth            | [Clerk](https://clerk.com/)                                               |
-| Cache           | [Upstash Redis](https://upstash.com/)                                     |
-| Styling         | [Tailwind CSS 4](https://tailwindcss.com/)                                |
-| UI              | [shadcn/ui](https://ui.shadcn.com/) + [Radix](https://www.radix-ui.com/)  |
-| Forms           | [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) |
-| Hosting         | [Vercel](https://vercel.com/)                                             |
-| DNS             | [Porkbun](https://porkbun.com/)                                           |
-| Monitoring      | [Sentry](https://sentry.io/)                                              |
-| Monorepo        | [Turborepo](https://turborepo.com/)                                       |
-| Package Manager | [pnpm](https://pnpm.io/)                                                  |
+- **Framework:** [Next.js 16](https://nextjs.org/)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **Database:** [Neon](https://neon.tech/) (PostgreSQL)
+- **ORM:** [Drizzle](https://orm.drizzle.team/)
+- **Auth:** [Clerk](https://clerk.com/)
+- **Cache:** [Upstash Redis](https://upstash.com/)
+- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
+- **UI:** [shadcn/ui](https://ui.shadcn.com/) + [Radix](https://www.radix-ui.com/)
+- **Forms:** [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+- **Hosting:** [Vercel](https://vercel.com/)
+- **DNS:** [Porkbun](https://porkbun.com/)
+- **Monitoring:** [Sentry](https://sentry.io/)
+- **Monorepo:** [Turborepo](https://turborepo.com/)
+- **Package Manager:** [pnpm](https://pnpm.io/)
 
 ## Project Structure
 

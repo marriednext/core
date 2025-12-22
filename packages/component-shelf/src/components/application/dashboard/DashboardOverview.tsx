@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "../../../components/ui/card";
 import { Button, buttonVariants } from "../../../components/ui/button";
-import { Progress } from "../../../components/ui/progress";
 import { Skeleton } from "../../../components/ui/skeleton";
 import {
   Users,
@@ -18,6 +17,7 @@ import {
   Grid3X3,
   CalendarHeart,
 } from "lucide-react";
+import { RsvpProgress } from "./RsvpProgress";
 
 export interface HomeStatsData {
   totalGuests: number;
@@ -45,40 +45,6 @@ export interface ApplicationDashboardOverviewProps {
   isLoading?: boolean;
   Link?: React.ComponentType<React.AnchorHTMLAttributes<HTMLAnchorElement>>;
 }
-
-// const recentActivity = [
-//   {
-//     name: "Emma Thompson",
-//     action: "accepted the invitation",
-//     time: "2 hours ago",
-//     status: "accepted",
-//   },
-//   {
-//     name: "James Wilson",
-//     action: "declined the invitation",
-//     time: "5 hours ago",
-//     status: "declined",
-//   },
-//   {
-//     name: "Oliver & Sophie Brown",
-//     action: "accepted with +1",
-//     time: "Yesterday",
-//     status: "accepted",
-//   },
-//   {
-//     name: "Charlotte Davis",
-//     action: "updated dietary requirements",
-//     time: "Yesterday",
-//     status: "updated",
-//   },
-//   {
-//     name: "William Taylor",
-//     action: "is awaiting response",
-//     time: "2 days ago",
-//     status: "pending",
-//   },
-// ];
-
 const quickActions = [
   {
     name: "Edit Website",
@@ -153,84 +119,21 @@ export function ApplicationDashboardOverview({
         )}
       </div>
 
-      <Card>
-        <CardContent className="p-0">
-          <div className="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-border">
-            <div className="flex-1 p-4 text-center">
-              <p className="text-sm text-muted-foreground">Total Invitations</p>
-              {isLoading ? (
-                <Skeleton className="h-8 w-12 mx-auto mt-1" />
-              ) : (
-                <p className="text-2xl font-semibold mt-1">
-                  {data?.totalInvitations ?? 0}
-                </p>
-              )}
-            </div>
-            <div className="flex-1 p-4 text-center">
-              <p className="text-sm text-muted-foreground">Total Guests</p>
-              {isLoading ? (
-                <Skeleton className="h-8 w-12 mx-auto mt-1" />
-              ) : (
-                <p className="text-2xl font-semibold mt-1">
-                  {data?.totalGuests ?? 0}
-                </p>
-              )}
-            </div>
-            <div className="flex-1 p-4 text-center">
-              <p className="text-sm text-muted-foreground">Attending</p>
-              {isLoading ? (
-                <Skeleton className="h-8 w-12 mx-auto mt-1" />
-              ) : (
-                <p className="text-2xl font-semibold text-green-600 mt-1">
-                  {data?.attendingGuests ?? 0}
-                </p>
-              )}
-            </div>
-            <div className="flex-1 p-4 text-center">
-              <p className="text-sm text-muted-foreground">Declined</p>
-              {isLoading ? (
-                <Skeleton className="h-8 w-12 mx-auto mt-1" />
-              ) : (
-                <p className="text-2xl font-semibold text-red-500 mt-1">
-                  {data?.declinedGuests ?? 0}
-                </p>
-              )}
-            </div>
-            <div className="flex-1 p-4 text-center">
-              <p className="text-sm text-muted-foreground">Awaiting</p>
-              {isLoading ? (
-                <Skeleton className="h-8 w-12 mx-auto mt-1" />
-              ) : (
-                <p className="text-2xl font-semibold text-amber-600 mt-1">
-                  {data?.pendingGuests ?? 0}
-                </p>
-              )}
-            </div>
-            <div className="flex-1 p-4 text-center">
-              <p className="text-sm text-muted-foreground">Response Rate</p>
-              {isLoading ? (
-                <Skeleton className="h-8 w-12 mx-auto mt-1" />
-              ) : (
-                <p className="text-2xl font-semibold mt-1">
-                  {data?.totalGuests && data.totalGuests > 0
-                    ? Math.round(
-                        ((data.attendingGuests + data.declinedGuests) /
-                          data.totalGuests) *
-                          100
-                      )
-                    : 0}
-                  %
-                </p>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Main Content Grid */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Left Column - 2/3 width */}
         <div className="lg:col-span-2 space-y-6">
+          <RsvpProgress
+            isLoading={isLoading}
+            totalInvitations={data?.totalInvitations ?? 0}
+            totalGuests={data?.totalGuests ?? 0}
+            respondedGuests={data?.respondedGuests ?? 0}
+            responseRate={data?.responseRate ?? 0}
+            attendingGuests={data?.attendingGuests ?? 0}
+            declinedGuests={data?.declinedGuests ?? 0}
+            pendingGuests={data?.pendingGuests ?? 0}
+          />
+
           {/* Website Preview Card */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -279,52 +182,6 @@ export function ApplicationDashboardOverview({
                   <span className="text-foreground">
                     {data?.websiteTemplate}
                   </span>
-                </div>
-                {/* <div className="text-sm text-muted-foreground ml-auto">
-                  342 visits this month
-                </div> */}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">RSVP Progress</CardTitle>
-              <CardDescription>Track your guest responses</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">
-                    Responses received
-                  </span>
-                  <span className="font-medium text-foreground">
-                    {data?.respondedGuests ?? 0} of {data?.totalGuests ?? 0}{" "}
-                    guests
-                  </span>
-                </div>
-                <Progress value={data?.responseRate ?? 0} className="h-2" />
-              </div>
-              <div className="grid grid-cols-3 gap-4 pt-2">
-                <div className="text-center p-4 rounded-lg bg-accent/10">
-                  <p className="text-2xl font-semibold text-accent">
-                    {isLoading ? "-" : data?.attendingGuests ?? 0}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Attending
-                  </p>
-                </div>
-                <div className="text-center p-4 rounded-lg bg-destructive/10">
-                  <p className="text-2xl font-semibold text-destructive">
-                    {isLoading ? "-" : data?.declinedGuests ?? 0}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">Declined</p>
-                </div>
-                <div className="text-center p-4 rounded-lg bg-muted">
-                  <p className="text-2xl font-semibold text-muted-foreground">
-                    {isLoading ? "-" : data?.pendingGuests ?? 0}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">Pending</p>
                 </div>
               </div>
             </CardContent>
