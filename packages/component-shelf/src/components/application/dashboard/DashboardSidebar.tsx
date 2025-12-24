@@ -11,6 +11,7 @@ import {
   Camera,
   Settings,
   HelpCircle,
+  ExternalLink as ExternalLinkIcon,
 } from "lucide-react";
 import { Sheet, SheetContent } from "../../../components/ui/sheet";
 
@@ -77,6 +78,7 @@ export function ApplicationDashboardSidebar({
   const coupleDisplayName = getCoupleDisplayName(wedding);
   const weddingDateFormatted = formatWeddingDate(wedding?.eventDate ?? null);
   const daysUntil = getDaysUntilWedding(wedding?.eventDate ?? null);
+  const liveWebsiteUrl = process.env.NEXT_PUBLIC_APP_LIVE_URL ?? "";
 
   const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
     <>
@@ -90,10 +92,24 @@ export function ApplicationDashboardSidebar({
         <p className="text-sm text-muted-foreground mt-1">
           {weddingDateFormatted}
         </p>
-        <div className="flex items-center gap-2 mt-3">
-          <div className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-          <span className="text-xs text-muted-foreground">{daysUntil}</span>
-        </div>
+        {!wedding?.eventDate ? (
+          <Link
+            href={`${liveWebsiteUrl}/engaged/settings#date-time`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div className="flex items-center gap-2 mt-3">
+              <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
+              <span className="text-xs text-muted-foreground">{daysUntil}</span>
+              <ExternalLinkIcon className="h-3 w-3 text-muted-foreground hover:text-primary" />
+            </div>
+          </Link>
+        ) : (
+          <div className="flex items-center gap-2 mt-3">
+            <div className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+            <span className="text-xs text-muted-foreground">{daysUntil}</span>
+          </div>
+        )}
       </div>
 
       {/* Main Navigation */}

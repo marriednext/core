@@ -213,10 +213,10 @@ export function ApplicationDashboardOverview({
                 )}
               </div>
               <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                {/* <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <div className="h-2 w-2 rounded-full bg-accent" />
                   <span>Published</span>
-                </div>
+                </div> */}
                 <div className="text-sm text-muted-foreground">
                   Template:{" "}
                   <span className="text-foreground">

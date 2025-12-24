@@ -10,14 +10,14 @@ import { Input } from "../../../components/ui/input";
 import { Switch } from "../../../components/ui/switch";
 import { Label } from "../../../components/ui/label";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../../../components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../../../components/ui/sheet";
 import {
   Form,
   FormControl,
@@ -192,188 +192,223 @@ export function AddInvitationDialog({
   });
 
   return (
-    <Dialog
+    <Sheet
       open={isOpen}
       onOpenChange={(open) => (open ? openDialog() : handleClose())}
     >
-      <DialogTrigger asChild>
+      <SheetTrigger asChild>
         <Button size="sm" className="gap-2">
           <Plus className="h-4 w-4" />
           Add Invitation
         </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle className="font-serif">Add New Invitation</DialogTitle>
-          <DialogDescription>
+      </SheetTrigger>
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+        <SheetHeader>
+          <SheetTitle className="font-serif text-xl">
+            Add New Invitation
+          </SheetTitle>
+          <SheetDescription className="text-base">
             Create an invitation for a single guest, guest with +1, or a group
             of guests.
-          </DialogDescription>
-        </DialogHeader>
+          </SheetDescription>
+        </SheetHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-4 py-4"
+            className="flex flex-col flex-1 px-4"
           >
-            <div className="space-y-2">
-              <FormLabel>Invitation Type</FormLabel>
-              <div className="grid grid-cols-3 gap-2">
-                <Button
-                  type="button"
-                  variant={
-                    watchedInvitationType === "single" ? "default" : "outline"
-                  }
-                  className="flex-col h-auto py-3 gap-1"
-                  onClick={() => setInvitationType("single")}
-                >
-                  <User className="h-5 w-5" />
-                  <span className="text-xs">Single</span>
-                </Button>
-                <Button
-                  type="button"
-                  variant={
-                    watchedInvitationType === "plusone" ? "default" : "outline"
-                  }
-                  className="flex-col h-auto py-3 gap-1"
-                  onClick={() => setInvitationType("plusone")}
-                >
-                  <UserPlus className="h-5 w-5" />
-                  <span className="text-xs">Guest +1</span>
-                </Button>
-                <Button
-                  type="button"
-                  variant={
-                    watchedInvitationType === "group" ? "default" : "outline"
-                  }
-                  className="flex-col h-auto py-3 gap-1"
-                  onClick={() => setInvitationType("group")}
-                >
-                  <Users className="h-5 w-5" />
-                  <span className="text-xs">Group</span>
-                </Button>
-              </div>
-            </div>
-
-            {watchedInvitationType === "group" && (
-              <FormField
-                control={form.control}
-                name="groupName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Group Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., The Smith Family" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-
-            {watchedInvitationType === "group" ? (
-              <div className="space-y-2">
-                <FormLabel>Guest Names</FormLabel>
-                {fields.map((field, index) => (
-                  <FormField
-                    key={field.id}
-                    control={form.control}
-                    name={`guestNames.${index}.value`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="flex items-center gap-2">
-                          <FormControl>
-                            <Input placeholder="Full name" {...field} />
-                          </FormControl>
-                          {fields.length > 1 && (
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="shrink-0"
-                              onClick={() => remove(index)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          )}
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="w-full gap-2"
-                  onClick={() => append({ value: "" })}
-                >
-                  <Plus className="h-4 w-4" />
-                  Add Guest
-                </Button>
-              </div>
-            ) : (
-              <FormField
-                control={form.control}
-                name="guestName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Guest Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Full name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email (optional)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="guest@email.com"
-                      {...field}
-                      value={field.value || ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {watchedInvitationType === "plusone" && (
-              <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/50 p-3">
-                <UserPlus className="h-5 w-5 text-muted-foreground" />
-                <div className="text-sm">
-                  <p className="font-medium">Plus One Enabled</p>
-                  <p className="text-muted-foreground">
-                    Guest can bring one additional person
-                  </p>
+            <div className="space-y-5 flex-1">
+              <div className="space-y-3">
+                <FormLabel className="text-base">Invitation Type</FormLabel>
+                <div className="grid grid-cols-3 gap-2">
+                  <Button
+                    type="button"
+                    variant={
+                      watchedInvitationType === "single" ? "default" : "outline"
+                    }
+                    className="flex-col h-auto py-4 gap-1.5"
+                    onClick={() => setInvitationType("single")}
+                  >
+                    <User className="h-6 w-6" />
+                    <span className="text-sm">Single</span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={
+                      watchedInvitationType === "plusone"
+                        ? "default"
+                        : "outline"
+                    }
+                    className="flex-col h-auto py-4 gap-1.5"
+                    onClick={() => setInvitationType("plusone")}
+                  >
+                    <UserPlus className="h-6 w-6" />
+                    <span className="text-sm">Guest +1</span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={
+                      watchedInvitationType === "group" ? "default" : "outline"
+                    }
+                    className="flex-col h-auto py-4 gap-1.5"
+                    onClick={() => setInvitationType("group")}
+                  >
+                    <Users className="h-6 w-6" />
+                    <span className="text-sm">Group</span>
+                  </Button>
                 </div>
               </div>
-            )}
 
-            <div className="flex items-center justify-between space-x-2 py-2">
-              <Label
-                htmlFor="add-another"
-                className="text-sm font-normal cursor-pointer"
-              >
-                Add another invitation
-              </Label>
-              <Switch
-                id="add-another"
-                checked={addAnother}
-                onCheckedChange={setAddAnother}
+              {watchedInvitationType === "group" && (
+                <FormField
+                  control={form.control}
+                  name="groupName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base">Group Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="text-base h-11"
+                          placeholder="e.g., The Smith Family"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              {watchedInvitationType === "group" ? (
+                <div className="space-y-3">
+                  <FormLabel className="text-base">Guest Names</FormLabel>
+                  {fields.map((field, index) => (
+                    <FormField
+                      key={field.id}
+                      control={form.control}
+                      name={`guestNames.${index}.value`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className="flex items-center gap-2">
+                            <FormControl>
+                              <div className="relative flex-1">
+                                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                                <Input
+                                  className="text-base h-11 pl-10"
+                                  placeholder="Full name"
+                                  {...field}
+                                />
+                              </div>
+                            </FormControl>
+                            {fields.length > 1 && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                className="shrink-0 h-11 w-11"
+                                onClick={() => remove(index)}
+                              >
+                                <Trash2 className="h-5 w-5" />
+                              </Button>
+                            )}
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full gap-2 h-11 text-base"
+                    onClick={() => append({ value: "" })}
+                  >
+                    <Plus className="h-5 w-5" />
+                    Add Guest
+                  </Button>
+                </div>
+              ) : (
+                <FormField
+                  control={form.control}
+                  name="guestName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">Guest Name</FormLabel>
+                        <p className="text-sm text-muted-foreground">
+                          as written on invitation
+                        </p>
+                      </div>
+                      <FormControl>
+                        <Input
+                          className="text-base h-11"
+                          placeholder="Full name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">
+                        Email (optional)
+                      </FormLabel>
+                      {watchedInvitationType === "group" && (
+                        <p className="text-sm text-muted-foreground">
+                          primary contact for the group
+                        </p>
+                      )}
+                    </div>
+                    <FormControl>
+                      <Input
+                        className="text-base h-11"
+                        type="email"
+                        placeholder="guest@email.com"
+                        {...field}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
+
+              {watchedInvitationType === "plusone" && (
+                <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/50 p-4">
+                  <UserPlus className="h-6 w-6 text-muted-foreground" />
+                  <div>
+                    <p className="text-base font-medium">Plus One Enabled</p>
+                    <p className="text-sm text-muted-foreground">
+                      Guest can bring one additional person
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between space-x-2 py-2">
+                <Label
+                  htmlFor="add-another"
+                  className="text-base font-normal cursor-pointer"
+                >
+                  Add another invitation
+                </Label>
+                <Switch
+                  id="add-another"
+                  checked={addAnother}
+                  onCheckedChange={setAddAnother}
+                />
+              </div>
             </div>
 
-            <DialogFooter>
+            <SheetFooter className="px-0 pt-6">
               <Button
                 type="button"
                 variant="outline"
@@ -385,10 +420,10 @@ export function AddInvitationDialog({
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? "Adding..." : "Add Invitation"}
               </Button>
-            </DialogFooter>
+            </SheetFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
