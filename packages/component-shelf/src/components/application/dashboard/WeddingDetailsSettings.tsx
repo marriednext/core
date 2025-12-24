@@ -323,7 +323,7 @@ export function ApplicationWeddingDetailsSettings({
       <Form {...form}>
         <form onSubmit={handleSave} className="space-y-6">
           {/* Page Header - Sticky */}
-          <div className="sticky top-14 z-10 bg-background/95 backdrop-blur-md border-b border-border -mx-6 px-6 py-4 -mt-6 mb-6">
+          <div className="sticky top-14 z-10 backdrop-blur-md border-b border-border -mx-6 px-6 py-4 -mt-6 mb-6">
             <div className="max-w-4xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h1 className="font-serif text-3xl font-semibold text-foreground">

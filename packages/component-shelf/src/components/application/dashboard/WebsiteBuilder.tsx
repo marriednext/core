@@ -14,7 +14,6 @@ import {
   CardDescription,
 } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
-import { Label } from "../../../components/ui/label";
 import { Switch } from "../../../components/ui/switch";
 import {
   Tabs,
@@ -354,6 +353,9 @@ export function ApplicationWebsiteBuilder({
   };
 
   const handleSectionToggle = (sectionId: string, enabled: boolean) => {
+    if (sectionId === "countdown" && enabled && !data?.fieldEventDate) {
+      return;
+    }
     updateSection(sectionId, enabled);
     setHasChanges(true);
   };
@@ -430,6 +432,17 @@ export function ApplicationWebsiteBuilder({
     const hasChangesToSave = hasUnsavedChanges();
     setHasChanges(hasChangesToSave);
   }, [pendingLabels, pendingSections, hasUnsavedChanges]);
+
+  useEffect(() => {
+    if (!data?.fieldEventDate) {
+      const countdownSection = pendingSections.find(
+        (s) => s.id === "countdown"
+      );
+      if (countdownSection?.enabled) {
+        updateSection("countdown", false);
+      }
+    }
+  }, [data?.fieldEventDate, pendingSections, updateSection]);
 
   return (
     <div className="space-y-6">
@@ -758,23 +771,48 @@ export function ApplicationWebsiteBuilder({
                     <div className="space-y-2">
                       {pendingSections
                         .sort((a, b) => a.order - b.order)
-                        .map((section) => (
-                          <div
-                            key={section.id}
-                            className="flex items-center justify-between p-3 rounded-lg border border-border bg-card"
-                          >
-                            <span className="text-sm font-medium">
-                              {SECTION_DISPLAY_NAMES[section.id] || section.id}
-                            </span>
-                            <Switch
-                              checked={section.enabled}
-                              onCheckedChange={(enabled) =>
-                                handleSectionToggle(section.id, enabled)
-                              }
-                              disabled={isSaving}
-                            />
-                          </div>
-                        ))}
+                        .map((section) => {
+                          const isCountdownWithoutDate =
+                            section.id === "countdown" && !data?.fieldEventDate;
+                          return (
+                            <div
+                              key={section.id}
+                              className="flex flex-col gap-2 p-3 rounded-lg border border-border bg-card"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium">
+                                  {SECTION_DISPLAY_NAMES[section.id] ||
+                                    section.id}
+                                </span>
+                                <Switch
+                                  checked={section.enabled}
+                                  onCheckedChange={(enabled) =>
+                                    handleSectionToggle(section.id, enabled)
+                                  }
+                                  disabled={isSaving || isCountdownWithoutDate}
+                                />
+                              </div>
+                              {isCountdownWithoutDate && (
+                                <div className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-muted/50 border border-border">
+                                  <span className="text-xs text-muted-foreground flex-1">
+                                    Set your wedding date to enable this section
+                                  </span>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 text-xs"
+                                    asChild
+                                  >
+                                    <a href="/engaged/settings#date-time">
+                                      Set Date
+                                      <ChevronRight className="h-3 w-3 ml-1" />
+                                    </a>
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                     </div>
                   </CardContent>
                 </Card>

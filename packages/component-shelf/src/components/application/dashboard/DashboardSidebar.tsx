@@ -3,7 +3,6 @@ import type { ApplicationLinkComponent } from "../link-types";
 import type { DashboardWeddingData } from "./DashboardLayout";
 import { cn } from "../../../lib/utils";
 import {
-  Heart,
   LayoutDashboard,
   Globe,
   Users,
@@ -13,6 +12,7 @@ import {
   HelpCircle,
   ExternalLink as ExternalLinkIcon,
 } from "lucide-react";
+import { MarriedNextLogo } from "../../ui/married-next-logo";
 import { Sheet, SheetContent } from "../../../components/ui/sheet";
 
 const mainNavItems = [
@@ -167,7 +167,7 @@ export function ApplicationDashboardSidebar({
           {/* Logo */}
           <div className="flex h-16 shrink-0 items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <Heart className="h-6 w-6 text-primary fill-primary" />
+              <MarriedNextLogo className="h-6 w-6" />
               <span className="font-serif text-xl font-semibold text-foreground">
                 Married Next
               </span>
@@ -190,7 +190,7 @@ export function ApplicationDashboardSidebar({
                 className="flex items-center gap-2"
                 onClick={onMobileClose}
               >
-                <Heart className="h-6 w-6 text-primary fill-primary" />
+                <MarriedNextLogo className="h-6 w-6" />
                 <span className="font-serif text-xl font-semibold text-foreground">
                   Married Next
                 </span>
