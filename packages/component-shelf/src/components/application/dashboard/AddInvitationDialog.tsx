@@ -10,16 +10,15 @@ import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Switch } from "../../../components/ui/switch";
 import { Label } from "../../../components/ui/label";
-import { SeparatorDoubleLine } from "../../../components/ui/separator";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "../../../components/ui/sheet";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -79,11 +78,11 @@ function FormSection({
   return (
     <div className={clsx("space-y-4", className)}>
       <div className="flex items-center gap-2">
-        <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        <span className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
           {title}
         </span>
         {optional && (
-          <span className="text-xs text-muted-foreground/60">optional</span>
+          <span className="text-sm text-muted-foreground/60">optional</span>
         )}
       </div>
       {children}
@@ -230,32 +229,32 @@ export function AddInvitationDialog({
   });
 
   return (
-    <Sheet
+    <Dialog
       open={isOpen}
       onOpenChange={(open) => (open ? openDialog() : handleClose())}
     >
-      <SheetTrigger asChild>
+      <DialogTrigger asChild>
         <Button size="sm" className="gap-2">
           <Plus className="h-4 w-4" />
           Add Invitation
         </Button>
-      </SheetTrigger>
-      <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle className="font-serif text-xl">
+      </DialogTrigger>
+      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto pt-6">
+        <DialogHeader>
+          <DialogTitle className="font-serif text-2xl">
             Add New Invitation
-          </SheetTitle>
-          <SheetDescription className="text-base">
+          </DialogTitle>
+          <DialogDescription className="text-lg">
             Create an invitation for a single guest, guest with +1, or a group
             of guests.
-          </SheetDescription>
-        </SheetHeader>
+          </DialogDescription>
+        </DialogHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="flex flex-col flex-1 px-4"
+            className="flex flex-col flex-1"
           >
-            <div className="flex-1 space-y-6">
+            <div className="flex-1 space-y-6 pb-6">
               <FormSection title="Invitation Type">
                 <div className="grid grid-cols-3 gap-2">
                   <Button
@@ -267,7 +266,7 @@ export function AddInvitationDialog({
                     onClick={() => setInvitationType("single")}
                   >
                     <User className="h-6 w-6" />
-                    <span className="text-sm">Single</span>
+                    <span className="text-base">Single</span>
                   </Button>
                   <Button
                     type="button"
@@ -280,7 +279,7 @@ export function AddInvitationDialog({
                     onClick={() => setInvitationType("plusone")}
                   >
                     <UserPlus className="h-6 w-6" />
-                    <span className="text-sm">Guest +1</span>
+                    <span className="text-base">Guest +1</span>
                   </Button>
                   <Button
                     type="button"
@@ -291,34 +290,36 @@ export function AddInvitationDialog({
                     onClick={() => setInvitationType("group")}
                   >
                     <Users className="h-6 w-6" />
-                    <span className="text-sm">Group</span>
+                    <span className="text-base">Group</span>
                   </Button>
                 </div>
               </FormSection>
 
-              {/* <SeparatorDoubleLine /> */}
-
               <FormSection title="Guest Details">
                 {watchedInvitationType === "group" && (
-                  <div className="mb-12">
+                  <div className="mb-6">
                     <FormField
                       control={form.control}
                       name="groupName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Name of the group (optional)</FormLabel>
+                          <div className="mb-2">
+                            <FormLabel className="text-lg font-semibold">
+                              Name of the group (optional)
+                            </FormLabel>
+                            <p className="text-sm text-muted-foreground flex items-center gap-2 mt-0.5">
+                              <InfoIcon className="h-4 w-4" />
+                              Guests in group can use this name to RSVP to the
+                              event.
+                            </p>
+                          </div>
                           <FormControl>
                             <Input
-                              className="h-11"
+                              className="h-11 text-base"
                               placeholder="e.g., The Smith Family"
                               {...field}
                             />
                           </FormControl>
-                          <p className="text-sm text-muted-foreground flex items-center gap-2">
-                            <InfoIcon className="h-4 w-4" />
-                            Guests in group can use this name to RSVP to the
-                            event.
-                          </p>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -327,8 +328,16 @@ export function AddInvitationDialog({
                 )}
 
                 {watchedInvitationType === "group" ? (
-                  <div className="space-y-3">
-                    <FormLabel>Guest Names</FormLabel>
+                  <div className="space-y-3 ">
+                    <div className="mb-2">
+                      <FormLabel className="text-lg font-semibold">
+                        Guest Names{" "}
+                        <span className="text-destructive font-bold">*</span>
+                      </FormLabel>
+                      <p className="text-sm text-muted-foreground flex items-center gap-2 mt-0.5">
+                        Full name as written on the invitation
+                      </p>
+                    </div>
                     {fields.map((field, index) => (
                       <FormField
                         key={field.id}
@@ -341,8 +350,8 @@ export function AddInvitationDialog({
                                 <div className="relative flex-1">
                                   <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                   <Input
-                                    className="h-11 pl-10"
-                                    placeholder="Full name as written on invitation"
+                                    className="h-11 pl-10 text-base"
+                                    placeholder="Enter name here"
                                     {...field}
                                   />
                                 </div>
@@ -359,11 +368,6 @@ export function AddInvitationDialog({
                                 </Button>
                               )}
                             </div>
-                            {index === fields.length - 1 && (
-                              <p className="text-sm text-muted-foreground flex items-center gap-2">
-                                Full name as written on the invitation
-                              </p>
-                            )}
                             <FormMessage />
                           </FormItem>
                         )}
@@ -382,52 +386,63 @@ export function AddInvitationDialog({
                     </div>
                   </div>
                 ) : (
-                  <div>
-                    <FormField
-                      control={form.control}
-                      name="guestName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Guest Name</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                              <Input
-                                className="h-11 pl-10"
-                                placeholder="Full name as written on invitation"
-                                {...field}
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {watchedInvitationType === "plusone" && (
-                      <p className="text-sm text-muted-foreground flex items-center gap-2 mt-2">
-                        <UserPlus className="h-4 w-4" />
-                        Guest can bring one additional person
-                      </p>
+                  <FormField
+                    control={form.control}
+                    name="guestName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="mb-2">
+                          <FormLabel className="text-lg font-semibold">
+                            Guest Name{" "}
+                            <span className="text-destructive font-bold">
+                              *
+                            </span>
+                          </FormLabel>
+                          {watchedInvitationType === "plusone" && (
+                            <p className="text-sm text-muted-foreground flex items-center gap-2 mt-0.5">
+                              <UserPlus className="h-4 w-4" />
+                              Guest can bring one additional person
+                            </p>
+                          )}
+                        </div>
+                        <FormControl>
+                          <div className="relative">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                              className="h-11 pl-10 text-base"
+                              placeholder="Full name as written on invitation"
+                              {...field}
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
                     )}
-                  </div>
+                  />
                 )}
               </FormSection>
 
-              <SeparatorDoubleLine />
-
-              <FormSection title="Contact" optional>
+              <FormSection title="Additional Information" optional>
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="sr-only">Email</FormLabel>
+                      <div>
+                        <FormLabel className="text-lg font-semibold">
+                          Email
+                        </FormLabel>
+                        {watchedInvitationType === "group" && (
+                          <p className="text-sm text-muted-foreground">
+                            Primary contact for the group
+                          </p>
+                        )}
+                      </div>
                       <FormControl>
                         <div className="relative">
                           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                           <Input
-                            className="h-11 pl-10"
+                            className="h-11 pl-10 text-base"
                             type="email"
                             placeholder="guest@email.com"
                             {...field}
@@ -435,11 +450,6 @@ export function AddInvitationDialog({
                           />
                         </div>
                       </FormControl>
-                      {watchedInvitationType === "group" && (
-                        <p className="text-sm text-muted-foreground">
-                          Primary contact for the group
-                        </p>
-                      )}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -447,37 +457,39 @@ export function AddInvitationDialog({
               </FormSection>
             </div>
 
-            <SheetFooter className="px-0 pt-6">
-              <div className="flex items-center justify-between py-1">
-                <Label
-                  htmlFor="add-another"
-                  className="text-sm font-normal cursor-pointer text-muted-foreground"
-                >
-                  Add another invitation after saving
-                </Label>
-                <Switch
-                  id="add-another"
-                  checked={addAnother}
-                  onCheckedChange={setAddAnother}
-                />
+            <DialogFooter className="flex-col gap-4 pt-6 sticky bottom-0 z-10 bg-background border-t border-border">
+              <div className="flex flex-col gap-2 w-full items-center justify-center">
+                <div className="flex items-center justify-between w-full mb-2">
+                  <Label
+                    htmlFor="add-another"
+                    className="text-base font-normal cursor-pointer text-muted-foreground"
+                  >
+                    Add another invitation after saving
+                  </Label>
+                  <Switch
+                    id="add-another"
+                    checked={addAnother}
+                    onCheckedChange={setAddAnother}
+                  />
+                </div>
+                <div className="flex justify-end gap-2 w-full">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleClose}
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Adding..." : "Add Invitation"}
+                  </Button>
+                </div>
               </div>
-              <div className="flex justify-end gap-2 w-full">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleClose}
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Adding..." : "Add Invitation"}
-                </Button>
-              </div>
-            </SheetFooter>
+            </DialogFooter>
           </form>
         </Form>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }
