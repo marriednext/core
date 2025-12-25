@@ -48,7 +48,6 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "../../../lib/utils";
-import { LisasTheme } from "../../theme/lisastheme/LisasTheme";
 import {
   mergeSectionsWithDefaults,
   SECTION_DISPLAY_NAMES,
@@ -122,7 +121,6 @@ export function ApplicationWebsiteBuilder({
     pendingSections,
     initializeLabels,
     initializeSections,
-    updateLabel,
     updateSection,
     commitLabels,
     commitSections,
@@ -130,19 +128,7 @@ export function ApplicationWebsiteBuilder({
     hasUnsavedChanges,
   } = useWebsiteBuilderStore();
 
-  const defaultContent: WebsiteContent = {
-    coupleNames: "Sarah & Michael",
-    weddingDate: "June 15, 2025",
-    venue: "Rosewood Garden Estate",
-    venueAddress: "1234 Garden Lane, Napa Valley, CA",
-    welcomeMessage:
-      "We are so excited to celebrate our special day with you. Join us for an evening of love, laughter, and dancing under the stars.",
-    heroImage: "/elegant-wedding-website-preview-with-couple-photo.jpg",
-    ourStoryImage: "",
-    galleryImages: [],
-  };
-
-  const [content, setContent] = useState<WebsiteContent>(() => {
+  const getInitialContent = (): WebsiteContent => {
     const heroPhoto = data?.photos?.find(
       (p) => p.photoType === "hero" && p.themeId === themeId
     );
@@ -159,21 +145,21 @@ export function ApplicationWebsiteBuilder({
       coupleNames:
         data?.fieldNameA && data?.fieldNameB
           ? `${data.fieldNameA} & ${data.fieldNameB}`
-          : "Sarah & Michael",
-      weddingDate: data?.fieldEventDate || "June 15, 2025",
-      venue: data?.fieldLocationName || "Rosewood Garden Estate",
-      venueAddress:
-        data?.fieldLocationAddress || "1234 Garden Lane, Napa Valley, CA",
-      welcomeMessage:
-        "We are so excited to celebrate our special day with you. Join us for an evening of love, laughter, and dancing under the stars.",
+          : "",
+      weddingDate: data?.fieldEventDate || "",
+      venue: data?.fieldLocationName || "",
+      venueAddress: data?.fieldLocationAddress || "",
+      welcomeMessage: "",
       heroImage: heroPhoto?.blobUrl || "",
       ourStoryImage: storyPhoto?.blobUrl || "",
       galleryImages: galleryPhotos,
     };
-  });
+  };
+
+  const [content, setContent] = useState<WebsiteContent>(getInitialContent);
 
   const handleReset = () => {
-    setContent(defaultContent);
+    setContent(getInitialContent());
     discardChanges();
     setHasChanges(false);
   };
@@ -357,15 +343,6 @@ export function ApplicationWebsiteBuilder({
       return;
     }
     updateSection(sectionId, enabled);
-    setHasChanges(true);
-  };
-
-  const handleCustomizationChange = (
-    section: string,
-    key: string,
-    value: string
-  ) => {
-    updateLabel(section, key, value);
     setHasChanges(true);
   };
 
@@ -894,41 +871,24 @@ export function ApplicationWebsiteBuilder({
           <div className="p-0 bg-muted/30">
             <div
               className={cn(
-                "mx-auto transition-all duration-300 bg-white overflow-auto",
+                "mx-auto transition-all duration-300 bg-white overflow-auto max-h-[calc(100dvh-12rem)]",
                 previewMode === "mobile"
                   ? "max-w-[375px] my-6 rounded-xl shadow-lg"
                   : "w-full"
               )}
-              style={{
-                maxHeight: "800px",
-              }}
             >
               {isLoading ? (
                 <div className="flex items-center justify-center min-h-[600px]">
                   <p className="text-muted-foreground">Loading preview...</p>
                 </div>
               ) : data ? (
-                <LisasTheme
-                  fieldNameA={data.fieldNameA}
-                  fieldNameB={data.fieldNameB}
-                  fieldLocationName={data.fieldLocationName}
-                  fieldLocationAddress={data.fieldLocationAddress}
-                  fieldEventDate={data.fieldEventDate}
-                  fieldEventTime={data.fieldEventTime}
-                  fieldMapsShareUrl={data.fieldMapsShareUrl}
-                  heroImageUrl={content.heroImage || undefined}
-                  ourStoryImageUrl={content.ourStoryImage || undefined}
-                  galleryImages={
-                    content.galleryImages.length > 0
-                      ? content.galleryImages
-                      : undefined
-                  }
-                  websiteSections={pendingSections}
-                  websiteLabels={pendingLabels}
-                  editable={true}
-                  contained={true}
-                  onCustomizationChange={handleCustomizationChange}
-                />
+                <iframe
+                  src={`/tenant/${data?.subdomain}/?preview=true`}
+                  className="w-full h-[calc(100dvh-12rem)]"
+                  title="Wedding website preview"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
               ) : (
                 <div className="flex items-center justify-center min-h-[600px]">
                   <p className="text-muted-foreground">
