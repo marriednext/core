@@ -2,46 +2,6 @@
 
 Create and deploy your wedding website in minutes. Manage your guest list and collect reservations. Invite your spouse, wedding planner, or long lost uncle to help manage the website. All for free.
 
-## Tech Stack
-
-- **Framework:** [Next.js 16](https://nextjs.org/)
-- **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **Database:** [Neon](https://neon.tech/) (PostgreSQL)
-- **ORM:** [Drizzle](https://orm.drizzle.team/)
-- **Auth:** [Clerk](https://clerk.com/)
-- **Cache:** [Upstash Redis](https://upstash.com/)
-- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
-- **UI:** [shadcn/ui](https://ui.shadcn.com/) + [Radix](https://www.radix-ui.com/)
-- **Forms:** [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
-- **Hosting:** [Vercel](https://vercel.com/)
-- **DNS:** [Porkbun](https://porkbun.com/)
-- **Monitoring:** [Sentry](https://sentry.io/)
-- **Monorepo:** [Turborepo](https://turborepo.com/)
-- **Package Manager:** [pnpm](https://pnpm.io/)
-
-## Project Structure
-
-```
-marriednext.com/
-├── apps/
-│   └── webapp/              # Next.js application
-├── packages/
-│   ├── component-shelf/     # Shared React components & Storybook
-│   ├── style-shelf/         # Global CSS & Tailwind configuration
-│   ├── orm-shelf/           # Drizzle schema, migrations & types
-│   └── label-shelf/         # i18n labels & theme text
-└── docs/                    # Internal documentation
-```
-
-### Packages
-
-| Package           | Purpose                                                       |
-| ----------------- | ------------------------------------------------------------- |
-| `component-shelf` | Shared React components, theme templates, and Storybook       |
-| `style-shelf`     | Global Tailwind CSS configuration and shared styles           |
-| `orm-shelf`       | Drizzle ORM schema, database migrations, and type definitions |
-| `label-shelf`     | Internationalization labels and theme-specific text content   |
-
 ## Quick Start
 
 ### Prerequisites
@@ -59,7 +19,7 @@ pnpm add turbo --global
 1. Clone the repository and install dependencies:
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/matthewbub/marriednext.com
 cd marriednext.com
 pnpm install
 ```
@@ -72,44 +32,19 @@ pnpm run fork:env
 
 3. Configure your environment variables in `apps/webapp/.env.local` (see [Environment Variables](#environment-variables))
 
-4. Start the development server:
+4. Start the development server(s):
 
 ```bash
 pnpm run dev
 ```
 
-The webapp runs at [http://localhost:3000](http://localhost:3000)
+The webapp runs at [http://localhost:3000](http://localhost:3000). Storybook runs at [http://localhost:6006](http://localhost:6006).
 
-### Running Specific Apps
-
-```bash
-# Webapp only
-pnpm turbo dev --filter=webapp
-
-# Storybook only
-pnpm turbo dev --filter=component-shelf
-```
-
-## Environment Variables
-
-Copy `example.env` to `apps/webapp/.env.local` and configure:
-
-| Variable                            | Service | Description                  |
-| ----------------------------------- | ------- | ---------------------------- |
-| `DATABASE_URL`                      | Neon    | PostgreSQL connection string |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk   | Public auth key              |
-| `CLERK_SECRET_KEY`                  | Clerk   | Server-side auth key         |
-| `CLERK_FRONTEND_API_URL`            | Clerk   | Frontend API endpoint        |
-| `VERCEL_BEARER_TOKEN`               | Vercel  | API authentication           |
-| `VERCEL_PROJECT_ID`                 | Vercel  | Project identifier           |
-| `VERCEL_TEAM_ID`                    | Vercel  | Team identifier              |
-| `BLOB_READ_WRITE_TOKEN`             | Vercel  | Blob storage access          |
-| `PORKBUN_API_KEY`                   | Porkbun | DNS management key           |
-| `PORKBUN_SECRET_KEY`                | Porkbun | DNS management secret        |
-| `UPSTASH_REDIS_REST_URL`            | Upstash | Redis endpoint               |
-| `UPSTASH_REDIS_REST_TOKEN`          | Upstash | Redis auth token             |
+This also launces the other micro services such as the labels-shelf, which uses an node script to watch for changes to the .properties files and then converts those to JSON. There is also the style-shelf, which uses a node script to watch for changes to tailwind related changes across various directories.
 
 ## Setting up Clerk
+
+We are NOT using a premium version of Clerk at the moment. (We might soon for satellite domains)
 
 ### Enable Name Capture
 
@@ -146,16 +81,10 @@ Copy `example.env` to `apps/webapp/.env.local` and configure:
 
 ## Documentation
 
-Once the webapp is running locally, visit [http://localhost:3000/documentation](http://localhost:3000/documentation) for detailed technical documentation.
-
-Additional internal docs:
+Internal docs:
 
 - [`docs/onboarding.md`](docs/onboarding.md) - Onboarding flow & testing guide
-- [`docs/github/branching.md`](docs/github/branching.md) - Git workflow
-
-## Cron Jobs
-
-Health checks run on all 3rd party services for telemetry. Errors are reported to Sentry.
+- [`docs/github/branching-rules.md`](docs/github/branch-rules.md) - Git workflow
 
 ## Troubleshooting
 
