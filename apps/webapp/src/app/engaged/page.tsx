@@ -9,9 +9,12 @@ import {
   ApplicationDashboardLayout,
   ApplicationDashboardOverview,
   HomeStatsData,
-  DashboardUserData,
-  DashboardWeddingData,
 } from "component-shelf";
+import { fetchShell } from "fetch-shelf";
+import {
+  transformShellToUserData,
+  transformShellToWeddingData,
+} from "transformer-shelf";
 
 const homeStatsSchema = z.object({
   totalGuests: z.number(),
@@ -72,38 +75,28 @@ function transformToOverviewData(response: HomeStatsResponse): HomeStatsData {
   };
 }
 
-function transformToUserData(response: HomeStatsResponse): DashboardUserData {
-  return {
-    fullName: response.user.fullName,
-    email: response.user.email,
-    imageUrl: response.user.imageUrl,
-    initials: response.user.initials,
-    subscriptionPlan: response.subscriptionPlan,
-  };
-}
-
-function transformToWeddingData(
-  response: HomeStatsResponse
-): DashboardWeddingData {
-  return {
-    displayName: response.coupleNames.displayName,
-    nameA: response.coupleNames.nameA,
-    nameB: response.coupleNames.nameB,
-    eventDate: response.weddingDate,
-  };
-}
-
 export default function DashboardPage() {
   const pathname = usePathname();
   const router = useRouter();
   const { signOut } = useClerk();
-  const { data, isLoading } = useQuery({
+
+  const { data: shellData } = useQuery({
+    queryKey: ["shell"],
+    queryFn: fetchShell,
+  });
+
+  const { data: homeStatsData, isLoading } = useQuery({
     queryKey: ["home-stats"],
     queryFn: fetchHomeStats,
   });
-  const overviewData = data ? transformToOverviewData(data) : undefined;
-  const userData = data ? transformToUserData(data) : undefined;
-  const weddingData = data ? transformToWeddingData(data) : undefined;
+
+  const overviewData = homeStatsData
+    ? transformToOverviewData(homeStatsData)
+    : undefined;
+  const userData = shellData ? transformShellToUserData(shellData) : undefined;
+  const weddingData = shellData
+    ? transformShellToWeddingData(shellData)
+    : undefined;
 
   return (
     <ApplicationDashboardLayout

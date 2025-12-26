@@ -1,0 +1,20 @@
+{
+  "name": "transformer-shelf",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./shell": "./src/shell/index.ts"
+  },
+  "dependencies": {
+    "types-shelf": "workspace:*"
+  },
+  "devDependencies": {
+    "@marriednext/tsconfig-shelf": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

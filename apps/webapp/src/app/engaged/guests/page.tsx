@@ -9,8 +9,6 @@ import { toast } from "sonner";
 import {
   ApplicationDashboardLayout,
   ApplicationGuestListManager,
-  DashboardUserData,
-  DashboardWeddingData,
   GuestListInvitation,
   GuestListStats,
   AddInvitationPayload,
@@ -20,6 +18,11 @@ import {
   EditInvitationDialogInvitation,
   RsvpLookupMethod,
 } from "component-shelf";
+import { fetchShell } from "fetch-shelf";
+import {
+  transformShellToUserData,
+  transformShellToWeddingData,
+} from "transformer-shelf";
 
 const guestSchema = z.object({
   id: z.string(),
@@ -72,27 +75,6 @@ async function fetchGuestList(): Promise<GuestListResponse> {
   }
   const data = await res.json();
   return guestListResponseSchema.parse(data);
-}
-
-function transformToUserData(response: GuestListResponse): DashboardUserData {
-  return {
-    fullName: response.user.fullName,
-    email: response.user.email,
-    imageUrl: response.user.imageUrl,
-    initials: response.user.initials,
-    subscriptionPlan: response.subscriptionPlan,
-  };
-}
-
-function transformToWeddingData(
-  response: GuestListResponse
-): DashboardWeddingData {
-  return {
-    displayName: response.wedding.displayName,
-    nameA: response.wedding.nameA,
-    nameB: response.wedding.nameB,
-    eventDate: response.wedding.eventDate,
-  };
 }
 
 function transformToInvitations(
@@ -195,6 +177,11 @@ export default function GuestsPage() {
   const { closeDialog } = useAddInvitationDialogStore();
   const { closeDialog: closeEditDialog } = useEditInvitationDialogStore();
 
+  const { data: shellData } = useQuery({
+    queryKey: ["shell"],
+    queryFn: fetchShell,
+  });
+
   const { data, isLoading } = useQuery({
     queryKey: ["guest-list"],
     queryFn: fetchGuestList,
@@ -234,8 +221,12 @@ export default function GuestsPage() {
     },
   });
 
-  const userData = data ? transformToUserData(data) : undefined;
-  const weddingData = data ? transformToWeddingData(data) : undefined;
+  const userData = shellData
+    ? transformShellToUserData(shellData)
+    : undefined;
+  const weddingData = shellData
+    ? transformShellToWeddingData(shellData)
+    : undefined;
   const invitations = data ? transformToInvitations(data) : undefined;
   const stats = data ? transformToStats(data) : undefined;
   const rsvpLink = data?.rsvpLink;

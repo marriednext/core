@@ -9,9 +9,12 @@ import {
   ApplicationDashboardLayout,
   ApplicationWebsiteBuilder,
   WebsiteBuilderData,
-  DashboardUserData,
-  DashboardWeddingData,
 } from "component-shelf";
+import { fetchShell } from "fetch-shelf";
+import {
+  transformShellToUserData,
+  transformShellToWeddingData,
+} from "transformer-shelf";
 
 const websiteBuilderSchema = z.object({
   displayName: z.string(),
@@ -89,41 +92,26 @@ function transformToBuilderData(
   };
 }
 
-function transformToUserData(
-  response: WebsiteBuilderResponse
-): DashboardUserData {
-  return {
-    fullName: response.user.fullName,
-    email: response.user.email,
-    imageUrl: response.user.imageUrl,
-    initials: response.user.initials,
-    subscriptionPlan: response.subscriptionPlan,
-  };
-}
-
-function transformToWeddingData(
-  response: WebsiteBuilderResponse
-): DashboardWeddingData {
-  return {
-    displayName: response.displayName,
-    nameA: response.nameA,
-    nameB: response.nameB,
-    eventDate: response.eventDate,
-  };
-}
-
 export default function WebsitePage() {
   const pathname = usePathname();
   const router = useRouter();
   const { signOut } = useClerk();
+
+  const { data: shellData } = useQuery({
+    queryKey: ["shell"],
+    queryFn: fetchShell,
+  });
+
   const { data, isLoading } = useQuery({
     queryKey: ["website-builder"],
     queryFn: fetchWebsiteBuilder,
   });
 
   const builderData = data ? transformToBuilderData(data) : undefined;
-  const userData = data ? transformToUserData(data) : undefined;
-  const weddingData = data ? transformToWeddingData(data) : undefined;
+  const userData = shellData ? transformShellToUserData(shellData) : undefined;
+  const weddingData = shellData
+    ? transformShellToWeddingData(shellData)
+    : undefined;
 
   return (
     <ApplicationDashboardLayout

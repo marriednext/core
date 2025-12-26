@@ -8,11 +8,14 @@ import { z } from "zod";
 import {
   ApplicationDashboardLayout,
   ApplicationWeddingDetailsSettings,
-  DashboardUserData,
-  DashboardWeddingData,
   WeddingDetailsData,
   DomainSettings,
 } from "component-shelf";
+import { fetchShell } from "fetch-shelf";
+import {
+  transformShellToUserData,
+  transformShellToWeddingData,
+} from "transformer-shelf";
 
 const weddingDetailsSchema = z.object({
   displayName: z.string(),
@@ -65,27 +68,6 @@ async function fetchSettings(): Promise<SettingsResponse> {
   }
   const data = await res.json();
   return settingsResponseSchema.parse(data);
-}
-
-function transformToUserData(response: SettingsResponse): DashboardUserData {
-  return {
-    fullName: response.user.fullName,
-    email: response.user.email,
-    imageUrl: response.user.imageUrl,
-    initials: response.user.initials,
-    subscriptionPlan: response.subscriptionPlan,
-  };
-}
-
-function transformToWeddingData(
-  response: SettingsResponse
-): DashboardWeddingData {
-  return {
-    displayName: response.wedding.displayName,
-    nameA: response.wedding.nameA,
-    nameB: response.wedding.nameB,
-    eventDate: response.wedding.eventDate,
-  };
 }
 
 function transformToWeddingDetailsData(
@@ -188,6 +170,12 @@ export default function SettingsPage() {
   const router = useRouter();
   const { signOut } = useClerk();
   const queryClient = useQueryClient();
+
+  const { data: shellData } = useQuery({
+    queryKey: ["shell"],
+    queryFn: fetchShell,
+  });
+
   const { data, isLoading } = useQuery({
     queryKey: ["settings"],
     queryFn: fetchSettings,
@@ -227,8 +215,12 @@ export default function SettingsPage() {
     updateCustomDomainMutation.isPending ||
     deleteCustomDomainMutation.isPending;
 
-  const userData = data ? transformToUserData(data) : undefined;
-  const weddingData = data ? transformToWeddingData(data) : undefined;
+  const userData = shellData
+    ? transformShellToUserData(shellData)
+    : undefined;
+  const weddingData = shellData
+    ? transformShellToWeddingData(shellData)
+    : undefined;
   const weddingDetails = data ? transformToWeddingDetailsData(data) : undefined;
   const domainSettings = data ? transformToDomainSettings(data) : undefined;
 
