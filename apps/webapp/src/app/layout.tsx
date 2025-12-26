@@ -1,9 +1,21 @@
 import "style-shelf/tailwind";
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
+import { DM_Sans, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { Toaster } from "component-shelf/ui";
+import clsx from "clsx";
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://marriednext.com"),
@@ -31,7 +43,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className="antialiased">
+        <body className={clsx(dmSans.variable, playfairDisplay.variable, "antialiased")}>
           <QueryProvider>
             <div className="mx-auto">{children}</div>
           </QueryProvider>
