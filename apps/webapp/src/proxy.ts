@@ -82,6 +82,8 @@ export default clerkMiddleware(async (auth, req) => {
     const onboardingUrl = new URL("/engaged/onboarding", req.url);
     return NextResponse.redirect(onboardingUrl);
   }
+
+  return NextResponse.next();
 });
 
 export const config = {
