@@ -7,7 +7,8 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./shell": "./src/shell.ts"
+    "./shell": "./src/shell.ts",
+    "./home": "./src/home.ts"
   },
   "dependencies": {
     "types-shelf": "workspace:*",

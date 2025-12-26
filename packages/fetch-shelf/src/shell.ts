@@ -9,4 +9,3 @@ export async function fetchShell(): Promise<ShellResponse> {
   const data = await res.json();
   return shellResponseSchema.parse(data);
 }
-

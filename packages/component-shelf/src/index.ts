@@ -23,10 +23,8 @@ export type {
 } from "./components/application/dashboard/DashboardLayout";
 
 export { ApplicationDashboardOverview } from "./components/application/dashboard/DashboardOverview";
-export type {
-  HomeStatsData,
-  ApplicationDashboardOverviewProps,
-} from "./components/application/dashboard/DashboardOverview";
+export type { ApplicationDashboardOverviewProps } from "./components/application/dashboard/DashboardOverview";
+export type { HomeStatsData } from "types-shelf/home";
 
 export { ApplicationGuestListManager } from "./components/application/dashboard/GuestListManager";
 export type {

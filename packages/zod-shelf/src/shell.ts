@@ -17,4 +17,3 @@ export const shellResponseSchema = z.object({
   }),
   subscriptionPlan: z.string(),
 }) satisfies z.ZodType<ShellResponse>;
-

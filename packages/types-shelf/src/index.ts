@@ -5,3 +5,4 @@ export type {
   DashboardUserData,
   DashboardWeddingData,
 } from "./shell";
+export type { HomeStatsData, HomeStatsResponse } from "./home";
