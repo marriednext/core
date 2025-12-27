@@ -138,12 +138,33 @@ export async function POST(req: NextRequest) {
     });
 
     const client = await clerkClient();
-    await client.users.updateUserMetadata(userId, {
-      publicMetadata: {
-        onboardingComplete: true,
-        weddingId: newWedding.id,
-        role: "spouse" as Role,
-      },
+    const metadataToSet = {
+      onboardingComplete: true,
+      weddingId: newWedding.id,
+      role: "spouse" as Role,
+    };
+
+    console.log("[Onboarding API] About to update Clerk metadata:", {
+      userId,
+      metadataToSet,
+    });
+    Sentry.addBreadcrumb({
+      category: "onboarding",
+      message: "About to update Clerk publicMetadata",
+      level: "info",
+      data: { userId, metadataToSet },
+    });
+
+    const updatedUser = await client.users.updateUserMetadata(userId, {
+      publicMetadata: metadataToSet,
+    });
+
+    console.log("[Onboarding API] Clerk metadata updated. New publicMetadata:", updatedUser.publicMetadata);
+    Sentry.addBreadcrumb({
+      category: "onboarding",
+      message: "Clerk publicMetadata updated successfully",
+      level: "info",
+      data: { userId, newMetadata: updatedUser.publicMetadata },
     });
 
     return NextResponse.json(

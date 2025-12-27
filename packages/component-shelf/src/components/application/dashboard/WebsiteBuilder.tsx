@@ -47,6 +47,7 @@ import {
   PanelLeftClose,
   ChevronRight,
   X,
+  ExternalLinkIcon,
 } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import {
@@ -824,8 +825,7 @@ export function ApplicationWebsiteBuilder({
                                     asChild
                                   >
                                     <a href="/engaged/settings#date-time">
-                                      Set Date
-                                      <ChevronRight className="h-3 w-3 ml-1" />
+                                      <ExternalLinkIcon className="h-3 w-3" />
                                     </a>
                                   </Button>
                                 </div>
