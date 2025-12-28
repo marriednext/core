@@ -12,63 +12,46 @@ import { FaqSection } from "./faq-section";
 import { RegistrySection } from "./registry-section";
 import { FooterSection } from "./footer-section";
 import { ScrollAnimationProvider } from "./scroll-animation-provider";
+import type { TuscanBloomProps } from "./types";
 
-// Wedding data - customize these fields
-const weddingData = {
-  couple: {
-    partner1: "Elena",
-    partner2: "Marco",
-  },
-  date: new Date("2025-09-20T16:00:00"),
-  location: {
-    fieldLocationName: "Villa di Maiano",
-    fieldPreferredLocationAddressLine1: "Via Benedetto da Maiano, 11",
-    fieldPreferredLocationAddressLine2: "",
-    fieldPreferredLocationCity: "Fiesole",
-    fieldPreferredLocationState: "Tuscany",
-    fieldPreferredLocationZipCode: "50014",
-    fieldPreferredLocationCountry: "Italy",
-  },
-  ceremony: {
-    time: "4:00 PM",
-    venue: "The Olive Grove",
-  },
-  reception: {
-    time: "6:30 PM",
-    venue: "The Terrace Gardens",
-  },
-};
-
-export function TuscanBloom() {
+export function TuscanBloom({
+  partner1,
+  partner2,
+  date,
+  location,
+  ceremony,
+  reception,
+  Image,
+  Link,
+}: TuscanBloomProps) {
   return (
     <ScrollAnimationProvider>
       <main className="relative">
         <StickyNav />
         <HeroSection
-          partner1={weddingData.couple.partner1}
-          partner2={weddingData.couple.partner2}
-          date={weddingData.date}
-          location={weddingData.location}
+          partner1={partner1}
+          partner2={partner2}
+          date={date}
+          location={location}
+          Image={Image}
         />
-        <CountdownSection targetDate={weddingData.date} />
+        <CountdownSection targetDate={date} />
         <OurStorySection
-          partner1={weddingData.couple.partner1}
-          partner2={weddingData.couple.partner2}
+          partner1={partner1}
+          partner2={partner2}
+          Image={Image}
         />
         <EventDetailsSection
-          location={weddingData.location}
-          ceremony={weddingData.ceremony}
-          reception={weddingData.reception}
-          date={weddingData.date}
+          location={location}
+          ceremony={ceremony}
+          reception={reception}
+          date={date}
         />
-        <GallerySection />
+        <GallerySection Image={Image} />
         <RsvpSection />
         <FaqSection />
         <RegistrySection />
-        <FooterSection
-          partner1={weddingData.couple.partner1}
-          partner2={weddingData.couple.partner2}
-        />
+        <FooterSection partner1={partner1} partner2={partner2} Link={Link} />
       </main>
     </ScrollAnimationProvider>
   );

@@ -4,6 +4,12 @@ export type { GoogleMapsTypes } from "./stories/GoogleMaps/GoogleMaps.types";
 
 export { LisasTheme } from "./components/theme/lisastheme/LisasTheme";
 export { TuscanBloom } from "./components/theme/tuscanbloom/tuscanbloom";
+export type {
+  TuscanBloomProps,
+  TuscanBloomLocation,
+  TuscanBloomCeremony,
+  TuscanBloomReception,
+} from "./components/theme/tuscanbloom/types";
 
 export {
   mergeSectionsWithDefaults,

@@ -4,6 +4,8 @@ import { useMemo, useEffect, useCallback } from "react";
 import { useWebsiteBuilderStore } from "../../../stores/websiteBuilderStore";
 import { LisasTheme, mergeSectionsWithDefaults, type WebsiteSection } from "component-shelf";
 import { postToParent, isBuilderMessage } from "../../../lib/component-shelf/builderMessages";
+import { mapWeddingDataToLisasThemeProps } from "@/components/theme/themes/lisastheme/mapper";
+import type { WeddingData } from "@/lib/wedding/types";
 
 export type WebsiteBuilderPhoto = {
   id: string;
@@ -36,8 +38,6 @@ export type WebsiteBuilderPreviewProps = {
   isLoading?: boolean;
 };
 
-const THEME_ID = "lisastheme";
-
 export function WebsiteBuilderPreview({
   data,
   isLoading = false,
@@ -50,25 +50,32 @@ export function WebsiteBuilderPreview({
     [data?.websiteSections]
   );
 
-  const content = useMemo(() => {
-    const heroPhoto = data?.photos?.find(
-      (p) => p.photoType === "hero" && p.themeId === THEME_ID
-    );
-    const storyPhoto = data?.photos?.find(
-      (p) => p.photoType === "story" && p.themeId === THEME_ID
-    );
-    const galleryPhotos =
-      data?.photos
-        ?.filter((p) => p.photoType === "gallery" && p.themeId === THEME_ID)
-        ?.sort((a, b) => a.displayOrder - b.displayOrder)
-        ?.map((p) => p.blobUrl) || [];
-
-    return {
-      heroImage: heroPhoto?.blobUrl || "",
-      ourStoryImage: storyPhoto?.blobUrl || "",
-      galleryImages: galleryPhotos,
+  const themeProps = useMemo(() => {
+    if (!data) return null;
+    const weddingData: WeddingData = {
+      id: "",
+      subdomain: data.subdomain ?? null,
+      customDomain: data.customDomain ?? null,
+      createdAt: "",
+      updatedAt: "",
+      fieldDisplayName: null,
+      fieldLocationName: data.fieldLocationName,
+      fieldLocationAddress: data.fieldLocationAddress,
+      fieldEventDate: data.fieldEventDate,
+      fieldEventTime: data.fieldEventTime,
+      fieldMapsEmbedUrl: null,
+      fieldMapsShareUrl: data.fieldMapsShareUrl,
+      fieldQuestionsAndAnswers: null,
+      fieldOurStory: null,
+      fieldNameA: data.fieldNameA,
+      fieldNameB: data.fieldNameB,
+      controlRsvpNameFormat: "FIRST_NAME_ONLY",
+      photos: data.photos,
+      websiteSections: data.websiteSections,
+      websiteLabels: data.websiteLabels,
     };
-  }, [data?.photos]);
+    return mapWeddingDataToLisasThemeProps(weddingData);
+  }, [data]);
 
   useEffect(() => {
     if (data?.websiteLabels) {
@@ -121,7 +128,7 @@ export function WebsiteBuilderPreview({
     );
   }
 
-  if (!data) {
+  if (!data || !themeProps) {
     return (
       <div className="flex items-center justify-center min-h-[600px]">
         <p className="text-muted-foreground">No website data available</p>
@@ -131,18 +138,7 @@ export function WebsiteBuilderPreview({
 
   return (
     <LisasTheme
-      fieldNameA={data.fieldNameA}
-      fieldNameB={data.fieldNameB}
-      fieldLocationName={data.fieldLocationName}
-      fieldLocationAddress={data.fieldLocationAddress}
-      fieldEventDate={data.fieldEventDate}
-      fieldEventTime={data.fieldEventTime}
-      fieldMapsShareUrl={data.fieldMapsShareUrl}
-      heroImageUrl={content.heroImage || undefined}
-      ourStoryImageUrl={content.ourStoryImage || undefined}
-      galleryImages={
-        content.galleryImages.length > 0 ? content.galleryImages : undefined
-      }
+      {...themeProps}
       websiteSections={sections}
       websiteLabels={pendingLabels}
       editable={true}
