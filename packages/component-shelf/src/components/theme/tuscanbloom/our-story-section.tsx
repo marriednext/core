@@ -3,7 +3,7 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import type { ApplicationImageComponent } from "../../application/image-types";
+import type { ApplicationImageComponent } from "../../../types/image-types";
 import artGalleryImage from "../../../assets/couple-meeting-at-art-gallery-vintage-romantic.jpg";
 import amalfiImage from "../../../assets/couple-on-italian-coastline-amalfi-romantic.jpg";
 import proposalImage from "../../../assets/romantic-proposal-olive-grove-lanterns-evening.jpg";

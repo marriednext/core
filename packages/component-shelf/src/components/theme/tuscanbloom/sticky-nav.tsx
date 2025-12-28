@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Menu, X } from "lucide-react";
-import type { ApplicationLinkComponent } from "../../application/link-types";
+import type { ApplicationLinkComponent } from "../../../types/link-types";
 
 gsap.registerPlugin(ScrollTrigger);
 

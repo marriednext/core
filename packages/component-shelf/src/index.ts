@@ -42,5 +42,5 @@ export {
   SeparatorVine,
 } from "./components/ui/separator";
 
-export type { ApplicationLinkComponent, ApplicationLinkProps } from "./components/application/link-types";
-export type { ApplicationImageComponent, ApplicationImageProps } from "./components/application/image-types";
+export type { ApplicationLinkComponent, ApplicationLinkProps } from "./types/link-types";
+export type { ApplicationImageComponent, ApplicationImageProps } from "./types/image-types";

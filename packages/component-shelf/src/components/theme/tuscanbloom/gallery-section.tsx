@@ -3,7 +3,7 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import type { ApplicationImageComponent } from "../../application/image-types";
+import type { ApplicationImageComponent } from "../../../types/image-types";
 import laughingImage from "../../../assets/couple-laughing-together-romantic-portrait.jpg";
 import vineyardImage from "../../../assets/couple-walking-through-vineyard-sunset.jpg";
 import ringImage from "../../../assets/couple-hands-holding-engagement-ring-detail.jpg";

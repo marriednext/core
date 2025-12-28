@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import type { ApplicationImageComponent } from "../../application/image-types";
+import type { ApplicationImageComponent } from "../../../types/image-types";
 import heroImage from "../../../assets/romantic-tuscan-vineyard-landscape-golden-hour-oli.jpg";
 
 interface HeroSectionProps {

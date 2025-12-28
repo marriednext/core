@@ -5,4 +5,3 @@ export type ApplicationLinkProps = ComponentPropsWithoutRef<"a"> & {
 };
 
 export type ApplicationLinkComponent = ElementType<ApplicationLinkProps>;
-
