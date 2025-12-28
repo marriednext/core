@@ -1,5 +1,5 @@
-import type { HomeStatsResponse } from "types-shelf/home";
-import { homeStatsResponseSchema } from "zod-shelf/home";
+import type { HomeStatsResponse } from "@/lib/types/home";
+import { homeStatsResponseSchema } from "@/lib/schemas/home";
 
 export async function fetchHomeStats(): Promise<HomeStatsResponse> {
   const res = await fetch("/api/v2/engaged/home-stats");

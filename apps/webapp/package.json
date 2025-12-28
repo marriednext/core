@@ -89,10 +89,8 @@
     "style-shelf": "workspace:*",
     "tailwind-merge": "catalog:",
     "three": "0.180.0",
-    "types-shelf": "workspace:*",
     "vaul": "catalog:",
     "zod": "catalog:",
-    "zod-shelf": "workspace:*",
     "zustand": "5.0.8"
   },
   "devDependencies": {

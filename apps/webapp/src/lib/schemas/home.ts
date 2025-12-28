@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { HomeStatsResponse } from "types-shelf/home";
+import type { HomeStatsResponse } from "@/lib/types/home";
 
 export const homeStatsResponseSchema = z.object({
   totalGuests: z.number(),

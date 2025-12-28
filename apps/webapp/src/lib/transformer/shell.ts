@@ -2,7 +2,7 @@ import type {
   ShellResponse,
   DashboardUserData,
   DashboardWeddingData,
-} from "types-shelf/shell";
+} from "@/lib/types/shell";
 
 export function transformShellToUserData(
   response: ShellResponse

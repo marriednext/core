@@ -33,3 +33,4 @@ export type DashboardWeddingData = {
   nameB: string;
   eventDate: string | null;
 };
+

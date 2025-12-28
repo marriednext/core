@@ -437,18 +437,12 @@ importers:
       three:
         specifier: 0.180.0
         version: 0.180.0
-      types-shelf:
-        specifier: workspace:*
-        version: link:../../packages/types-shelf
       vaul:
         specifier: 'catalog:'
         version: 1.1.2(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       zod:
         specifier: 'catalog:'
         version: 4.1.12
-      zod-shelf:
-        specifier: workspace:*
-        version: link:../../packages/zod-shelf
       zustand:
         specifier: 5.0.8
         version: 5.0.8(@types/react@19.2.2)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
@@ -696,9 +690,6 @@ importers:
       tailwindcss-animate:
         specifier: 'catalog:'
         version: 1.0.7(tailwindcss@4.1.17)
-      types-shelf:
-        specifier: workspace:*
-        version: link:../types-shelf
       vaul:
         specifier: 'catalog:'
         version: 1.1.2(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -805,37 +796,6 @@ importers:
         version: 1.4.0
 
   packages/tsconfig-shelf: {}
-
-  packages/types-shelf:
-    devDependencies:
-      '@marriednext/tsconfig-shelf':
-        specifier: workspace:*
-        version: link:../tsconfig-shelf
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.10.0
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-
-  packages/zod-shelf:
-    dependencies:
-      types-shelf:
-        specifier: workspace:*
-        version: link:../types-shelf
-      zod:
-        specifier: 'catalog:'
-        version: 4.1.12
-    devDependencies:
-      '@marriednext/tsconfig-shelf':
-        specifier: workspace:*
-        version: link:../tsconfig-shelf
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.10.0
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
 packages:
 

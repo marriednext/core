@@ -20,9 +20,6 @@
       "dependsOn": ["^build"],
       "env": []
     },
-    "zod-shelf#build": {
-      "dependsOn": ["types-shelf#build"]
-    },
     "check-types": {
       "dependsOn": ["^check-types"]
     },

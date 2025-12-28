@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { ShellResponse } from "types-shelf/shell";
+import type { ShellResponse } from "@/lib/types/shell";
 
 export const shellResponseSchema = z.object({
   user: z.object({
@@ -17,3 +17,4 @@ export const shellResponseSchema = z.object({
   }),
   subscriptionPlan: z.string(),
 }) satisfies z.ZodType<ShellResponse>;
+

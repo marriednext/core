@@ -34,3 +34,4 @@ export type HomeStatsResponse = {
   customDomain: string | null;
   websiteTemplate: string;
 };
+

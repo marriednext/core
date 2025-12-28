@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { HomeStatsData } from "types-shelf/home";
+import type { HomeStatsData } from "@/lib/types/home";
 import {
   Card,
   CardContent,
@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { RsvpProgress } from "./RsvpProgress";
 
-export type { HomeStatsData } from "types-shelf/home";
+export type { HomeStatsData } from "@/lib/types/home";
 
 export interface ApplicationDashboardOverviewProps {
   data?: HomeStatsData;

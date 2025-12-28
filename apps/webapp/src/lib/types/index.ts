@@ -6,3 +6,4 @@ export type {
   DashboardWeddingData,
 } from "./shell";
 export type { HomeStatsData, HomeStatsResponse } from "./home";
+

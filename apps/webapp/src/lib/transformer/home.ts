@@ -1,5 +1,5 @@
-import type { HomeStatsResponse, HomeStatsData } from "types-shelf/home";
-import type { ShellResponse } from "types-shelf/shell";
+import type { HomeStatsResponse, HomeStatsData } from "@/lib/types/home";
+import type { ShellResponse } from "@/lib/types/shell";
 
 export function transformHomeStatsToOverviewData(
   response: HomeStatsResponse,
