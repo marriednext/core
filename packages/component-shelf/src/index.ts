@@ -13,20 +13,6 @@ export {
 } from "./components/theme/lisastheme/sections";
 
 export {
-  postToParent,
-  postToIframe,
-  isBuilderMessage,
-  BUILDER_MESSAGE_SOURCE,
-} from "./lib/builderMessages";
-export type {
-  BuilderMessage,
-  BuilderMessageType,
-  SectionClickedPayload,
-  LabelClickedPayload,
-  UpdateLabelPayload,
-} from "./lib/builderMessages";
-
-export {
   Separator,
   SeparatorHearts,
   SeparatorDiamonds,
@@ -42,5 +28,11 @@ export {
   SeparatorVine,
 } from "./components/ui/separator";
 
-export type { ApplicationLinkComponent, ApplicationLinkProps } from "./types/link-types";
-export type { ApplicationImageComponent, ApplicationImageProps } from "./types/image-types";
+export type {
+  ApplicationLinkComponent,
+  ApplicationLinkProps,
+} from "./types/link-types";
+export type {
+  ApplicationImageComponent,
+  ApplicationImageProps,
+} from "./types/image-types";
