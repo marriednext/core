@@ -105,9 +105,6 @@ catalogs:
     '@types/react-dom':
       specifier: 19.2.2
       version: 19.2.2
-    '@vitest/browser':
-      specifier: 4.0.9
-      version: 4.0.9
     '@vitest/coverage-v8':
       specifier: 4.0.9
       version: 4.0.9
@@ -123,15 +120,6 @@ catalogs:
     date-fns:
       specifier: 4.1.0
       version: 4.1.0
-    dotenv:
-      specifier: 17.2.2
-      version: 17.2.2
-    drizzle-kit:
-      specifier: 0.31.4
-      version: 0.31.4
-    drizzle-orm:
-      specifier: 0.44.5
-      version: 0.44.5
     embla-carousel-react:
       specifier: 8.5.1
       version: 8.5.1
@@ -159,9 +147,6 @@ catalogs:
     postcss-mixins:
       specifier: 12.1.2
       version: 12.1.2
-    postgres:
-      specifier: 3.4.7
-      version: 3.4.7
     react:
       specifier: 19.2.3
       version: 19.2.3
@@ -366,10 +351,10 @@ importers:
         specifier: 'catalog:'
         version: 4.1.0
       drizzle-kit:
-        specifier: 'catalog:'
+        specifier: 0.31.4
         version: 0.31.4
       drizzle-orm:
-        specifier: 'catalog:'
+        specifier: 0.44.5
         version: 0.44.5(@neondatabase/serverless@1.0.1)(@opentelemetry/api@1.9.0)(@types/pg@8.15.6)(@upstash/redis@1.35.6)(postgres@3.4.7)
       embla-carousel-react:
         specifier: 'catalog:'
@@ -393,7 +378,7 @@ importers:
         specifier: 'catalog:'
         version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       postgres:
-        specifier: 'catalog:'
+        specifier: 3.4.7
         version: 3.4.7
       react:
         specifier: 'catalog:'
@@ -487,7 +472,7 @@ importers:
         specifier: 0.180.0
         version: 0.180.0
       '@vitest/browser':
-        specifier: 'catalog:'
+        specifier: 4.0.9
         version: 4.0.9(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.1)(yaml@2.8.1))(vitest@4.0.9)
       '@vitest/browser-playwright':
         specifier: 4.0.14
@@ -496,7 +481,7 @@ importers:
         specifier: 'catalog:'
         version: 4.0.9(@vitest/browser@4.0.9(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.1)(yaml@2.8.1))(vitest@4.0.9))(vitest@4.0.9)
       dotenv:
-        specifier: 'catalog:'
+        specifier: 17.2.2
         version: 17.2.2
       eslint:
         specifier: 'catalog:'
@@ -794,8 +779,6 @@ importers:
       tw-animate-css:
         specifier: 'catalog:'
         version: 1.4.0
-
-  packages/tsconfig-shelf: {}
 
 packages:
 
