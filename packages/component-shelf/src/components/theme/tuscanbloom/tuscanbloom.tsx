@@ -39,7 +39,7 @@ const weddingData = {
   },
 };
 
-export default function WeddingPage() {
+export function TuscanBloom() {
   return (
     <ScrollAnimationProvider>
       <main className="relative">
