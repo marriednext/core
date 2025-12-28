@@ -18,7 +18,7 @@ import {
   EditInvitationDialogInvitation,
   RsvpLookupMethod,
 } from "component-shelf";
-import { fetchShell } from "fetch-shelf";
+import { fetchShell } from "@/lib/fetch";
 import {
   transformShellToUserData,
   transformShellToWeddingData,
@@ -221,9 +221,7 @@ export default function GuestsPage() {
     },
   });
 
-  const userData = shellData
-    ? transformShellToUserData(shellData)
-    : undefined;
+  const userData = shellData ? transformShellToUserData(shellData) : undefined;
   const weddingData = shellData
     ? transformShellToWeddingData(shellData)
     : undefined;

@@ -8,7 +8,7 @@ import {
   ApplicationDashboardLayout,
   ApplicationDashboardOverview,
 } from "component-shelf";
-import { fetchShell, fetchHomeStats } from "fetch-shelf";
+import { fetchShell, fetchHomeStats } from "@/lib/fetch";
 import {
   transformShellToUserData,
   transformShellToWeddingData,

@@ -1,5 +1,0 @@
-{
-  "extends": "@marriednext/tsconfig-shelf/library-dom.json",
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
-}

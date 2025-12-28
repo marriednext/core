@@ -9,4 +9,3 @@ export async function fetchHomeStats(): Promise<HomeStatsResponse> {
   const data = await res.json();
   return homeStatsResponseSchema.parse(data);
 }
-

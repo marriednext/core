@@ -11,7 +11,7 @@ import {
   WeddingDetailsData,
   DomainSettings,
 } from "component-shelf";
-import { fetchShell } from "fetch-shelf";
+import { fetchShell } from "@/lib/fetch";
 import {
   transformShellToUserData,
   transformShellToWeddingData,
@@ -215,9 +215,7 @@ export default function SettingsPage() {
     updateCustomDomainMutation.isPending ||
     deleteCustomDomainMutation.isPending;
 
-  const userData = shellData
-    ? transformShellToUserData(shellData)
-    : undefined;
+  const userData = shellData ? transformShellToUserData(shellData) : undefined;
   const weddingData = shellData
     ? transformShellToWeddingData(shellData)
     : undefined;

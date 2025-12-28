@@ -23,9 +23,6 @@
     "zod-shelf#build": {
       "dependsOn": ["types-shelf#build"]
     },
-    "fetch-shelf#build": {
-      "dependsOn": ["types-shelf#build", "zod-shelf#build"]
-    },
     "transformer-shelf#build": {
       "dependsOn": ["types-shelf#build"]
     },

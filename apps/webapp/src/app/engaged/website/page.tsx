@@ -10,7 +10,7 @@ import {
   ApplicationWebsiteBuilder,
   WebsiteBuilderData,
 } from "component-shelf";
-import { fetchShell } from "fetch-shelf";
+import { fetchShell } from "@/lib/fetch";
 import {
   transformShellToUserData,
   transformShellToWeddingData,
