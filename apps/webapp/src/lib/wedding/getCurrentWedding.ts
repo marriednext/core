@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/database/drizzle";
-import { wedding, weddingUsers } from "orm-shelf/schema";
+import { wedding, weddingUsers } from "@/database/schema";
 import { eq } from "drizzle-orm";
 
 export async function getCurrentWedding() {

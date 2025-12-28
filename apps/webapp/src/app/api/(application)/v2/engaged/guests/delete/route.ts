@@ -3,7 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/database/drizzle";
 import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
 import { z } from "zod";
-import { guest, invitation } from "orm-shelf/schema";
+import { guest, invitation } from "@/database/schema";
 import { and, eq } from "drizzle-orm";
 
 const deleteInvitationSchema = z.object({

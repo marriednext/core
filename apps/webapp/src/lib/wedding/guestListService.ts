@@ -3,7 +3,7 @@ import {
   getInvitationsWithGuests,
   getInvitationsCount,
 } from "@/database/drizzle";
-import type { DbInvitationWithGuests, DbGuest } from "orm-shelf/types";
+import type { DbInvitationWithGuests, DbGuest } from "@/database/types";
 
 export class DatabaseError extends Error {
   constructor(message: string, public cause?: unknown) {

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/database/drizzle";
-import { guest, invitation } from "orm-shelf/schema";
+import { guest, invitation } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import { getWeddingFromRequest } from "@/lib/wedding/getWeddingFromRequest";
 

@@ -326,9 +326,6 @@ importers:
       next-themes:
         specifier: 'catalog:'
         version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      orm-shelf:
-        specifier: workspace:*
-        version: link:../../packages/orm-shelf
       postgres:
         specifier: 'catalog:'
         version: 3.4.7
@@ -585,9 +582,6 @@ importers:
       next-themes:
         specifier: 'catalog:'
         version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      orm-shelf:
-        specifier: workspace:*
-        version: link:../orm-shelf
       postcss:
         specifier: 'catalog:'
         version: 8.5.6
@@ -725,22 +719,6 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
-
-  packages/orm-shelf:
-    dependencies:
-      drizzle-kit:
-        specifier: 'catalog:'
-        version: 0.31.4
-      drizzle-orm:
-        specifier: 'catalog:'
-        version: 0.44.5(@neondatabase/serverless@1.0.1)(@opentelemetry/api@1.9.0)(@types/pg@8.15.6)(@upstash/redis@1.35.6)(postgres@3.4.7)
-      postgres:
-        specifier: 'catalog:'
-        version: 3.4.7
-    devDependencies:
-      dotenv:
-        specifier: 'catalog:'
-        version: 17.2.2
 
   packages/style-shelf:
     dependencies:

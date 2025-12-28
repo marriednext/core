@@ -1,14 +1,14 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import { eq, count, and, sql } from "drizzle-orm";
-import * as schema from "orm-shelf/schema";
-import { invitation, guest } from "orm-shelf/schema";
+import * as schema from "./schema";
+import { invitation, guest } from "./schema";
 import {
   guestRelations,
   weddingRelations,
   invitationRelations,
   weddingUsersRelations,
-} from "orm-shelf/relations";
-import type { DbGuest } from "orm-shelf/types";
+} from "./relations";
+import type { DbGuest } from "./types";
 import postgres from "postgres";
 
 const { DATABASE_URL } = process.env;

@@ -78,7 +78,6 @@
     "vaul": "catalog:",
     "zod": "catalog:",
     "zustand": "5.0.8",
-    "orm-shelf": "workspace:*",
     "types-shelf": "workspace:*"
   },
   "devDependencies": {

@@ -4,7 +4,7 @@ import { db, getInvitationsWithGuests } from "@/database/drizzle";
 import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
 import { buildSiteUrl, getInitials } from "@/lib/utils/site";
 import { z } from "zod";
-import { guest, invitation } from "orm-shelf/schema";
+import { guest, invitation } from "@/database/schema";
 import { and, eq, inArray } from "drizzle-orm";
 
 type GuestResponse = {

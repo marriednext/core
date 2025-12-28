@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/database/drizzle";
-import { wedding } from "orm-shelf/schema";
+import { wedding } from "@/database/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
 import {

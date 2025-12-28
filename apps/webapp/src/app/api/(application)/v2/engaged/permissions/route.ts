@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentUser, clerkClient, Invitation } from "@clerk/nextjs/server";
 import { db } from "@/database/drizzle";
-import { collaboratorInvitations, weddingUsers } from "orm-shelf/schema";
+import { collaboratorInvitations, weddingUsers } from "@/database/schema";
 import { eq, and } from "drizzle-orm";
 import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
 import { getInitials } from "@/lib/utils/site";

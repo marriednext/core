@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/database/drizzle";
-import { getShellWeddingData, type ShellApiResponse } from "orm-shelf/queries";
+import {
+  getShellWeddingData,
+  type ShellApiResponse,
+} from "@/lib/queries/engaged-shell";
 import { getInitials } from "@/lib/utils/site";
 import * as Sentry from "@sentry/nextjs";
 

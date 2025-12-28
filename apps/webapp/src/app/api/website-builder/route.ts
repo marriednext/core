@@ -4,7 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
 import { getInitials } from "@/lib/utils/site";
 import { db } from "@/database/drizzle";
-import { wedding, weddingPhotos } from "orm-shelf/schema";
+import { wedding, weddingPhotos } from "@/database/schema";
 import { eq, and, asc } from "drizzle-orm";
 import { z } from "zod";
 import { invalidateWeddingCache } from "@/lib/wedding/cache";

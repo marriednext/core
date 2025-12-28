@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { wedding, weddingUsers } from "../../drizzle/schema";
+import { wedding, weddingUsers } from "@/database/schema";
 
 export type ShellQueryInput = {
   clerkUserId: string;

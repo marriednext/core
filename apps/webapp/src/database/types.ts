@@ -5,7 +5,7 @@ import {
   weddingUsers,
   seatingTable,
   seatAssignment,
-} from "./drizzle/schema";
+} from "./schema";
 
 export type DbGuest = InferSelectModel<typeof guest>;
 export type DbInvitation = InferSelectModel<typeof invitation>;
