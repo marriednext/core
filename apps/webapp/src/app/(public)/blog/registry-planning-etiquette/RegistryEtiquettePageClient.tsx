@@ -5,7 +5,7 @@ import {
   ApplicationNavbar,
   ApplicationFooter,
   ApplicationRegistryEtiquetteArticle,
-} from "component-shelf";
+} from "@/components/application";
 
 export function RegistryEtiquettePageClient() {
   const { isSignedIn } = useUser();

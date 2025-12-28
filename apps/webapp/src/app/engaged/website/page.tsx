@@ -8,8 +8,8 @@ import { z } from "zod";
 import {
   ApplicationDashboardLayout,
   ApplicationWebsiteBuilder,
-  WebsiteBuilderData,
-} from "component-shelf";
+  type WebsiteBuilderData,
+} from "@/components/application";
 import { fetchShell } from "@/lib/fetch";
 import {
   transformShellToUserData,

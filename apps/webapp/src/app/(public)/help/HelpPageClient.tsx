@@ -1,9 +1,11 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { ApplicationNavbar } from "component-shelf";
-import { ApplicationFooter } from "component-shelf";
-import { ApplicationHelpCenter } from "component-shelf";
+import {
+  ApplicationNavbar,
+  ApplicationFooter,
+  ApplicationHelpCenter,
+} from "@/components/application";
 
 export function HelpPageClient() {
   const { isSignedIn } = useUser();

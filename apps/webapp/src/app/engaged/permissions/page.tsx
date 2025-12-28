@@ -9,7 +9,7 @@ import {
   ApplicationDashboardLayout,
   ApplicationTeamPermissions,
   type Role,
-} from "component-shelf";
+} from "@/components/application";
 import { fetchShell } from "@/lib/fetch";
 import {
   transformShellToUserData,

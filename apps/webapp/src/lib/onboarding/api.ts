@@ -1,4 +1,4 @@
-import type { ApplicationOnboardingFormData } from "component-shelf";
+import type { ApplicationOnboardingFormData } from "@/components/application";
 
 export async function checkSubdomainAvailability(
   subdomain: string

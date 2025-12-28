@@ -1,6 +1,6 @@
 "use client";
 
-import { WebsiteBuilderPreview } from "component-shelf";
+import { WebsiteBuilderPreview } from "@/components/application";
 import { useWeddingData } from "@/contexts/WeddingDataContext";
 
 export default function BuilderPreviewPage() {

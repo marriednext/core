@@ -5,7 +5,7 @@ import {
   ApplicationNavbar,
   ApplicationFooter,
   ApplicationConnectDomainArticle,
-} from "component-shelf";
+} from "@/components/application";
 
 export function ConnectDomainPageClient() {
   const { isSignedIn } = useUser();

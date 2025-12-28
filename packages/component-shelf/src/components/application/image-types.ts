@@ -10,3 +10,4 @@ export type ApplicationImageProps = ComponentPropsWithoutRef<"img"> & {
 };
 
 export type ApplicationImageComponent = ElementType<ApplicationImageProps>;
+

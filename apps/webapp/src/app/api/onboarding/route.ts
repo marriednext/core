@@ -6,7 +6,7 @@ import { wedding, weddingUsers } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import { updateWeddingCache } from "@/lib/wedding/cache";
 import { subdomainSchema } from "@/lib/utils/site";
-import { Role } from "component-shelf";
+import type { Role } from "@/components/application";
 import * as Sentry from "@sentry/nextjs";
 
 const onboardingSchema = z.object({

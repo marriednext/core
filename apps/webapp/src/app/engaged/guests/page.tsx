@@ -9,15 +9,17 @@ import { toast } from "sonner";
 import {
   ApplicationDashboardLayout,
   ApplicationGuestListManager,
-  GuestListInvitation,
-  GuestListStats,
-  AddInvitationPayload,
-  useAddInvitationDialogStore,
+  type GuestListInvitation,
+  type GuestListStats,
+  type AddInvitationPayload,
   EditInvitationDialog,
+  type RsvpLookupMethod,
+} from "@/components/application";
+import {
+  useAddInvitationDialogStore,
   useEditInvitationDialogStore,
-  EditInvitationDialogInvitation,
-  RsvpLookupMethod,
-} from "component-shelf";
+  type EditInvitationDialogInvitation,
+} from "@/stores";
 import { fetchShell } from "@/lib/fetch";
 import {
   transformShellToUserData,

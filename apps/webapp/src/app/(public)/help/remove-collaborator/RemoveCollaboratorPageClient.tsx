@@ -5,7 +5,7 @@ import {
   ApplicationNavbar,
   ApplicationFooter,
   ApplicationRemoveCollaboratorArticle,
-} from "component-shelf";
+} from "@/components/application";
 
 export function RemoveCollaboratorPageClient() {
   const { isSignedIn } = useUser();

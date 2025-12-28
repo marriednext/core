@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useClerk } from "@clerk/nextjs";
-import { ApplicationDashboardLayout, ComingSoonOverlay } from "component-shelf";
+import { ApplicationDashboardLayout, ComingSoonOverlay } from "@/components/application";
 import { fetchShell } from "@/lib/fetch";
 import {
   transformShellToUserData,

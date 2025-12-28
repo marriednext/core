@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
-import { LandingPage } from "component-shelf";
+import { LandingPage } from "@/components/application";
 
 export default function Home() {
   const { isSignedIn } = useUser();

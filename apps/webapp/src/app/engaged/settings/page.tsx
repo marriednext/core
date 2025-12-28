@@ -8,9 +8,9 @@ import { z } from "zod";
 import {
   ApplicationDashboardLayout,
   ApplicationWeddingDetailsSettings,
-  WeddingDetailsData,
-  DomainSettings,
-} from "component-shelf";
+  type WeddingDetailsData,
+  type DomainSettings,
+} from "@/components/application";
 import { fetchShell } from "@/lib/fetch";
 import {
   transformShellToUserData,

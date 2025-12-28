@@ -5,7 +5,7 @@ import {
   ApplicationNavbar,
   ApplicationFooter,
   ApplicationBlogHome,
-} from "component-shelf";
+} from "@/components/application";
 
 export function BlogPageClient() {
   const { isSignedIn } = useUser();

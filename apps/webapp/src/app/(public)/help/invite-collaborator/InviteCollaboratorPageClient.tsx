@@ -5,7 +5,7 @@ import {
   ApplicationNavbar,
   ApplicationFooter,
   ApplicationInviteCollaboratorArticle,
-} from "component-shelf";
+} from "@/components/application";
 
 export function InviteCollaboratorPageClient() {
   const { isSignedIn } = useUser();

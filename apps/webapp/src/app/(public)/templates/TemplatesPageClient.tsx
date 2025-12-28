@@ -7,7 +7,7 @@ import {
   ApplicationTemplatesHero,
   ApplicationTemplatesGrid,
   ApplicationTemplatesCta,
-} from "component-shelf";
+} from "@/components/application";
 
 export function TemplatesPageClient() {
   const { isSignedIn } = useUser();

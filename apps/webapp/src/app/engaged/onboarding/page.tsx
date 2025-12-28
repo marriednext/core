@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback } from "react";
-import { ApplicationOnboardingPage } from "component-shelf";
-import type { ApplicationOnboardingFormData } from "component-shelf";
+import {
+  ApplicationOnboardingPage,
+  type ApplicationOnboardingFormData,
+} from "@/components/application";
 import { LinkWrapper } from "@/components/LinkWrapper";
 import { useSession } from "@clerk/nextjs";
 import * as Sentry from "@sentry/nextjs";

@@ -7,7 +7,7 @@ import { useClerk } from "@clerk/nextjs";
 import {
   ApplicationDashboardLayout,
   ApplicationDashboardOverview,
-} from "component-shelf";
+} from "@/components/application";
 import { fetchShell, fetchHomeStats } from "@/lib/fetch";
 import {
   transformShellToUserData,
