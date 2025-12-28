@@ -14,7 +14,7 @@ import { fetchShell } from "@/lib/fetch";
 import {
   transformShellToUserData,
   transformShellToWeddingData,
-} from "transformer-shelf";
+} from "@/lib/transformer";
 
 const permissionsSchema = z.object({
   user: z.object({

@@ -64,7 +64,6 @@
     "style-shelf": "workspace:*",
     "types-shelf": "workspace:*",
     "zod-shelf": "workspace:*",
-    "transformer-shelf": "workspace:*",
     "three": "0.180.0",
     "zod": "catalog:",
     "zustand": "5.0.8"

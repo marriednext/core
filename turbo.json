@@ -23,9 +23,6 @@
     "zod-shelf#build": {
       "dependsOn": ["types-shelf#build"]
     },
-    "transformer-shelf#build": {
-      "dependsOn": ["types-shelf#build"]
-    },
     "check-types": {
       "dependsOn": ["^check-types"]
     },

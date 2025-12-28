@@ -13,7 +13,7 @@ import {
   transformShellToUserData,
   transformShellToWeddingData,
   transformHomeStatsToOverviewData,
-} from "transformer-shelf";
+} from "@/lib/transformer";
 
 export default function DashboardPage() {
   const pathname = usePathname();

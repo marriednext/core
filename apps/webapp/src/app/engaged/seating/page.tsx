@@ -9,7 +9,7 @@ import { fetchShell } from "@/lib/fetch";
 import {
   transformShellToUserData,
   transformShellToWeddingData,
-} from "transformer-shelf";
+} from "@/lib/transformer";
 
 export default function SeatingPage() {
   const pathname = usePathname();
