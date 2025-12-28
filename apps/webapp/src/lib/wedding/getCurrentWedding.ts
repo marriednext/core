@@ -46,8 +46,5 @@ export async function getCurrentWedding() {
     .where(eq(weddingUsers.clerkUserId, userId))
     .limit(1);
 
-  console.log("result wedding id", result?.id);
   return result || null;
 }
-
-
