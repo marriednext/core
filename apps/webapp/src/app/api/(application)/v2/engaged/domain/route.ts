@@ -11,6 +11,15 @@ import {
 } from "@/lib/wedding/cache";
 import { subdomainSchema } from "@/lib/utils/site";
 import * as Sentry from "@sentry/nextjs";
+import {
+  addSubdomainToVercel,
+  getDomainConfig,
+  removeSubdomainFromVercel,
+} from "@/lib/infrastructure/vercel/domainService";
+import {
+  createCnameRecord,
+  deleteCnameRecord,
+} from "@/lib/infrastructure/porkbun/dnsService";
 
 const SLOW_REQUEST_THRESHOLD_MS = 3000;
 
@@ -56,8 +65,12 @@ export async function PATCH(req: NextRequest) {
 
     const updateData: Record<string, unknown> = {};
 
+    const isSubdomainChanging =
+      validatedData.subdomain !== undefined &&
+      validatedData.subdomain !== currentWedding.subdomain;
+
     if (validatedData.subdomain !== undefined) {
-      if (validatedData.subdomain !== currentWedding.subdomain) {
+      if (isSubdomainChanging) {
         const [existingSubdomain] = await db
           .select({ id: wedding.id })
           .from(wedding)
@@ -73,6 +86,50 @@ export async function PATCH(req: NextRequest) {
           return NextResponse.json(
             { error: "This subdomain is already taken" },
             { status: 409 }
+          );
+        }
+
+        const vercelResult = await addSubdomainToVercel(
+          validatedData.subdomain
+        );
+        if (!vercelResult.success) {
+          Sentry.captureMessage("Subdomain rename failed - Vercel add error", {
+            level: "warning",
+            extra: {
+              newSubdomain: validatedData.subdomain,
+              oldSubdomain: currentWedding.subdomain,
+              userId: user.id,
+              vercelError: vercelResult.error,
+            },
+          });
+          return NextResponse.json(
+            { error: "Failed to register new subdomain. Please try again." },
+            { status: 500 }
+          );
+        }
+
+        const configResult = await getDomainConfig(vercelResult.domain!);
+        const cnameValue =
+          (configResult?.recommendedCNAME?.[0]?.value as string) || "";
+        const porkbunResult = await createCnameRecord(
+          validatedData.subdomain,
+          cnameValue
+        );
+
+        if (!porkbunResult.success) {
+          await removeSubdomainFromVercel(validatedData.subdomain);
+          Sentry.captureMessage("Subdomain rename failed - Porkbun add error", {
+            level: "warning",
+            extra: {
+              newSubdomain: validatedData.subdomain,
+              oldSubdomain: currentWedding.subdomain,
+              userId: user.id,
+              porkbunError: porkbunResult.error,
+            },
+          });
+          return NextResponse.json(
+            { error: "Failed to configure DNS. Please try again." },
+            { status: 500 }
           );
         }
       }
@@ -157,6 +214,34 @@ export async function PATCH(req: NextRequest) {
       fieldNameB: updatedWedding.fieldNameB,
       controlRsvpNameFormat: updatedWedding.controlRsvpNameFormat,
     });
+
+    if (isSubdomainChanging && oldSubdomain) {
+      const [vercelRemoval, porkbunRemoval] = await Promise.allSettled([
+        removeSubdomainFromVercel(oldSubdomain),
+        deleteCnameRecord(oldSubdomain),
+      ]);
+
+      if (
+        vercelRemoval.status === "rejected" ||
+        porkbunRemoval.status === "rejected"
+      ) {
+        Sentry.captureMessage("Old subdomain cleanup partially failed", {
+          level: "warning",
+          extra: {
+            oldSubdomain,
+            newSubdomain: updatedWedding.subdomain,
+            vercelStatus:
+              vercelRemoval.status === "fulfilled"
+                ? vercelRemoval.value
+                : vercelRemoval.reason,
+            porkbunStatus:
+              porkbunRemoval.status === "fulfilled"
+                ? porkbunRemoval.value
+                : porkbunRemoval.reason,
+          },
+        });
+      }
+    }
 
     const hasCustomDomainUpgrade = !!updatedWedding.customDomain;
     const domainVerified = !!updatedWedding.customDomain;

@@ -98,3 +98,81 @@ export async function createCnameRecord(
     };
   }
 }
+
+export async function deleteCnameRecord(
+  subdomain: string
+): Promise<DnsRecordResult> {
+  if (!PORKBUN_BASE_URL || !PORKBUN_API_KEY || !PORKBUN_SECRET_KEY) {
+    const error = "Porkbun environment variables are not configured";
+    Sentry.captureException(new Error(error), {
+      level: "error",
+      tags: {
+        service: "porkbun-dns",
+        action: "delete-cname",
+      },
+      extra: {
+        PORKBUN_BASE_URL_SET: !!PORKBUN_BASE_URL,
+        PORKBUN_API_KEY_SET: !!PORKBUN_API_KEY,
+        PORKBUN_SECRET_KEY_SET: !!PORKBUN_SECRET_KEY,
+      },
+    });
+    return { success: false, error };
+  }
+
+  try {
+    const response = await fetch(
+      `${PORKBUN_BASE_URL}/dns/deleteByNameType/${BASE_DOMAIN}/CNAME/${subdomain}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          secretapikey: PORKBUN_SECRET_KEY,
+          apikey: PORKBUN_API_KEY,
+        }),
+      }
+    );
+
+    const responseData = await response.json();
+
+    if (!response.ok || responseData.status !== "SUCCESS") {
+      throw new Error(
+        `Porkbun API error: ${response.status} - ${JSON.stringify(
+          responseData
+        )}`
+      );
+    }
+
+    Sentry.captureMessage("CNAME record deleted from Porkbun successfully", {
+      level: "info",
+      tags: {
+        service: "porkbun-dns",
+        action: "delete-cname",
+      },
+      extra: {
+        subdomain,
+      },
+    });
+
+    return { success: true };
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+
+    Sentry.captureException(error, {
+      level: "error",
+      tags: {
+        service: "porkbun-dns",
+        action: "delete-cname",
+      },
+      extra: {
+        subdomain,
+        errorMessage,
+      },
+    });
+
+    return {
+      success: false,
+      error: errorMessage,
+    };
+  }
+}

@@ -117,6 +117,86 @@ export async function addSubdomainToVercel(
   }
 }
 
+export interface DomainRemovalResult {
+  success: boolean;
+  error?: string;
+}
+
+export async function removeSubdomainFromVercel(
+  subdomain: string
+): Promise<DomainRemovalResult> {
+  if (!VERCEL_PROJECT_ID || !VERCEL_BEARER_TOKEN) {
+    const error = "Vercel environment variables are not configured";
+    Sentry.captureException(new Error(error), {
+      level: "error",
+      tags: {
+        service: "vercel-domain",
+        action: "remove-subdomain",
+      },
+      extra: {
+        VERCEL_PROJECT_ID_SET: !!VERCEL_PROJECT_ID,
+        VERCEL_BEARER_TOKEN_SET: !!VERCEL_BEARER_TOKEN,
+      },
+    });
+    return { success: false, error };
+  }
+
+  const fullDomain = `${subdomain}.${BASE_DOMAIN}`;
+
+  try {
+    const url = `${VERCEL_API_BASE}/v9/projects/${VERCEL_PROJECT_ID}/domains/${fullDomain}`;
+
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${VERCEL_BEARER_TOKEN}`,
+      },
+    });
+
+    if (!response.ok) {
+      const responseData = await response.json();
+      throw new Error(
+        `Vercel API error: ${response.status} - ${JSON.stringify(responseData)}`
+      );
+    }
+
+    Sentry.captureMessage("Subdomain removed from Vercel successfully", {
+      level: "info",
+      tags: {
+        service: "vercel-domain",
+        action: "remove-subdomain",
+      },
+      extra: {
+        subdomain,
+        fullDomain,
+      },
+    });
+
+    return { success: true };
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+
+    Sentry.captureException(error, {
+      level: "error",
+      tags: {
+        service: "vercel-domain",
+        action: "remove-subdomain",
+      },
+      extra: {
+        subdomain,
+        fullDomain,
+        errorMessage,
+      },
+    });
+
+    return {
+      success: false,
+      error: errorMessage,
+    };
+  }
+}
+
 export async function getDomainConfig(
   domain: string
 ): Promise<DomainConfigResult> {

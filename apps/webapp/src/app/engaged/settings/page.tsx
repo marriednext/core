@@ -185,6 +185,7 @@ export default function SettingsPage() {
     mutationFn: updateSettings,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
+      queryClient.invalidateQueries({ queryKey: ["shell"] });
     },
   });
 
@@ -192,6 +193,8 @@ export default function SettingsPage() {
     mutationFn: (subdomain: string) => updateDomainSettings({ subdomain }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
+      queryClient.invalidateQueries({ queryKey: ["website-builder"] });
+      queryClient.invalidateQueries({ queryKey: ["home-stats"] });
     },
   });
 
@@ -200,6 +203,8 @@ export default function SettingsPage() {
       updateDomainSettings({ customDomain }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
+      queryClient.invalidateQueries({ queryKey: ["website-builder"] });
+      queryClient.invalidateQueries({ queryKey: ["home-stats"] });
     },
   });
 
@@ -207,6 +212,8 @@ export default function SettingsPage() {
     mutationFn: () => updateDomainSettings({ customDomain: null }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
+      queryClient.invalidateQueries({ queryKey: ["website-builder"] });
+      queryClient.invalidateQueries({ queryKey: ["home-stats"] });
     },
   });
 

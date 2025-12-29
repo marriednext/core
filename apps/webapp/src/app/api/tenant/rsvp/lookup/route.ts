@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { findInvitationByGuestName } from "@/lib/tenant/invitationLookup";
-import { getWeddingFromRequest } from "@/lib/tenant/getWeddingFromRequest";
+import { findInvitationByGuestName } from "@/lib/wedding/invitationLookup";
+import { getWeddingFromRequest } from "@/lib/wedding/getWeddingFromRequest";
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
