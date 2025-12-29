@@ -15,7 +15,7 @@ export function TemplatesPageClient() {
     <main className="min-h-screen">
       <ApplicationNavbar isAuthenticated={isSignedIn} />
       <ApplicationTemplatesHero />
-      <ApplicationTemplatesGrid />
+      <ApplicationTemplatesGrid isSignedIn={isSignedIn} />
       <ApplicationTemplatesCta />
       <ApplicationFooter />
     </main>

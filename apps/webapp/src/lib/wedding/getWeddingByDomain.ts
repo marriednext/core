@@ -29,6 +29,7 @@ async function getWeddingFromDatabase(
       controlRsvpNameFormat: wedding.controlRsvpNameFormat,
       websiteSections: wedding.websiteSections,
       websiteLabels: wedding.websiteLabels,
+      websiteTemplate: wedding.websiteTemplate,
     })
     .from(wedding)
     .where(or(eq(wedding.subdomain, domain), eq(wedding.customDomain, domain)))

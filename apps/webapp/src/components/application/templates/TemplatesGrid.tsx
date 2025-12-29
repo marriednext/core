@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { z } from "zod";
 import { Button } from "../../ui/button";
 import { Badge } from "../../ui/badge";
-import { Eye, Sparkles, Check, Lock } from "lucide-react";
+import { Eye, Sparkles, Check, Lock, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
 
 type TemplateStyle =
   | "all"
@@ -13,117 +16,130 @@ type TemplateStyle =
   | "minimal"
   | "romantic";
 type TemplateFilter = "all" | "free" | "premium";
+type ThemeId = "lisastheme" | "tuscanbloom";
 
 interface Template {
   id: string;
+  themeId?: ThemeId;
   name: string;
   style: Exclude<TemplateStyle, "all">;
   isPremium: boolean;
   previewImage: string;
   features: string[];
   popular?: boolean;
+  isImplemented?: boolean;
 }
 
 const templates: Template[] = [
   {
-    id: "evergreen",
-    name: "Evergreen",
-    style: "modern",
-    isPremium: false,
-    previewImage: "/elegant-modern-wedding-website-sage-green-minimal.jpg",
-    features: ["RSVP form", "Photo gallery", "Event timeline"],
-  },
-  {
-    id: "blush",
-    name: "Blush & Gold",
-    style: "romantic",
-    isPremium: false,
-    previewImage: "/romantic-blush-pink-gold-wedding-website-elegant.jpg",
-    features: ["RSVP form", "Registry links", "Love story"],
-    popular: true,
-  },
-  {
-    id: "monochrome",
-    name: "Monochrome",
-    style: "minimal",
-    isPremium: false,
-    previewImage: "/minimal-black-white-wedding-website-clean-typograp.jpg",
-    features: ["RSVP form", "Photo gallery", "FAQ section"],
-  },
-  {
-    id: "garden",
-    name: "Secret Garden",
-    style: "romantic",
-    isPremium: true,
-    previewImage: "/floral-botanical-garden-wedding-website-romantic-w.jpg",
-    features: ["Animated florals", "Guest book", "Music player"],
-    popular: true,
-  },
-  {
-    id: "estate",
-    name: "Estate",
-    style: "classic",
-    isPremium: true,
-    previewImage: "/classic-elegant-estate-wedding-website-serif-typog.jpg",
-    features: ["Video header", "Multi-event support", "Custom fonts"],
-  },
-  {
-    id: "meadow",
-    name: "Meadow",
-    style: "rustic",
-    isPremium: false,
-    previewImage: "/rustic-wildflower-meadow-wedding-website-natural-e.jpg",
-    features: ["RSVP form", "Photo gallery", "Directions map"],
-  },
-  {
-    id: "noir",
-    name: "Noir",
-    style: "modern",
-    isPremium: true,
-    previewImage: "/dark-moody-noir-wedding-website-dramatic-elegant-b.jpg",
-    features: ["Dark mode", "Video backgrounds", "Parallax scroll"],
-  },
-  {
-    id: "coastal",
-    name: "Coastal",
-    style: "minimal",
-    isPremium: false,
-    previewImage: "/coastal-beach-wedding-website-blue-white-minimal-s.jpg",
-    features: ["RSVP form", "Weather widget", "Photo gallery"],
-  },
-  {
-    id: "vineyard",
-    name: "Vineyard",
-    style: "rustic",
-    isPremium: true,
-    previewImage: "/vineyard-winery-wedding-website-burgundy-elegant-t.jpg",
-    features: ["Wine pairing menu", "Interactive map", "Guest messaging"],
-  },
-  {
-    id: "timeless",
+    id: "lisastheme",
+    themeId: "lisastheme",
     name: "Timeless",
     style: "classic",
     isPremium: false,
     previewImage: "/timeless-traditional-wedding-website-ivory-elegant.jpg",
     features: ["RSVP form", "Photo gallery", "Event details"],
-  },
-  {
-    id: "aurora",
-    name: "Aurora",
-    style: "modern",
-    isPremium: true,
-    previewImage: "/modern-gradient-aurora-wedding-website-colorful-el.jpg",
-    features: ["Gradient animations", "3D elements", "Custom cursor"],
+    isImplemented: true,
     popular: true,
   },
   {
-    id: "provence",
-    name: "Provence",
+    id: "tuscanbloom",
+    themeId: "tuscanbloom",
+    name: "Tuscan Bloom",
     style: "romantic",
     isPremium: false,
-    previewImage: "/french-provence-lavender-wedding-website-romantic-.jpg",
-    features: ["RSVP form", "Photo gallery", "Travel info"],
+    previewImage: "/floral-botanical-garden-wedding-website-romantic-w.jpg",
+    features: ["RSVP form", "Photo gallery", "Our Story"],
+    isImplemented: true,
   },
+  // {
+  //   id: "evergreen",
+  //   name: "Evergreen",
+  //   style: "modern",
+  //   isPremium: false,
+  //   previewImage: "/elegant-modern-wedding-website-sage-green-minimal.jpg",
+  //   features: ["RSVP form", "Photo gallery", "Event timeline"],
+  // },
+  // {
+  //   id: "blush",
+  //   name: "Blush & Gold",
+  //   style: "romantic",
+  //   isPremium: false,
+  //   previewImage: "/romantic-blush-pink-gold-wedding-website-elegant.jpg",
+  //   features: ["RSVP form", "Registry links", "Love story"],
+  // },
+  // {
+  //   id: "monochrome",
+  //   name: "Monochrome",
+  //   style: "minimal",
+  //   isPremium: false,
+  //   previewImage: "/minimal-black-white-wedding-website-clean-typograp.jpg",
+  //   features: ["RSVP form", "Photo gallery", "FAQ section"],
+  // },
+  // {
+  //   id: "garden",
+  //   name: "Secret Garden",
+  //   style: "romantic",
+  //   isPremium: true,
+  //   previewImage: "/floral-botanical-garden-wedding-website-romantic-w.jpg",
+  //   features: ["Animated florals", "Guest book", "Music player"],
+  // },
+  // {
+  //   id: "estate",
+  //   name: "Estate",
+  //   style: "classic",
+  //   isPremium: true,
+  //   previewImage: "/classic-elegant-estate-wedding-website-serif-typog.jpg",
+  //   features: ["Video header", "Multi-event support", "Custom fonts"],
+  // },
+  // {
+  //   id: "meadow",
+  //   name: "Meadow",
+  //   style: "rustic",
+  //   isPremium: false,
+  //   previewImage: "/rustic-wildflower-meadow-wedding-website-natural-e.jpg",
+  //   features: ["RSVP form", "Photo gallery", "Directions map"],
+  // },
+  // {
+  //   id: "noir",
+  //   name: "Noir",
+  //   style: "modern",
+  //   isPremium: true,
+  //   previewImage: "/dark-moody-noir-wedding-website-dramatic-elegant-b.jpg",
+  //   features: ["Dark mode", "Video backgrounds", "Parallax scroll"],
+  // },
+  // {
+  //   id: "coastal",
+  //   name: "Coastal",
+  //   style: "minimal",
+  //   isPremium: false,
+  //   previewImage: "/coastal-beach-wedding-website-blue-white-minimal-s.jpg",
+  //   features: ["RSVP form", "Weather widget", "Photo gallery"],
+  // },
+  // {
+  //   id: "vineyard",
+  //   name: "Vineyard",
+  //   style: "rustic",
+  //   isPremium: true,
+  //   previewImage: "/vineyard-winery-wedding-website-burgundy-elegant-t.jpg",
+  //   features: ["Wine pairing menu", "Interactive map", "Guest messaging"],
+  // },
+  // {
+  //   id: "aurora",
+  //   name: "Aurora",
+  //   style: "modern",
+  //   isPremium: true,
+  //   previewImage: "/modern-gradient-aurora-wedding-website-colorful-el.jpg",
+  //   features: ["Gradient animations", "3D elements", "Custom cursor"],
+  // },
+  // {
+  //   id: "provence",
+  //   name: "Provence",
+  //   style: "romantic",
+  //   isPremium: false,
+  //   previewImage: "/french-provence-lavender-wedding-website-romantic-.jpg",
+  //   features: ["RSVP form", "Photo gallery", "Travel info"],
+  // },
 ];
 
 const styleFilters: { value: TemplateStyle; label: string }[] = [
@@ -141,11 +157,62 @@ const priceFilters: { value: TemplateFilter; label: string }[] = [
   { value: "premium", label: "Premium" },
 ];
 
-export function ApplicationTemplatesGrid() {
+const websiteBuilderResponseSchema = z.object({
+  websiteTemplate: z.string(),
+});
+
+async function fetchCurrentTemplate(): Promise<string> {
+  const res = await fetch("/api/website-builder");
+  if (!res.ok) {
+    throw new Error("Failed to fetch current template");
+  }
+  const data = await res.json();
+  const validated = websiteBuilderResponseSchema.parse(data);
+  return validated.websiteTemplate;
+}
+
+async function updateTemplate(themeId: ThemeId): Promise<void> {
+  const res = await fetch("/api/website-builder", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ websiteTemplate: themeId }),
+  });
+  if (!res.ok) {
+    throw new Error("Failed to update template");
+  }
+}
+
+interface ApplicationTemplatesGridProps {
+  isSignedIn?: boolean;
+}
+
+export function ApplicationTemplatesGrid({
+  isSignedIn,
+}: ApplicationTemplatesGridProps) {
   const [styleFilter, setStyleFilter] = useState<TemplateStyle>("all");
   const [priceFilter, setPriceFilter] = useState<TemplateFilter>("all");
+  const queryClient = useQueryClient();
 
-  const filteredTemplates = templates.filter((template) => {
+  const { data: currentTemplate } = useQuery({
+    queryKey: ["websiteTemplate"],
+    queryFn: fetchCurrentTemplate,
+    enabled: !!isSignedIn,
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: updateTemplate,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["websiteTemplate"] });
+    },
+  });
+
+  const sortedTemplates = [...templates].sort((a, b) => {
+    if (a.isImplemented && !b.isImplemented) return -1;
+    if (!a.isImplemented && b.isImplemented) return 1;
+    return 0;
+  });
+
+  const filteredTemplates = sortedTemplates.filter((template) => {
     const matchesStyle =
       styleFilter === "all" || template.style === styleFilter;
     const matchesPrice =
@@ -161,36 +228,35 @@ export function ApplicationTemplatesGrid() {
   return (
     <section className="py-16 px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        {/* Filters */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
-          {/* Style filters */}
           <div className="flex flex-wrap gap-2">
             {styleFilters.map((filter) => (
               <button
                 key={filter.value}
                 onClick={() => setStyleFilter(filter.value)}
-                className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                className={cn(
+                  "px-4 py-2 text-sm font-medium rounded-full transition-colors",
                   styleFilter === filter.value
                     ? "bg-primary text-primary-foreground"
                     : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                }`}
+                )}
               >
                 {filter.label}
               </button>
             ))}
           </div>
 
-          {/* Price filters */}
           <div className="flex items-center gap-2 bg-secondary rounded-full p-1">
             {priceFilters.map((filter) => (
               <button
                 key={filter.value}
                 onClick={() => setPriceFilter(filter.value)}
-                className={`px-4 py-1.5 text-sm font-medium rounded-full transition-colors ${
+                className={cn(
+                  "px-4 py-1.5 text-sm font-medium rounded-full transition-colors",
                   priceFilter === filter.value
                     ? "bg-background text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
-                }`}
+                )}
               >
                 {filter.label}
                 {filter.value === "free" && (
@@ -208,16 +274,28 @@ export function ApplicationTemplatesGrid() {
           </div>
         </div>
 
-        {/* Results count */}
         <p className="text-sm text-muted-foreground mb-8">
           Showing {filteredTemplates.length} template
           {filteredTemplates.length !== 1 ? "s" : ""}
         </p>
 
-        {/* Templates grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredTemplates.map((template) => (
-            <TemplateCard key={template.id} template={template} />
+            <TemplateCard
+              key={template.id}
+              template={template}
+              isSignedIn={isSignedIn}
+              isCurrent={currentTemplate === template.themeId}
+              isUpdating={
+                updateMutation.isPending &&
+                updateMutation.variables === template.themeId
+              }
+              onSelect={
+                template.themeId
+                  ? () => updateMutation.mutate(template.themeId!)
+                  : undefined
+              }
+            />
           ))}
         </div>
 
@@ -243,16 +321,33 @@ export function ApplicationTemplatesGrid() {
   );
 }
 
-function TemplateCard({ template }: { template: Template }) {
+interface TemplateCardProps {
+  template: Template;
+  isSignedIn?: boolean;
+  isCurrent?: boolean;
+  isUpdating?: boolean;
+  onSelect?: () => void;
+}
+
+function TemplateCard({
+  template,
+  isSignedIn,
+  isCurrent,
+  isUpdating,
+  onSelect,
+}: TemplateCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const canSelect = isSignedIn && template.isImplemented && !template.isPremium;
 
   return (
     <div
-      className="group relative bg-card rounded-xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition-all duration-300"
+      className={cn(
+        "group relative bg-background rounded-xl overflow-hidden border shadow-sm hover:shadow-lg transition-all duration-300",
+        isCurrent ? "border-primary ring-2 ring-primary/20" : "border-border"
+      )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Preview image */}
       <div className="relative aspect-[3/2] overflow-hidden bg-muted">
         <img
           src={template.previewImage || "/placeholder.svg"}
@@ -260,47 +355,77 @@ function TemplateCard({ template }: { template: Template }) {
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
-        {/* Overlay on hover */}
         <div
-          className={`absolute inset-0 bg-foreground/60 flex items-center justify-center gap-3 transition-opacity duration-300 ${
+          className={cn(
+            "absolute inset-0 bg-foreground/60 flex items-center justify-center gap-3 transition-opacity duration-300",
             isHovered ? "opacity-100" : "opacity-0"
-          }`}
+          )}
         >
           <Button size="sm" variant="secondary" className="gap-2">
             <Eye className="h-4 w-4" />
             Preview
           </Button>
-          <Button size="sm" className="gap-2">
-            {template.isPremium ? (
-              <>
-                <Lock className="h-4 w-4" />
-                Unlock
-              </>
-            ) : (
-              <>
-                <Check className="h-4 w-4" />
-                Use Free
-              </>
-            )}
-          </Button>
+          {canSelect && !isCurrent && (
+            <Button
+              size="sm"
+              className="gap-2"
+              onClick={onSelect}
+              disabled={isUpdating}
+            >
+              {isUpdating ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Applying...
+                </>
+              ) : (
+                <>
+                  <Check className="h-4 w-4" />
+                  Use This
+                </>
+              )}
+            </Button>
+          )}
+          {template.isPremium && (
+            <Button size="sm" className="gap-2">
+              <Lock className="h-4 w-4" />
+              Unlock
+            </Button>
+          )}
+          {!template.isImplemented && !template.isPremium && (
+            <Button size="sm" variant="secondary" className="gap-2" disabled>
+              Coming Soon
+            </Button>
+          )}
         </div>
 
-        {/* Badges */}
         <div className="absolute top-3 left-3 flex gap-2">
+          {isCurrent && (
+            <Badge className="bg-primary text-primary-foreground border-0 gap-1">
+              <Check className="h-3 w-3" />
+              Current
+            </Badge>
+          )}
           {template.isPremium ? (
             <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 gap-1">
               <Sparkles className="h-3 w-3" />
               Premium
             </Badge>
-          ) : (
+          ) : template.isImplemented ? (
             <Badge
               variant="secondary"
               className="bg-background/90 backdrop-blur-sm"
             >
               Free
             </Badge>
+          ) : (
+            <Badge
+              variant="secondary"
+              className="bg-muted/90 backdrop-blur-sm text-muted-foreground"
+            >
+              Coming Soon
+            </Badge>
           )}
-          {template.popular && (
+          {template.popular && !isCurrent && (
             <Badge
               variant="secondary"
               className="bg-primary/90 text-primary-foreground backdrop-blur-sm"
@@ -311,7 +436,6 @@ function TemplateCard({ template }: { template: Template }) {
         </div>
       </div>
 
-      {/* Info */}
       <div className="p-5">
         <div className="flex items-start justify-between gap-4 mb-3">
           <div>
@@ -324,7 +448,6 @@ function TemplateCard({ template }: { template: Template }) {
           </div>
         </div>
 
-        {/* Features */}
         <div className="flex flex-wrap gap-2">
           {template.features.map((feature) => (
             <span

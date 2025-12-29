@@ -70,6 +70,7 @@ export async function GET() {
       subscriptionPlan,
       websiteSections: wedding.websiteSections,
       websiteLabels: wedding.websiteLabels,
+      websiteTemplate: wedding.websiteTemplate || "lisastheme",
     });
   } catch (error) {
     console.error("Error fetching website builder data:", error);
@@ -93,15 +94,23 @@ const websiteLabelsSchema = z.record(
   z.record(z.string(), z.string())
 );
 
+const websiteTemplateSchema = z.enum(["lisastheme", "tuscanbloom"]);
+
 const patchBodySchema = z
   .object({
     websiteSections: websiteSectionsSchema.optional(),
     websiteLabels: websiteLabelsSchema.optional(),
+    websiteTemplate: websiteTemplateSchema.optional(),
   })
   .refine(
     (data) =>
-      data.websiteSections !== undefined || data.websiteLabels !== undefined,
-    { message: "At least one of websiteSections or websiteLabels is required" }
+      data.websiteSections !== undefined ||
+      data.websiteLabels !== undefined ||
+      data.websiteTemplate !== undefined,
+    {
+      message:
+        "At least one of websiteSections, websiteLabels, or websiteTemplate is required",
+    }
   );
 
 export async function PATCH(req: NextRequest) {
@@ -124,6 +133,7 @@ export async function PATCH(req: NextRequest) {
     const updateData: {
       websiteSections?: typeof validated.websiteSections;
       websiteLabels?: typeof validated.websiteLabels;
+      websiteTemplate?: typeof validated.websiteTemplate;
       updatedAt: string;
     } = {
       updatedAt: new Date().toISOString(),
@@ -149,6 +159,10 @@ export async function PATCH(req: NextRequest) {
       updateData.websiteLabels = mergedLabels;
     }
 
+    if (validated.websiteTemplate) {
+      updateData.websiteTemplate = validated.websiteTemplate;
+    }
+
     await db
       .update(wedding)
       .set(updateData)
@@ -163,6 +177,7 @@ export async function PATCH(req: NextRequest) {
       success: true,
       websiteSections: validated.websiteSections,
       websiteLabels: updateData.websiteLabels,
+      websiteTemplate: updateData.websiteTemplate,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

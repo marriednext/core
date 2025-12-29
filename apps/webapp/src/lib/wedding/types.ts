@@ -33,6 +33,7 @@ export type WeddingData = {
   photos?: WeddingPhoto[];
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: Record<string, Record<string, string>> | null;
+  websiteTemplate?: string | null;
 };
 
 export type QA = {
