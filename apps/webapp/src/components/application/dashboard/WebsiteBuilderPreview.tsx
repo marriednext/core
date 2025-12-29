@@ -2,9 +2,16 @@
 
 import { useMemo, useEffect, useCallback } from "react";
 import { useWebsiteBuilderStore } from "../../../stores/websiteBuilderStore";
-import { LisasTheme, mergeSectionsWithDefaults, type WebsiteSection } from "component-shelf";
-import { postToParent, isBuilderMessage } from "../../../lib/component-shelf/builderMessages";
-import { mapWeddingDataToLisasThemeProps } from "@/components/theme/themes/lisastheme/mapper";
+import {
+  mergeSectionsWithDefaults,
+  type WebsiteSection,
+} from "component-shelf";
+import {
+  postToParent,
+  isBuilderMessage,
+} from "../../../lib/component-shelf/builderMessages";
+import { ThemeRenderer } from "@/components/theme/ThemeRenderer";
+import type { ThemeId } from "@/components/theme/types";
 import type { WeddingData } from "@/lib/wedding/types";
 
 export type WebsiteBuilderPhoto = {
@@ -31,6 +38,7 @@ export type WebsiteBuilderData = {
   subdomain?: string | null;
   customDomain?: string | null;
   subscriptionPlan?: string;
+  websiteTemplate?: string | null;
 };
 
 export type WebsiteBuilderPreviewProps = {
@@ -50,9 +58,9 @@ export function WebsiteBuilderPreview({
     [data?.websiteSections]
   );
 
-  const themeProps = useMemo(() => {
+  const weddingData = useMemo<WeddingData | null>(() => {
     if (!data) return null;
-    const weddingData: WeddingData = {
+    return {
       id: "",
       subdomain: data.subdomain ?? null,
       customDomain: data.customDomain ?? null,
@@ -71,11 +79,13 @@ export function WebsiteBuilderPreview({
       fieldNameB: data.fieldNameB,
       controlRsvpNameFormat: "FIRST_NAME_ONLY",
       photos: data.photos,
-      websiteSections: data.websiteSections,
-      websiteLabels: data.websiteLabels,
+      websiteSections: sections,
+      websiteLabels: pendingLabels,
+      websiteTemplate: data.websiteTemplate,
     };
-    return mapWeddingDataToLisasThemeProps(weddingData);
-  }, [data]);
+  }, [data, sections, pendingLabels]);
+
+  const themeId = (data?.websiteTemplate ?? "lisastheme") as ThemeId;
 
   useEffect(() => {
     if (data?.websiteLabels) {
@@ -101,17 +111,16 @@ export function WebsiteBuilderPreview({
     return () => window.removeEventListener("message", handleMessage);
   }, [updateLabel]);
 
-  const handleCustomizationChange = (
-    section: string,
-    key: string,
-    value: string
-  ) => {
-    updateLabel(section, key, value);
-    postToParent({
-      type: "LABEL_CLICKED",
-      payload: { sectionId: section, labelKey: key, currentValue: value },
-    });
-  };
+  const handleCustomizationChange = useCallback(
+    (section: string, key: string, value: string) => {
+      updateLabel(section, key, value);
+      postToParent({
+        type: "LABEL_CLICKED",
+        payload: { sectionId: section, labelKey: key, currentValue: value },
+      });
+    },
+    [updateLabel]
+  );
 
   const handleSectionClick = useCallback((sectionId: string) => {
     postToParent({
@@ -128,7 +137,7 @@ export function WebsiteBuilderPreview({
     );
   }
 
-  if (!data || !themeProps) {
+  if (!data || !weddingData) {
     return (
       <div className="flex items-center justify-center min-h-[600px]">
         <p className="text-muted-foreground">No website data available</p>
@@ -137,10 +146,9 @@ export function WebsiteBuilderPreview({
   }
 
   return (
-    <LisasTheme
-      {...themeProps}
-      websiteSections={sections}
-      websiteLabels={pendingLabels}
+    <ThemeRenderer
+      themeId={themeId}
+      weddingData={weddingData}
       editable={true}
       contained={true}
       onCustomizationChange={handleCustomizationChange}

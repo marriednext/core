@@ -19,6 +19,7 @@ export default function BuilderPreviewPage() {
     websiteLabels: weddingData.websiteLabels,
     subdomain: weddingData.subdomain,
     customDomain: weddingData.customDomain,
+    websiteTemplate: weddingData.websiteTemplate,
   };
 
   return <WebsiteBuilderPreview data={builderData} />;
