@@ -140,26 +140,30 @@ export function GallerySection({
           ref={galleryRef}
           className="columns-1 md:columns-2 lg:columns-3 gap-4 lg:gap-6"
         >
-          {galleryImages.map((image, index) => (
-            <div
-              key={index}
-              className={`gallery-item break-inside-avoid mb-4 lg:mb-6 overflow-hidden ${
-                image.aspect === "portrait"
-                  ? "aspect-[2/3]"
-                  : image.aspect === "landscape"
-                  ? "aspect-[3/2]"
-                  : "aspect-square"
-              }`}
-            >
-              <ImageComponent
-                src={image.src}
-                alt={image.alt}
-                width={900}
-                height={900}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-              />
-            </div>
-          ))}
+          {galleryImages.map((image, index) => {
+            const src = image.src as unknown;
+            const imageSrc = typeof src === "string" ? src : (src as { src: string }).src;
+            return (
+              <div
+                key={index}
+                className={`gallery-item break-inside-avoid mb-4 lg:mb-6 overflow-hidden ${
+                  image.aspect === "portrait"
+                    ? "aspect-[2/3]"
+                    : image.aspect === "landscape"
+                    ? "aspect-[3/2]"
+                    : "aspect-square"
+                }`}
+              >
+                <ImageComponent
+                  src={imageSrc}
+                  alt={image.alt}
+                  width={900}
+                  height={900}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

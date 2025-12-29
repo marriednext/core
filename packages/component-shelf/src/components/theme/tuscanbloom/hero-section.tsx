@@ -86,7 +86,7 @@ export function HeroSection({
       {/* Background Image */}
       <div ref={imageRef} className="absolute inset-0">
         <ImageComponent
-          src={heroImage}
+          src={typeof heroImage === "string" ? heroImage : (heroImage as unknown as { src: string }).src}
           alt="Tuscan landscape"
           fill
           className="absolute inset-0 w-full h-full object-cover"

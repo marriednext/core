@@ -20,10 +20,10 @@ export default async function BuilderLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{ domain: string }>;
+  params: Promise<{ theme: string }>;
 }>) {
-  const { domain } = await params;
-  const weddingData = await getWeddingByDomain(domain);
+  const { theme } = await params;
+  const weddingData = await getWeddingByDomain(theme);
 
   if (!weddingData) {
     notFound();

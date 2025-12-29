@@ -124,26 +124,29 @@ export function OurStorySection({
 
       {/* Horizontal Scroll Container */}
       <div ref={horizontalRef} className="flex h-screen pt-32 lg:pt-40">
-        {storyMilestones.map((milestone, index) => (
-          <div
-            key={milestone.year}
-            className="milestone flex-shrink-0 w-screen lg:w-[80vw] h-full flex items-center px-6 lg:px-24"
-          >
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center w-full max-w-7xl mx-auto">
-              {/* Image */}
-              <div
-                className={`milestone-image overflow-hidden ${
-                  index % 2 === 1 ? "lg:order-2" : ""
-                }`}
-              >
-                <ImageComponent
-                  src={milestone.image}
-                  alt={milestone.title}
-                  width={800}
-                  height={600}
-                  className="w-full h-[50vh] lg:h-[60vh] object-cover"
-                />
-              </div>
+        {storyMilestones.map((milestone, index) => {
+          const imgSrc = milestone.image as unknown;
+          const imageSrc = typeof imgSrc === "string" ? imgSrc : (imgSrc as { src: string }).src;
+          return (
+            <div
+              key={milestone.year}
+              className="milestone flex-shrink-0 w-screen lg:w-[80vw] h-full flex items-center px-6 lg:px-24"
+            >
+              <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center w-full max-w-7xl mx-auto">
+                {/* Image */}
+                <div
+                  className={`milestone-image overflow-hidden ${
+                    index % 2 === 1 ? "lg:order-2" : ""
+                  }`}
+                >
+                  <ImageComponent
+                    src={imageSrc}
+                    alt={milestone.title}
+                    width={800}
+                    height={600}
+                    className="w-full h-[50vh] lg:h-[60vh] object-cover"
+                  />
+                </div>
 
               {/* Content */}
               <div
@@ -163,7 +166,8 @@ export function OurStorySection({
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
