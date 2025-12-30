@@ -3,12 +3,17 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRsvpStore } from "@/stores/rsvpStore";
 import type { InvitationLookupResponse, RsvpApiResponse } from "@/types/rsvp";
-import RsvpForm, { type RsvpFormTokens, type RsvpFormStyles } from "./RsvpForm";
+import RsvpForm, {
+  type RsvpFormTokens,
+  type RsvpFormStyles,
+  type RsvpFormLabels,
+} from "./RsvpForm";
 
 interface RsvpFormContainerProps {
   className?: string;
   tokens?: Partial<RsvpFormTokens>;
   styles?: RsvpFormStyles;
+  labels?: RsvpFormLabels;
   showTitle?: boolean;
 }
 
@@ -16,6 +21,7 @@ export default function RsvpFormContainer({
   className,
   tokens,
   styles,
+  labels,
   showTitle,
 }: RsvpFormContainerProps) {
   const {
@@ -96,6 +102,7 @@ export default function RsvpFormContainer({
       className={className}
       tokens={tokens}
       styles={styles}
+      labels={labels}
       showTitle={showTitle}
       onLookup={(name) => lookupMutation.mutate(name)}
       onSubmit={() => submitMutation.mutate()}

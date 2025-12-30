@@ -31,10 +31,18 @@ export type RsvpFormStyles = {
   errorMessage?: string;
 };
 
+export type RsvpFormLabels = {
+  firstNamePlaceholder?: string;
+  fullNamePlaceholder?: string;
+  firstNameSubtitle?: string;
+  fullNameSubtitle?: string;
+};
+
 interface RsvpFormProps {
   className?: string;
   tokens?: Partial<RsvpFormTokens>;
   styles?: RsvpFormStyles;
+  labels?: RsvpFormLabels;
   showTitle?: boolean;
   onLookup: (name: string) => void;
   onSubmit: () => void;
@@ -67,16 +75,27 @@ const defaultStyles: RsvpFormStyles = {
   errorMessage: "mt-6 md:mt-10 text-lg md:text-xl",
 };
 
+const defaultLabels: RsvpFormLabels = {
+  firstNamePlaceholder: "First Name",
+  fullNamePlaceholder: "Full Name",
+  firstNameSubtitle:
+    "Please enter your first name as it appears on your invitation.",
+  fullNameSubtitle:
+    "Please enter your full name as it appears on your invitation.",
+};
+
 export default function RsvpForm({
   className,
   tokens: tokensProp,
   styles: stylesProp,
+  labels: labelsProp,
   showTitle = true,
   onLookup,
   onSubmit,
 }: RsvpFormProps) {
   const tokens = { ...defaultTokens, ...tokensProp };
   const styles = { ...defaultStyles, ...stylesProp };
+  const labels = { ...defaultLabels, ...labelsProp };
   const mutedColor = tokens.bodyColor + "cc";
 
   const {
@@ -127,12 +146,15 @@ export default function RsvpForm({
     onSubmit();
   };
 
-  const getPlaceholder = () => {
-    if (nameFormat === "FIRST_NAME_ONLY") {
-      return "First Name";
-    }
-    return "Full Name";
-  };
+  const placeholder =
+    nameFormat === "FIRST_NAME_ONLY"
+      ? labels.firstNamePlaceholder
+      : labels.fullNamePlaceholder;
+
+  const subtitle =
+    nameFormat === "FIRST_NAME_ONLY"
+      ? labels.firstNameSubtitle
+      : labels.fullNameSubtitle;
 
   const attendingCount = selectedGuests.filter((g) => g.isAttending).length;
   const totalGuests = selectedGuests.length;
@@ -161,11 +183,7 @@ export default function RsvpForm({
         {step === "name-input" && (
           <>
             <p className={styles.subtitle} style={{ color: tokens.bodyColor }}>
-              Please enter{" "}
-              {nameFormat === "FIRST_NAME_ONLY"
-                ? "your first name"
-                : "your full name"}{" "}
-              as it appears on your invitation.
+              {subtitle}
             </p>
 
             <form
@@ -174,14 +192,14 @@ export default function RsvpForm({
               className="mt-10 md:mt-12"
             >
               <label htmlFor="name" className="sr-only">
-                {getPlaceholder()}
+                {placeholder}
               </label>
               <input
                 id="name"
                 type="text"
                 inputMode="text"
                 autoComplete="name"
-                placeholder={getPlaceholder()}
+                placeholder={placeholder}
                 aria-invalid={nameErrors.name ? "true" : "false"}
                 className={styles.input}
                 style={{
@@ -192,11 +210,7 @@ export default function RsvpForm({
                 }}
                 disabled={isLoading}
                 {...registerName("name", {
-                  required: `Your ${
-                    nameFormat === "FIRST_NAME_ONLY"
-                      ? "first name"
-                      : "full name"
-                  } is required`,
+                  required: `${placeholder} is required`,
                 })}
               />
               {nameErrors.name && (
