@@ -59,6 +59,7 @@ const websiteBuilderSchema = z.object({
     .record(z.string(), z.record(z.string(), z.string()))
     .nullable()
     .optional(),
+  websiteTemplate: z.string(),
 });
 
 type WebsiteBuilderResponse = z.infer<typeof websiteBuilderSchema>;
@@ -89,6 +90,7 @@ function transformToBuilderData(
     subscriptionPlan: response.subscriptionPlan,
     websiteSections: response.websiteSections,
     websiteLabels: response.websiteLabels,
+    websiteTemplate: response.websiteTemplate,
   };
 }
 

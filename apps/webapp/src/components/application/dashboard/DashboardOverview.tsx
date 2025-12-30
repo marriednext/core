@@ -55,6 +55,11 @@ const quickActions = [
   },
 ];
 
+const TEMPLATE_NAMES: Record<string, string> = {
+  lisastheme: "Lisa's Theme",
+  tuscanbloom: "Tuscan Bloom",
+};
+
 export function ApplicationDashboardOverview({
   data,
   isLoading,
@@ -62,6 +67,9 @@ export function ApplicationDashboardOverview({
 }: ApplicationDashboardOverviewProps) {
   const LinkComponent = Link ?? "a";
   console.log("data", data);
+  const templateDisplayName = data?.websiteTemplate 
+    ? TEMPLATE_NAMES[data.websiteTemplate] ?? data.websiteTemplate 
+    : "";
   const displayName =
     data?.coupleNames?.displayName ||
     (data?.coupleNames?.nameA && data?.coupleNames?.nameB
@@ -201,7 +209,7 @@ export function ApplicationDashboardOverview({
                 <div className="text-sm text-muted-foreground">
                   Template:{" "}
                   <span className="text-foreground">
-                    {data?.websiteTemplate}
+                    {templateDisplayName}
                   </span>
                 </div>
               </div>

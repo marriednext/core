@@ -93,6 +93,7 @@ export type WebsiteBuilderData = {
   subdomain?: string | null;
   customDomain?: string | null;
   subscriptionPlan?: string;
+  websiteTemplate?: string | null;
 };
 
 export type ApplicationWebsiteBuilderProps = {
@@ -108,8 +109,14 @@ export function ApplicationWebsiteBuilder({
     "desktop"
   );
   const [hasChanges, setHasChanges] = useState(false);
-  const currentTemplate = "Lisa's Theme";
-  const themeId = "lisastheme";
+
+  const TEMPLATE_NAMES: Record<string, string> = {
+    lisastheme: "Lisa's Theme",
+    tuscanbloom: "Tuscan Bloom",
+  };
+
+  const themeId = data?.websiteTemplate ?? "lisastheme";
+  const currentTemplate = TEMPLATE_NAMES[themeId] ?? themeId;
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("images");
   const [isUploading, setIsUploading] = useState(false);
