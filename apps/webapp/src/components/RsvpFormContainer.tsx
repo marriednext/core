@@ -9,12 +9,14 @@ interface RsvpFormContainerProps {
   className?: string;
   tokens?: Partial<RsvpFormTokens>;
   styles?: RsvpFormStyles;
+  showTitle?: boolean;
 }
 
 export default function RsvpFormContainer({
   className,
   tokens,
   styles,
+  showTitle,
 }: RsvpFormContainerProps) {
   const {
     email,
@@ -94,6 +96,7 @@ export default function RsvpFormContainer({
       className={className}
       tokens={tokens}
       styles={styles}
+      showTitle={showTitle}
       onLookup={(name) => lookupMutation.mutate(name)}
       onSubmit={() => submitMutation.mutate()}
     />

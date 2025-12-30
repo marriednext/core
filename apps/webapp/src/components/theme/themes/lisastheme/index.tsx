@@ -21,7 +21,7 @@ const lisasThemeStyles: RsvpFormStyles = {
   title: "font-serif text-5xl md:text-6xl font-light italic mb-4",
   subtitle: "text-lg md:text-xl",
   input:
-    "w-full h-14 text-lg text-center bg-transparent border-0 border-b-2 rounded-none focus:ring-0 placeholder:opacity-40",
+    "w-full h-14 text-lg text-center bg-transparent border-0 border-b-2 rounded-none focus:ring-0 ",
   button:
     "h-14 px-12 tracking-[0.2em] uppercase text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
   buttonBack: "underline text-base md:text-lg transition-colors",
@@ -44,7 +44,11 @@ export default function LisasThemeEntry({
     <LisasTheme
       {...props}
       rsvpFormComponent={
-        <RsvpFormContainer tokens={lisasThemeTokens} styles={lisasThemeStyles} />
+        <RsvpFormContainer
+          tokens={lisasThemeTokens}
+          styles={lisasThemeStyles}
+          showTitle={false}
+        />
       }
       editable={editable}
       contained={contained}

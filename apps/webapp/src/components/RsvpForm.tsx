@@ -35,6 +35,7 @@ interface RsvpFormProps {
   className?: string;
   tokens?: Partial<RsvpFormTokens>;
   styles?: RsvpFormStyles;
+  showTitle?: boolean;
   onLookup: (name: string) => void;
   onSubmit: () => void;
 }
@@ -70,6 +71,7 @@ export default function RsvpForm({
   className,
   tokens: tokensProp,
   styles: stylesProp,
+  showTitle = true,
   onLookup,
   onSubmit,
 }: RsvpFormProps) {
@@ -144,12 +146,17 @@ export default function RsvpForm({
       style={{ fontFamily: tokens.bodyFont }}
     >
       <div className={styles.container}>
-        <h2
-          className={styles.title}
-          style={{ fontFamily: tokens.headingFont, color: tokens.headingColor }}
-        >
-          RSVP
-        </h2>
+        {showTitle && (
+          <h2
+            className={styles.title}
+            style={{
+              fontFamily: tokens.headingFont,
+              color: tokens.headingColor,
+            }}
+          >
+            RSVP
+          </h2>
+        )}
 
         {step === "name-input" && (
           <>
