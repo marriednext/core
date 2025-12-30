@@ -3,6 +3,7 @@
 import { LisasTheme } from "component-shelf";
 import { mapWeddingDataToLisasThemeProps } from "./mapper";
 import type { ThemeProps } from "../../types";
+import RsvpFormContainer from "@/components/RsvpFormContainer";
 
 export default function LisasThemeEntry({
   weddingData,
@@ -15,6 +16,7 @@ export default function LisasThemeEntry({
   return (
     <LisasTheme
       {...props}
+      rsvpFormComponent={<RsvpFormContainer />}
       editable={editable}
       contained={contained}
       onCustomizationChange={onCustomizationChange}
@@ -22,4 +24,3 @@ export default function LisasThemeEntry({
     />
   );
 }
-
