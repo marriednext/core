@@ -49,7 +49,7 @@ export function HeroSection({ Link = "a" }: HeroSectionProps) {
               size="lg"
               className="gap-2 text-base px-8 bg-transparent"
             >
-              <LinkComponent href="https://github.com/matthewbub/marriednext.com">
+              <LinkComponent href="https://github.com/marriednext/core">
                 <span className="flex items-center gap-2">
                   <Github className="h-4 w-4" />
                   View Source

@@ -52,4 +52,4 @@ The onboarding form sets records in Clerk, Neon, Vercel -> Project -> Domains, P
 
 ## Additional info
 
-https://github.com/matthewbub/marriednext.com/issues/143
+https://github.com/marriednext/core/issues/143

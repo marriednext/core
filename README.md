@@ -19,7 +19,7 @@ pnpm add turbo --global
 1. Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/matthewbub/marriednext.com
+git clone https://github.com/marriednext/core
 cd marriednext.com
 pnpm install
 ```
