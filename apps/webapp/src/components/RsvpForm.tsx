@@ -232,7 +232,8 @@ export default function RsvpForm({
               className="mt-2 text-base md:text-lg"
               style={{ color: mutedColor }}
             >
-              Please select who will be attending:
+              Check the box for guests who will be attending. Unchecked guests
+              will be marked as not attending.
             </p>
 
             <div className="mt-8 md:mt-10 space-y-3 w-md mx-auto">
@@ -273,10 +274,7 @@ export default function RsvpForm({
               style={{ color: mutedColor }}
             >
               {attendingCount === 0 && (
-                <p>
-                  No guests selected. Please select at least one guest or mark
-                  as not attending.
-                </p>
+                <p>All guests will be marked as not attending.</p>
               )}
               {attendingCount > 0 && (
                 <p>

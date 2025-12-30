@@ -26,6 +26,10 @@ export async function POST(request: Request) {
     }
 
     const { name } = parse.data;
+    console.log(
+      `RSVP lookup: "${name}" for wedding ${wedding.id} (format: ${wedding.controlRsvpNameFormat})`
+    );
+
     const invitation = await findInvitationByGuestName(
       name,
       wedding.id,
@@ -33,6 +37,7 @@ export async function POST(request: Request) {
     );
 
     if (!invitation) {
+      console.log(`RSVP lookup: No invitation found for "${name}"`);
       return NextResponse.json(
         { error: "Guest not found on invitation list" },
         { status: 404 }

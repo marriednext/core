@@ -19,7 +19,10 @@ export async function findInvitationByGuestName(
       })
       .from(invitation)
       .where(
-        and(eq(invitation.weddingId, weddingId), ilike(invitation.email, searchName))
+        and(
+          eq(invitation.weddingId, weddingId),
+          ilike(invitation.email, searchName)
+        )
       )
       .limit(1);
 
@@ -49,7 +52,11 @@ export async function findInvitationByGuestName(
     )
     .limit(1);
 
-  if (!matchingGuest || !matchingGuest.invitationId) return null;
+  if (!matchingGuest) return null;
+
+  if (!matchingGuest.invitationId) {
+    return null;
+  }
 
   const [invitationResult] = await db
     .select({
@@ -71,4 +78,3 @@ export async function findInvitationByGuestName(
 
   return { ...invitationResult, guests };
 }
-
