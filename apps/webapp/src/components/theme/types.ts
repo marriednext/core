@@ -8,4 +8,4 @@ export type ThemeProps = {
   onSectionClick?: (sectionId: string) => void;
 };
 
-export type ThemeId = "lisastheme" | "tuscanbloom";
+export type ThemeId = "lisastheme" | "tuscanbloom" | "basic";

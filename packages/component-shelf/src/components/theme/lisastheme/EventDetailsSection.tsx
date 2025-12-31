@@ -69,80 +69,75 @@ export function EventDetailsSection({
         </div>
 
         <div className="grid md:grid-cols-3 gap-12 md:gap-8">
-          {formattedTime && (
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 border border-[#745656]/30 rounded-full mb-6">
-                <Sparkles className="w-6 h-6 text-[#745656]" />
-              </div>
-              {mergedCustomization.ceremonyHeadingLabel && (
-                <EditableLabel
-                  as="h3"
-                  value={mergedCustomization.ceremonyHeadingLabel}
-                  editable={editable}
-                  onChange={(v) => handleChange("ceremonyHeadingLabel", v)}
-                  className="font-serif text-2xl text-[#2c2c2c] mb-4 italic"
-                />
-              )}
-              {mergedCustomization.ceremonyDescriptionLabel && (
-                <EditableLabel
-                  as="p"
-                  value={mergedCustomization.ceremonyDescriptionLabel}
-                  editable={editable}
-                  onChange={(v) => handleChange("ceremonyDescriptionLabel", v)}
-                  className="text-[#2c2c2c]/70 mb-6 leading-relaxed"
-                />
-              )}
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 border border-[#745656]/30 rounded-full mb-6">
+              <Sparkles className="w-6 h-6 text-[#745656]" />
+            </div>
+            {mergedCustomization.ceremonyHeadingLabel && (
+              <EditableLabel
+                as="h3"
+                value={mergedCustomization.ceremonyHeadingLabel}
+                editable={editable}
+                onChange={(v) => handleChange("ceremonyHeadingLabel", v)}
+                className="font-serif text-2xl text-[#2c2c2c] mb-4 italic"
+              />
+            )}
+            {mergedCustomization.ceremonyDescriptionLabel && (
+              <EditableLabel
+                as="p"
+                value={mergedCustomization.ceremonyDescriptionLabel}
+                editable={editable}
+                onChange={(v) => handleChange("ceremonyDescriptionLabel", v)}
+                className="text-[#2c2c2c]/70 mb-6 leading-relaxed"
+              />
+            )}
+            {formattedTime && (
               <div className="space-y-2 text-[#2c2c2c]/80">
                 <p className="flex items-center justify-center gap-2">
                   <Clock className="w-4 h-4 text-[#745656]" />
                   {formattedTime}
                 </p>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
-          {data?.locationName && (
-            <div
-              className={clsx(
-                "text-center",
-                formattedTime &&
-                  "border-x-0 md:border-x border-[#745656]/10 px-0 md:px-8"
-              )}
-            >
-              <div className="inline-flex items-center justify-center w-16 h-16 border border-[#745656]/30 rounded-full mb-6">
-                <MapPin className="w-6 h-6 text-[#745656]" />
-              </div>
-              {mergedCustomization.venueHeadingLabel && (
-                <EditableLabel
-                  as="h3"
-                  value={mergedCustomization.venueHeadingLabel}
-                  editable={editable}
-                  onChange={(v) => handleChange("venueHeadingLabel", v)}
-                  className="font-serif text-2xl text-[#2c2c2c] mb-4 italic"
-                />
-              )}
-              <p className="text-[#2c2c2c]/70 mb-6 leading-relaxed">
-                {data?.locationName}
-              </p>
-              {addressLines.length > 0 && (
-                <address className="not-italic text-[#2c2c2c]/80 space-y-1">
-                  {addressLines.map((line, i) => (
-                    <p key={i}>{line}</p>
-                  ))}
-                </address>
-              )}
-              {data?.mapsShareUrl && mergedCustomization.viewMapLabel && (
-                <a
-                  href={data?.mapsShareUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block mt-4 text-[#745656] text-sm tracking-[0.2em] uppercase border-b border-[#745656]/30 pb-1 hover:border-[#745656] transition-colors"
-                >
-                  {mergedCustomization.viewMapLabel}
-                </a>
-              )}
+          <div
+            className={clsx(
+              "text-center",
+              "border-x-0 md:border-x border-[#745656]/10 px-0 md:px-8"
+            )}
+          >
+            <div className="inline-flex items-center justify-center w-16 h-16 border border-[#745656]/30 rounded-full mb-6">
+              <MapPin className="w-6 h-6 text-[#745656]" />
             </div>
-          )}
+            {mergedCustomization.venueHeadingLabel && (
+              <EditableLabel
+                as="h3"
+                value={mergedCustomization.venueHeadingLabel}
+                editable={editable}
+                onChange={(v) => handleChange("venueHeadingLabel", v)}
+                className="font-serif text-2xl text-[#2c2c2c] mb-4 italic"
+              />
+            )}
+            <p className="text-[#2c2c2c]/70 mb-6 leading-relaxed">
+              {data?.locationName}
+            </p>
+            <address className="not-italic text-[#2c2c2c]/80 space-y-1">
+              {addressLines.map((line, i) => (
+                <p key={i}>{line}</p>
+              ))}
+            </address>
+            {data?.mapsShareUrl && mergedCustomization.viewMapLabel && (
+              <a
+                href={data?.mapsShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-4 text-[#745656] text-sm tracking-[0.2em] uppercase border-b border-[#745656]/30 pb-1 hover:border-[#745656] transition-colors"
+              >
+                {mergedCustomization.viewMapLabel}
+              </a>
+            )}
+          </div>
 
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 border border-[#745656]/30 rounded-full mb-6">

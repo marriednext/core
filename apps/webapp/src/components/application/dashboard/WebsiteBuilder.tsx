@@ -6,7 +6,10 @@ import {
   areLabelsEqual,
   areSectionsEqual,
 } from "../../../stores/websiteBuilderStore";
-import { isBuilderMessage, postToIframe } from "../../../lib/component-shelf/builderMessages";
+import {
+  isBuilderMessage,
+  postToIframe,
+} from "../../../lib/component-shelf/builderMessages";
 import {
   Card,
   CardContent,
@@ -16,12 +19,7 @@ import {
 } from "../../ui/card";
 import { Button } from "../../ui/button";
 import { Switch } from "../../ui/switch";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import {
   AlertDialog,
   AlertDialogAction,

@@ -94,7 +94,7 @@ const websiteLabelsSchema = z.record(
   z.record(z.string(), z.string())
 );
 
-const websiteTemplateSchema = z.enum(["lisastheme", "tuscanbloom"]);
+const websiteTemplateSchema = z.enum(["lisastheme", "tuscanbloom", "basic"]);
 
 const patchBodySchema = z
   .object({

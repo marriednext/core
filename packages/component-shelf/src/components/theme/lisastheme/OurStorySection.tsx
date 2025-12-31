@@ -6,6 +6,7 @@ import type {
   OurStorySectionProps,
 } from "./types";
 import { EditableLabel } from "../../ui/editable-label";
+import { PLACEHOLDER_IMAGES } from "./constants";
 
 const defaultMilestones: Milestone[] = [
   {
@@ -90,10 +91,7 @@ export function OurStorySection({
           <div className="aspect-[4/5] overflow-hidden">
             {data?.imageComponent || (
               <img
-                src={
-                  data?.imageUrl ||
-                  "/romantic-couple-engagement-photo-in-nature-golden-.jpg"
-                }
+                src={data?.imageUrl || PLACEHOLDER_IMAGES.ourStory}
                 alt={coupleName}
                 className="w-full h-full object-cover"
               />

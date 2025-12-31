@@ -8,16 +8,17 @@ import type {
   GallerySectionProps,
 } from "./types";
 import { EditableLabel } from "../../ui/editable-label";
+import { PLACEHOLDER_IMAGES } from "./constants";
 
 const defaultImages: GalleryImage[] = [
-  { src: "/romantic-couple-portrait-engagement.jpg", span: "row-span-2" },
-  { src: "/couple-laughing-candid-moment.jpg", span: "" },
-  { src: "/couple-holding-hands-closeup.jpg", span: "" },
-  { src: "/couple-sunset-silhouette-romantic.jpg", span: "col-span-2" },
-  { src: "/couple-adventure-hiking-together.jpg", span: "" },
-  { src: "/engagement-ring-proposal-moment.jpg", span: "row-span-2" },
-  { src: "/couple-cooking-kitchen.png", span: "" },
-  { src: "/romantic-dance.png", span: "" },
+  { src: PLACEHOLDER_IMAGES.gallery[0], span: "row-span-2" },
+  { src: PLACEHOLDER_IMAGES.gallery[1], span: "" },
+  { src: PLACEHOLDER_IMAGES.gallery[2], span: "" },
+  { src: PLACEHOLDER_IMAGES.gallery[3], span: "col-span-2" },
+  { src: PLACEHOLDER_IMAGES.gallery[4], span: "" },
+  { src: PLACEHOLDER_IMAGES.gallery[5], span: "row-span-2" },
+  { src: PLACEHOLDER_IMAGES.gallery[6], span: "" },
+  { src: PLACEHOLDER_IMAGES.gallery[7], span: "" },
 ];
 
 const defaultGalleryLabels = {

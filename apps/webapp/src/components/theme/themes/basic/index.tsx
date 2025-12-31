@@ -1,0 +1,64 @@
+"use client";
+
+import { BasicTheme } from "component-shelf";
+import { mapWeddingDataToBasicThemeProps } from "./mapper";
+import type { ThemeProps } from "../../types";
+import RsvpFormContainer from "@/components/RsvpFormContainer";
+import type { RsvpFormTokens, RsvpFormStyles } from "@/components/RsvpForm";
+import Link from "next/link";
+import Image from "next/image";
+
+const basicThemeTokens: RsvpFormTokens = {
+  primary: "#0a0a0a",
+  primaryForeground: "#fafafa",
+  background: "#fafafa",
+  headingColor: "#0a0a0a",
+  bodyColor: "#404040",
+  headingFont: "'Playfair Display', serif",
+  bodyFont: "'Inter', sans-serif",
+};
+
+const basicThemeStyles: RsvpFormStyles = {
+  container: "max-w-xl w-full",
+  title: "font-serif text-5xl md:text-6xl mb-4",
+  subtitle: "text-lg md:text-xl opacity-80",
+  input:
+    "px-4 w-full h-14 text-lg bg-transparent border-0 border-b-2 border-background rounded-none focus:ring-0 placeholder:opacity-40",
+  button:
+    "h-14 px-12 tracking-[0.2em] uppercase text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+  buttonBack: "underline text-base transition-colors",
+  guestItem: "flex items-center justify-between p-4 border-y transition-colors",
+  guestLabel: "font-serif text-xl cursor-pointer flex-1 text-left",
+  checkbox: "h-5 w-5",
+  successMessage: "mt-6 md:mt-10 text-lg md:text-xl",
+  errorMessage: "mt-6 md:mt-10 text-lg md:text-xl",
+};
+
+export default function BasicThemeEntry({
+  weddingData,
+  editable,
+  onCustomizationChange,
+  onSectionClick,
+}: ThemeProps) {
+  const props = mapWeddingDataToBasicThemeProps(weddingData);
+
+  return (
+    <BasicTheme
+      {...props}
+      rsvpFormComponent={
+        <RsvpFormContainer
+          tokens={basicThemeTokens}
+          styles={basicThemeStyles}
+          showTitle={false}
+        />
+      }
+      editable={editable}
+      onCustomizationChange={onCustomizationChange}
+      onSectionClick={onSectionClick}
+      LinkComponent={Link}
+      ImageComponent={Image}
+    />
+  );
+}
+
+

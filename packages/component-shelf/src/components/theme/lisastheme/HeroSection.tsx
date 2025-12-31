@@ -6,6 +6,7 @@ import type { HeroSectionCustomization, HeroSectionProps } from "./types";
 import labels from "label-shelf/lisastheme";
 import { EditableLabel } from "../../ui/editable-label";
 import { cn } from "../../../lib/utils";
+import { PLACEHOLDER_IMAGES } from "./constants";
 
 function formatDate(dateString: string | null | undefined): string {
   if (!dateString) return "";
@@ -60,10 +61,7 @@ export function HeroSection({
           </div>
         ) : (
           <img
-            src={
-              data?.imageUrl ||
-              "https://4ctc36zdopsyz0ok.public.blob.vercel-storage.com/photos/placeholders/cody-chan-7jgtAhJkjwk-unsplash.jpg"
-            }
+            src={data?.imageUrl || PLACEHOLDER_IMAGES.hero}
             alt=""
             className="w-full h-full object-cover"
           />

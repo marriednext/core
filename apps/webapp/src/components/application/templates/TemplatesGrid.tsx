@@ -16,7 +16,7 @@ type TemplateStyle =
   | "minimal"
   | "romantic";
 type TemplateFilter = "all" | "free" | "premium";
-type ThemeId = "lisastheme" | "tuscanbloom";
+type ThemeId = "lisastheme" | "tuscanbloom" | "basic";
 
 interface Template {
   id: string;
@@ -50,6 +50,16 @@ const templates: Template[] = [
     isPremium: false,
     previewImage: "/floral-botanical-garden-wedding-website-romantic-w.jpg",
     features: ["RSVP form", "Photo gallery", "Our Story"],
+    isImplemented: true,
+  },
+  {
+    id: "basic",
+    themeId: "basic",
+    name: "Classic",
+    style: "minimal",
+    isPremium: false,
+    previewImage: "/minimal-black-white-wedding-website-clean-typograp.jpg",
+    features: ["RSVP form", "Photo gallery", "FAQ section"],
     isImplemented: true,
   },
   // {

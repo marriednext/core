@@ -16,3 +16,5 @@ export const homeStatsResponseSchema = z.object({
   websiteTemplate: z.string(),
 }) satisfies z.ZodType<HomeStatsResponse>;
 
+
+

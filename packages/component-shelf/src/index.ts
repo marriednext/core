@@ -4,6 +4,24 @@ export type { GoogleMapsTypes } from "./stories/GoogleMaps/GoogleMaps.types";
 
 export { LisasTheme } from "./components/theme/lisastheme/LisasTheme";
 export { TuscanBloom } from "./components/theme/tuscanbloom/tuscanbloom";
+export { BasicTheme } from "./components/theme/basic/BasicTheme";
+export { PagePhotos } from "./components/theme/basic/page-photos";
+export { PageSaveTheDate } from "./components/theme/basic/page-save-the-date";
+export { PageCollectInfo } from "./components/theme/basic/page-collect-info";
+export { PageBuilder } from "./components/theme/basic/page-builder";
+export type {
+  BasicThemeProps,
+  PagePhotosProps,
+  PagePhotosData,
+  PagePhotosCustomization,
+  PageSaveTheDateProps,
+  PageSaveTheDateData,
+  PageSaveTheDateCustomization,
+  PageCollectInfoProps,
+  PageCollectInfoData,
+  PageCollectInfoCustomization,
+  CollectInfoFormData,
+} from "./components/theme/basic/types";
 export type {
   TuscanBloomProps,
   TuscanBloomLocation,
