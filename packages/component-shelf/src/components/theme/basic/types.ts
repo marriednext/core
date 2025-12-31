@@ -166,7 +166,7 @@ export interface EventDetailsSectionProps {
 }
 
 export interface GalleryImage {
-  src: string;
+  src: unknown;
   alt?: string;
 }
 

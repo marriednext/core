@@ -19,7 +19,7 @@ const defaultCustomization = {
   closingLabel: "WITH LOVE",
   madeWithLabel: "Made for free with",
   brandLabel: "MARRIEDNEXT.COM",
-  logoUrl: defaultLogoImage,
+  logoUrl: defaultLogoImage as unknown as string,
 };
 
 export function FooterSection({
@@ -77,7 +77,7 @@ export function FooterSection({
             </p>
             <div className="flex items-center gap-2">
               <ImageComponent
-                src={labels.logoUrl || defaultLogoImage}
+                src={labels.logoUrl || (defaultLogoImage as unknown as string)}
                 alt="MarriedNext logo"
                 width={24}
                 height={24}

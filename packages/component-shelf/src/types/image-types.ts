@@ -1,7 +1,7 @@
-import type { ComponentPropsWithoutRef, ElementType } from "react";
+import type { ComponentPropsWithoutRef, ComponentType } from "react";
 
-export type ApplicationImageProps = ComponentPropsWithoutRef<"img"> & {
-  src: string;
+export type ApplicationImageProps = Omit<ComponentPropsWithoutRef<"img">, "src" | "width" | "height"> & {
+  src: unknown;
   alt: string;
   width?: number;
   height?: number;
@@ -9,5 +9,5 @@ export type ApplicationImageProps = ComponentPropsWithoutRef<"img"> & {
   priority?: boolean;
 };
 
-export type ApplicationImageComponent = ElementType<ApplicationImageProps>;
+export type ApplicationImageComponent = "img" | ComponentType<ApplicationImageProps>;
 

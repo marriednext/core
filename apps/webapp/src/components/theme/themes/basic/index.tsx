@@ -1,6 +1,7 @@
 "use client";
 
 import { BasicTheme } from "component-shelf";
+import type { ApplicationImageComponent } from "component-shelf";
 import { mapWeddingDataToBasicThemeProps } from "./mapper";
 import type { ThemeProps } from "../../types";
 import RsvpFormContainer from "@/components/RsvpFormContainer";
@@ -56,7 +57,7 @@ export default function BasicThemeEntry({
       onCustomizationChange={onCustomizationChange}
       onSectionClick={onSectionClick}
       LinkComponent={Link}
-      ImageComponent={Image}
+      ImageComponent={Image as ApplicationImageComponent}
     />
   );
 }

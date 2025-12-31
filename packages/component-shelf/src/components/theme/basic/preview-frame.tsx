@@ -566,7 +566,7 @@ export function PreviewFrame({ tokens }: { tokens: TokenValues }) {
                 style={{ backgroundColor: tokens.background }}
               >
                 <img
-                  src={img || "/placeholder.svg"}
+                  src={(img || "/placeholder.svg") as string}
                   alt={`Gallery ${i + 1}`}
                   className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
                 />

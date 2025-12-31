@@ -46,9 +46,9 @@ const defaultTokens: TokenValues = {
   bodyColor: "#404040",
   headingFont: "Playfair Display",
   bodyFont: "Inter",
-  heroImage: heroImageAsset,
-  coupleImage: coupleImageAsset,
-  galleryImages: [galleryImage1, galleryImage2, galleryImage3],
+  heroImage: heroImageAsset as unknown as string,
+  coupleImage: coupleImageAsset as unknown as string,
+  galleryImages: [galleryImage1, galleryImage2, galleryImage3] as unknown as string[],
   faqs: [
     {
       question: "What is the dress code?",

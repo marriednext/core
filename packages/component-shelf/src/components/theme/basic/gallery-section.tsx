@@ -49,7 +49,7 @@ export function GallerySection({
               className="aspect-square overflow-hidden bg-background"
             >
               <ImageComponent
-                src={image.src || "/placeholder.svg"}
+                src={(image.src || "/placeholder.svg") as string}
                 alt={image.alt || `Gallery image ${index + 1}`}
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
               />
