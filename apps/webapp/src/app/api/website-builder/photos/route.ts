@@ -7,6 +7,7 @@ import { eq, and } from "drizzle-orm";
 import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
 import { uploadPhoto, deletePhoto, type PhotoType } from "@/lib/infrastructure/blob/upload";
 import { randomUUID } from "crypto";
+import { invalidateWeddingCache } from "@/lib/wedding/cache";
 
 const uploadSchema = z.object({
   photoType: z.enum(["hero", "story", "gallery"]),
@@ -96,6 +97,11 @@ export async function POST(req: NextRequest) {
         displayOrder: weddingPhotos.displayOrder,
       });
 
+    await invalidateWeddingCache({
+      subdomain: wedding.subdomain,
+      customDomain: wedding.customDomain,
+    });
+
     return NextResponse.json({ photo: newPhoto }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -148,6 +154,11 @@ export async function DELETE(req: NextRequest) {
 
     await deletePhoto(photo.blobPathname);
     await db.delete(weddingPhotos).where(eq(weddingPhotos.id, photoId));
+
+    await invalidateWeddingCache({
+      subdomain: wedding.subdomain,
+      customDomain: wedding.customDomain,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
