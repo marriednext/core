@@ -88,7 +88,7 @@ export function Footer({ Link = "a" }: FooterProps) {
                   Wedding Blog
                 </Link>
               </li>
-              <li>
+{/* <li>
                 <Link
                   href="/changelog"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -103,11 +103,11 @@ export function Footer({ Link = "a" }: FooterProps) {
                 >
                   Community
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
-          <div>
+{/* <div>
             <h4 className="font-medium text-foreground mb-4">Company</h4>
             <ul className="space-y-2">
               <li>
@@ -143,7 +143,7 @@ export function Footer({ Link = "a" }: FooterProps) {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">

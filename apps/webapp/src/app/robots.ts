@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/dashboard/", "/engaged/"],
+      disallow: ["/api/", "/engaged/"],
     },
     sitemap: "https://marriednext.com/sitemap.xml",
   };

@@ -49,7 +49,3 @@ The onboarding form sets records in Clerk, Neon, Vercel -> Project -> Domains, P
 2. Delete the Wedding from your DB Provider
 3. Delete the subdomain from Vercel -> Project -> Domains
 4. Delete the CNAME Records from Porkbun
-
-## Additional info
-
-https://github.com/marriednext/core/issues/143
