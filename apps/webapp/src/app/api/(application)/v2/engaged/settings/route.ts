@@ -5,7 +5,7 @@ import { db } from "@/database/drizzle";
 import { wedding } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
-import { updateWeddingCache } from "@/lib/wedding/cache";
+import { invalidateWeddingCache } from "@/lib/wedding/cache";
 import { getInitials } from "@/lib/utils/site";
 
 const weddingSettingsSchema = z
@@ -184,24 +184,9 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
     }
 
-    await updateWeddingCache({
-      id: updatedWedding.id,
+    await invalidateWeddingCache({
       subdomain: updatedWedding.subdomain,
       customDomain: updatedWedding.customDomain,
-      createdAt: updatedWedding.createdAt,
-      updatedAt: updatedWedding.updatedAt,
-      fieldDisplayName: updatedWedding.fieldDisplayName,
-      fieldLocationName: updatedWedding.fieldLocationName,
-      fieldLocationAddress: updatedWedding.fieldLocationAddress,
-      fieldEventDate: updatedWedding.fieldEventDate,
-      fieldEventTime: updatedWedding.fieldEventTime,
-      fieldMapsEmbedUrl: updatedWedding.fieldMapsEmbedUrl,
-      fieldMapsShareUrl: updatedWedding.fieldMapsShareUrl,
-      fieldQuestionsAndAnswers: updatedWedding.fieldQuestionsAndAnswers,
-      fieldOurStory: updatedWedding.fieldOurStory,
-      fieldNameA: updatedWedding.fieldNameA,
-      fieldNameB: updatedWedding.fieldNameB,
-      controlRsvpNameFormat: updatedWedding.controlRsvpNameFormat,
     });
 
     const subscriptionPlan = "Free";

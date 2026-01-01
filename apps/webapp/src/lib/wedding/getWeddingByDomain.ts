@@ -81,5 +81,3 @@ export async function getWeddingByDomain(
 
   return weddingData;
 }
-
-

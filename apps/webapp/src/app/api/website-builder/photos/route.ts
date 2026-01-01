@@ -5,7 +5,11 @@ import { db } from "@/database/drizzle";
 import { weddingPhotos } from "@/database/schema";
 import { eq, and } from "drizzle-orm";
 import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
-import { uploadPhoto, deletePhoto, type PhotoType } from "@/lib/infrastructure/blob/upload";
+import {
+  uploadPhoto,
+  deletePhoto,
+  type PhotoType,
+} from "@/lib/infrastructure/blob/upload";
 import { randomUUID } from "crypto";
 import { invalidateWeddingCache } from "@/lib/wedding/cache";
 
@@ -29,10 +33,7 @@ export async function POST(req: NextRequest) {
 
     const wedding = await getCurrentWedding();
     if (!wedding) {
-      return NextResponse.json(
-        { error: "Wedding not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
     }
 
     const formData = await req.formData();
@@ -42,10 +43,7 @@ export async function POST(req: NextRequest) {
     const displayOrderStr = formData.get("displayOrder") as string | null;
 
     if (!file) {
-      return NextResponse.json(
-        { error: "File is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "File is required" }, { status: 400 });
     }
 
     const validatedData = uploadSchema.parse({
@@ -54,7 +52,10 @@ export async function POST(req: NextRequest) {
       displayOrder: displayOrderStr ? parseInt(displayOrderStr, 10) : undefined,
     });
 
-    if (validatedData.photoType === "hero" || validatedData.photoType === "story") {
+    if (
+      validatedData.photoType === "hero" ||
+      validatedData.photoType === "story"
+    ) {
       const existingPhoto = await db.query.weddingPhotos.findFirst({
         where: and(
           eq(weddingPhotos.weddingId, wedding.id),
@@ -129,10 +130,7 @@ export async function DELETE(req: NextRequest) {
 
     const wedding = await getCurrentWedding();
     if (!wedding) {
-      return NextResponse.json(
-        { error: "Wedding not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Wedding not found" }, { status: 404 });
     }
 
     const body = await req.json();
@@ -146,10 +144,7 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (!photo) {
-      return NextResponse.json(
-        { error: "Photo not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Photo not found" }, { status: 404 });
     }
 
     await deletePhoto(photo.blobPathname);
@@ -176,4 +171,3 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
-

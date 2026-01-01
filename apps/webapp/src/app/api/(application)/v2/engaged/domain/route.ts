@@ -5,10 +5,7 @@ import { db } from "@/database/drizzle";
 import { wedding } from "@/database/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { getCurrentWedding } from "@/lib/wedding/getCurrentWedding";
-import {
-  updateWeddingCache,
-  invalidateWeddingCache,
-} from "@/lib/wedding/cache";
+import { invalidateWeddingCache } from "@/lib/wedding/cache";
 import { subdomainSchema } from "@/lib/utils/site";
 import * as Sentry from "@sentry/nextjs";
 import {
@@ -195,25 +192,15 @@ export async function PATCH(req: NextRequest) {
       customDomain: oldCustomDomain,
     });
 
-    await updateWeddingCache({
-      id: updatedWedding.id,
-      subdomain: updatedWedding.subdomain,
-      customDomain: updatedWedding.customDomain,
-      createdAt: updatedWedding.createdAt,
-      updatedAt: updatedWedding.updatedAt,
-      fieldDisplayName: updatedWedding.fieldDisplayName,
-      fieldLocationName: updatedWedding.fieldLocationName,
-      fieldLocationAddress: updatedWedding.fieldLocationAddress,
-      fieldEventDate: updatedWedding.fieldEventDate,
-      fieldEventTime: updatedWedding.fieldEventTime,
-      fieldMapsEmbedUrl: updatedWedding.fieldMapsEmbedUrl,
-      fieldMapsShareUrl: updatedWedding.fieldMapsShareUrl,
-      fieldQuestionsAndAnswers: updatedWedding.fieldQuestionsAndAnswers,
-      fieldOurStory: updatedWedding.fieldOurStory,
-      fieldNameA: updatedWedding.fieldNameA,
-      fieldNameB: updatedWedding.fieldNameB,
-      controlRsvpNameFormat: updatedWedding.controlRsvpNameFormat,
-    });
+    if (
+      oldSubdomain !== updatedWedding.subdomain ||
+      oldCustomDomain !== updatedWedding.customDomain
+    ) {
+      await invalidateWeddingCache({
+        subdomain: updatedWedding.subdomain,
+        customDomain: updatedWedding.customDomain,
+      });
+    }
 
     if (isSubdomainChanging && oldSubdomain) {
       const [vercelRemoval, porkbunRemoval] = await Promise.allSettled([
