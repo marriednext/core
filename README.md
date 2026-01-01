@@ -7,7 +7,7 @@ Create and deploy your wedding website in minutes. Manage your guest list and co
 ### Prerequisites
 
 - Node.js 20+
-- pnpm 10+
+- pnpm 10.23.0
 - Turbo CLI (installed globally)
 
 ```bash
