@@ -22,12 +22,44 @@ async function findThemes(): Promise<string[]> {
     .map((entry) => entry.name);
 }
 
+function extractLocale(filename: string): string {
+  const match = filename.match(/^default_(\w+)\.properties$/);
+  return match ? match[1] : "en";
+}
+
 async function buildTheme(themeName: string): Promise<void> {
-  const propertiesPath = join(DEFAULTS_DIR, themeName, "default.properties");
-  const labels = parseProperties(propertiesPath);
+  const themeDir = join(DEFAULTS_DIR, themeName);
+  const files = await readdir(themeDir);
+  const propertyFiles = files.filter((f) => f.endsWith(".properties"));
+
+  const locales: Record<string, Record<string, string>> = {};
+
+  for (const file of propertyFiles) {
+    const locale = extractLocale(file);
+    const propertiesPath = join(themeDir, file);
+    locales[locale] = parseProperties(propertiesPath);
+  }
+
+  const localesOutputPath = join(DIST_DIR, `${themeName}.locales.json`);
+  await writeFile(
+    localesOutputPath,
+    JSON.stringify(locales, null, 2) + "\n",
+    "utf8"
+  );
+
+  const englishLabels = locales.en || Object.values(locales)[0] || {};
   const outputPath = join(DIST_DIR, `${themeName}.json`);
-  await writeFile(outputPath, JSON.stringify(labels, null, 2) + "\n", "utf8");
-  console.log(`Built ${themeName}.json`);
+  await writeFile(
+    outputPath,
+    JSON.stringify(englishLabels, null, 2) + "\n",
+    "utf8"
+  );
+
+  console.log(
+    `Built ${themeName}.json (en) and ${themeName}.locales.json (${Object.keys(
+      locales
+    ).join(", ")})`
+  );
 }
 
 async function buildAll(): Promise<void> {
