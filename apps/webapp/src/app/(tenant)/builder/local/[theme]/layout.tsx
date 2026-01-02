@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Cormorant_Infant } from "next/font/google";
 import "style-shelf/tailwind";
 import { notFound } from "next/navigation";
-import { getWeddingByDomain } from "@/lib/wedding/getWeddingByDomain";
 import { BuilderLayoutContent } from "./BuilderLayoutContent";
+import { createDummyWeddingData, isValidTheme, VALID_THEMES } from "./dummyData";
 
 const cormorantInfant = Cormorant_Infant({
   variable: "--font-cormorant-infant",
@@ -11,7 +11,7 @@ const cormorantInfant = Cormorant_Infant({
 });
 
 export const metadata: Metadata = {
-  title: "Website Builder Preview",
+  title: "Local Theme Preview",
   robots: "noindex, nofollow",
 };
 
@@ -23,11 +23,12 @@ export default async function BuilderLayout({
   params: Promise<{ theme: string }>;
 }>) {
   const { theme } = await params;
-  const weddingData = await getWeddingByDomain(theme);
 
-  if (!weddingData) {
+  if (!isValidTheme(theme)) {
     notFound();
   }
+
+  const weddingData = createDummyWeddingData(theme);
 
   return (
     <html lang="en">
@@ -38,4 +39,8 @@ export default async function BuilderLayout({
       </body>
     </html>
   );
+}
+
+export function generateStaticParams() {
+  return VALID_THEMES.map((theme) => ({ theme }));
 }

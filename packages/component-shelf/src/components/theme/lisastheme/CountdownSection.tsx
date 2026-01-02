@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import "style-shelf/tailwind"
-import labels from "label-shelf/lisastheme"
-import { useCountdown } from "../../../hooks"
+import "style-shelf/tailwind";
+import labels from "label-shelf/lisastheme";
+import { useCountdown } from "../../../hooks";
 import type {
   CountdownSectionCustomization,
   CountdownSectionProps,
-} from "./types"
-import { EditableLabel } from "../../ui/editable-label"
+} from "./types";
+import { EditableLabel } from "../../ui/editable-label";
 
 const defaultCountdownLabels = {
   pretextLabel: labels["lisastheme.countdown.pretext.label"],
@@ -15,7 +15,7 @@ const defaultCountdownLabels = {
   hoursLabel: labels["lisastheme.countdown.hours.label"],
   minutesLabel: labels["lisastheme.countdown.minutes.label"],
   secondsLabel: labels["lisastheme.countdown.seconds.label"],
-}
+};
 
 export function CountdownSection({
   data,
@@ -26,9 +26,9 @@ export function CountdownSection({
   const mergedCustomization = {
     ...defaultCountdownLabels,
     ...customization,
-  }
+  };
 
-  const eventDate = data?.eventDate || "2026-07-26T07:00:00"
+  const eventDate = data?.eventDate || "2026-07-26T07:00:00";
 
   const { timeUnits } = useCountdown({
     targetDate: eventDate,
@@ -38,14 +38,14 @@ export function CountdownSection({
       minutes: mergedCustomization.minutesLabel,
       seconds: mergedCustomization.secondsLabel,
     },
-  })
+  });
 
   const handleChange = (
     key: keyof CountdownSectionCustomization,
     value: string
   ) => {
-    onCustomizationChange?.(key, value)
-  }
+    onCustomizationChange?.(key, value);
+  };
 
   return (
     <section className="@container py-32 bg-[#faf9f6]">
@@ -88,7 +88,12 @@ export function CountdownSection({
                       as="span"
                       value={unit.label}
                       editable={editable}
-                      onChange={(v) => handleChange(`${unit.key}Label` as keyof CountdownSectionCustomization, v)}
+                      onChange={(v) =>
+                        handleChange(
+                          `${unit.key}Label` as keyof CountdownSectionCustomization,
+                          v
+                        )
+                      }
                       className="block mt-3 text-[#745656]/70 tracking-[0.3em] uppercase text-xs"
                     />
                   )}
@@ -104,5 +109,5 @@ export function CountdownSection({
         </div>
       </div>
     </section>
-  )
+  );
 }

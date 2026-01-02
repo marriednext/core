@@ -1,39 +1,39 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo } from "react";
 
 export interface TimeLeft {
-  days: number
-  hours: number
-  minutes: number
-  seconds: number
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
 }
 
 export interface TimeUnit {
-  value: number
-  label: string
-  key: keyof TimeLeft
-  formatted: string
+  value: number;
+  label: string;
+  key: keyof TimeLeft;
+  formatted: string;
 }
 
 export interface CountdownLabels {
-  days?: string
-  hours?: string
-  minutes?: string
-  seconds?: string
+  days?: string;
+  hours?: string;
+  minutes?: string;
+  seconds?: string;
 }
 
 export interface UseCountdownOptions {
-  targetDate: Date | string
-  labels?: CountdownLabels
-  padNumbers?: boolean
+  targetDate: Date | string;
+  labels?: CountdownLabels;
+  padNumbers?: boolean;
 }
 
 export interface UseCountdownReturn {
-  timeLeft: TimeLeft
-  timeUnits: TimeUnit[]
-  isComplete: boolean
-  totalSeconds: number
+  timeLeft: TimeLeft;
+  timeUnits: TimeUnit[];
+  isComplete: boolean;
+  totalSeconds: number;
 }
 
 const DEFAULT_LABELS: Required<CountdownLabels> = {
@@ -41,14 +41,16 @@ const DEFAULT_LABELS: Required<CountdownLabels> = {
   hours: "Hours",
   minutes: "Minutes",
   seconds: "Seconds",
-}
+};
 
-function calculateTimeLeft(targetDate: Date): TimeLeft & { totalSeconds: number } {
-  const difference = targetDate.getTime() - new Date().getTime()
-  const totalSeconds = Math.max(0, Math.floor(difference / 1000))
+function calculateTimeLeft(
+  targetDate: Date
+): TimeLeft & { totalSeconds: number } {
+  const difference = targetDate.getTime() - new Date().getTime();
+  const totalSeconds = Math.max(0, Math.floor(difference / 1000));
 
   if (difference <= 0) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0, totalSeconds: 0 }
+    return { days: 0, hours: 0, minutes: 0, seconds: 0, totalSeconds: 0 };
   }
 
   return {
@@ -57,7 +59,7 @@ function calculateTimeLeft(targetDate: Date): TimeLeft & { totalSeconds: number 
     minutes: Math.floor((difference / 1000 / 60) % 60),
     seconds: Math.floor((difference / 1000) % 60),
     totalSeconds,
-  }
+  };
 }
 
 export function useCountdown({
@@ -68,31 +70,33 @@ export function useCountdown({
   const target = useMemo(
     () => (typeof targetDate === "string" ? new Date(targetDate) : targetDate),
     [targetDate]
-  )
+  );
 
-  const [state, setState] = useState(() => calculateTimeLeft(target))
+  const [state, setState] = useState(() => calculateTimeLeft(target));
 
   useEffect(() => {
-    setState(calculateTimeLeft(target))
+    setState(calculateTimeLeft(target));
 
     const timer = setInterval(() => {
-      setState(calculateTimeLeft(target))
-    }, 1000)
+      setState(calculateTimeLeft(target));
+    }, 1000);
 
-    return () => clearInterval(timer)
-  }, [target])
+    return () => clearInterval(timer);
+  }, [target]);
 
-  const mergedLabels = { ...DEFAULT_LABELS, ...labels }
+  const mergedLabels = { ...DEFAULT_LABELS, ...labels };
 
   const timeUnits: TimeUnit[] = useMemo(() => {
-    const keys: (keyof TimeLeft)[] = ["days", "hours", "minutes", "seconds"]
+    const keys: (keyof TimeLeft)[] = ["days", "hours", "minutes", "seconds"];
     return keys.map((key) => ({
       value: state[key],
       label: mergedLabels[key],
       key,
-      formatted: padNumbers ? String(state[key]).padStart(2, "0") : String(state[key]),
-    }))
-  }, [state, mergedLabels, padNumbers])
+      formatted: padNumbers
+        ? String(state[key]).padStart(2, "0")
+        : String(state[key]),
+    }));
+  }, [state, mergedLabels, padNumbers]);
 
   return {
     timeLeft: {
@@ -104,6 +108,5 @@ export function useCountdown({
     timeUnits,
     isComplete: state.totalSeconds === 0,
     totalSeconds: state.totalSeconds,
-  }
+  };
 }
-
