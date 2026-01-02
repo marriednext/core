@@ -22,9 +22,21 @@ export type {
   PageCollectInfoCustomization,
   CollectInfoFormData,
   WebsiteTokens,
+  HierarchicalWebsiteTokens,
+  GlobalTokens,
+  PageTokens,
+  ButtonTokens,
+  TextTokens,
+  ComponentTokenKey,
 } from "./components/theme/basic/types";
 export {
   defaultWebsiteTokens,
+  defaultHierarchicalTokens,
+  defaultGlobalTokens,
+  createDefaultHierarchicalTokens,
+  toFlatTokens,
+  isTokenReference,
+  resolveTokenValue,
   colorPresets,
   fontOptions,
 } from "./components/theme/basic/types";

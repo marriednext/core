@@ -1,6 +1,10 @@
 "use client";
 
-import { BasicTheme, defaultWebsiteTokens } from "component-shelf";
+import {
+  BasicTheme,
+  defaultHierarchicalTokens,
+  toFlatTokens,
+} from "component-shelf";
 import type { ApplicationImageComponent } from "component-shelf";
 import { mapWeddingDataToBasicThemeProps } from "./mapper";
 import type { ThemeProps } from "../../types";
@@ -32,7 +36,9 @@ export default function BasicThemeEntry({
   onSectionClick,
 }: ThemeProps) {
   const props = mapWeddingDataToBasicThemeProps(weddingData);
-  const tokens = weddingData.websiteTokens || defaultWebsiteTokens;
+  const hierarchicalTokens =
+    weddingData.websiteTokens || defaultHierarchicalTokens;
+  const tokens = toFlatTokens(hierarchicalTokens);
 
   const rsvpTokens: RsvpFormTokens = {
     primary: tokens.primary,
@@ -63,5 +69,3 @@ export default function BasicThemeEntry({
     />
   );
 }
-
-

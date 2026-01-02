@@ -1,6 +1,16 @@
 import { create } from "zustand";
-import type { WebsiteTokens } from "component-shelf";
-import { defaultWebsiteTokens } from "component-shelf";
+import type {
+  WebsiteTokens,
+  GlobalTokens,
+  ComponentTokenKey,
+} from "@/database/types";
+import {
+  defaultWebsiteTokens,
+  updateGlobalToken as updateGlobalTokenUtil,
+  updateComponentToken as updateComponentTokenUtil,
+  resetComponentToken as resetComponentTokenUtil,
+  isTokenOverridden,
+} from "@/lib/wedding/tokens";
 
 export type WebsiteLabels = Record<string, Record<string, string>>;
 
@@ -29,7 +39,32 @@ interface WebsiteBuilderStore {
   initializeTokens: (tokens: WebsiteTokens | null | undefined) => void;
   updateLabel: (section: string, key: string, value: string) => void;
   updateSection: (sectionId: string, enabled: boolean) => void;
-  updateToken: <K extends keyof WebsiteTokens>(key: K, value: WebsiteTokens[K]) => void;
+  updateGlobalToken: <K extends keyof GlobalTokens>(
+    key: K,
+    value: GlobalTokens[K]
+  ) => void;
+  updateComponentToken: <
+    C extends ComponentTokenKey,
+    K extends keyof WebsiteTokens[C]
+  >(
+    component: C,
+    key: K,
+    value: string
+  ) => void;
+  resetComponentToken: <
+    C extends ComponentTokenKey,
+    K extends keyof WebsiteTokens[C]
+  >(
+    component: C,
+    key: K
+  ) => void;
+  isTokenOverridden: <
+    C extends ComponentTokenKey,
+    K extends keyof WebsiteTokens[C]
+  >(
+    component: C,
+    key: K
+  ) => boolean;
   updateTokens: (tokens: Partial<WebsiteTokens>) => void;
   commitLabels: (labels: WebsiteLabels) => void;
   commitSections: (sections: WebsiteSection[]) => void;
@@ -102,7 +137,16 @@ export const areTokensEqual = (
 ): boolean => {
   const keys = Object.keys(tokens1) as (keyof WebsiteTokens)[];
   for (const key of keys) {
-    if (tokens1[key] !== tokens2[key]) {
+    const val1 = tokens1[key];
+    const val2 = tokens2[key];
+    if (typeof val1 === "object" && typeof val2 === "object") {
+      const nestedKeys = Object.keys(val1) as (keyof typeof val1)[];
+      for (const nestedKey of nestedKeys) {
+        if (val1[nestedKey] !== val2[nestedKey]) {
+          return false;
+        }
+      }
+    } else if (val1 !== val2) {
       return false;
     }
   }
@@ -161,13 +205,35 @@ export const useWebsiteBuilderStore = create<WebsiteBuilderStore>(
       }));
     },
 
-    updateToken: (key, value) => {
+    updateGlobalToken: (key, value) => {
       set((state) => ({
-        pendingTokens: {
-          ...state.pendingTokens,
-          [key]: value,
-        },
+        pendingTokens: updateGlobalTokenUtil(state.pendingTokens, key, value),
       }));
+    },
+
+    updateComponentToken: (component, key, value) => {
+      set((state) => ({
+        pendingTokens: updateComponentTokenUtil(
+          state.pendingTokens,
+          component,
+          key,
+          value
+        ),
+      }));
+    },
+
+    resetComponentToken: (component, key) => {
+      set((state) => ({
+        pendingTokens: resetComponentTokenUtil(
+          state.pendingTokens,
+          component,
+          key
+        ),
+      }));
+    },
+
+    isTokenOverridden: (component, key) => {
+      return isTokenOverridden(get().pendingTokens, component, key);
     },
 
     updateTokens: (tokens) => {

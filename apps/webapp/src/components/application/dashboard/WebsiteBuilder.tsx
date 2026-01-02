@@ -7,6 +7,7 @@ import {
   areSectionsEqual,
   areTokensEqual,
 } from "../../../stores/websiteBuilderStore";
+import type { GlobalTokens } from "@/database/types";
 import {
   isBuilderMessage,
   postToIframe,
@@ -54,7 +55,7 @@ import {
   mergeSectionsWithDefaults,
   SECTION_DISPLAY_NAMES,
   type WebsiteSection,
-  type WebsiteTokens,
+  type HierarchicalWebsiteTokens,
   colorPresets,
   fontOptions,
 } from "component-shelf";
@@ -93,7 +94,7 @@ export type WebsiteBuilderData = {
   photos?: WebsiteBuilderPhoto[];
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: WebsiteLabels | null;
-  websiteTokens?: WebsiteTokens | null;
+  websiteTokens?: HierarchicalWebsiteTokens | null;
   subdomain?: string | null;
   customDomain?: string | null;
   subscriptionPlan?: string;
@@ -139,6 +140,7 @@ export function ApplicationWebsiteBuilder({
     initializeTokens,
     updateSection,
     updateTokens,
+    updateGlobalToken,
     commitLabels,
     commitSections,
     commitTokens,
@@ -148,6 +150,27 @@ export function ApplicationWebsiteBuilder({
     setSelectedElement,
     clearSelectedElement,
   } = useWebsiteBuilderStore();
+
+  const applyColorPreset = useCallback(
+    (preset: (typeof colorPresets)[number]) => {
+      const globals: Partial<GlobalTokens> = {
+        primaryColor: preset.primary,
+        backgroundColor: preset.background,
+        headingColor: preset.headingColor,
+        bodyColor: preset.bodyColor,
+      };
+      Object.entries(globals).forEach(([key, value]) => {
+        if (value) {
+          updateGlobalToken(key as keyof GlobalTokens, value);
+        }
+      });
+      updatePreviewTokens({
+        __global: { ...pendingTokens.__global, ...globals } as GlobalTokens,
+      });
+      setHasChanges(true);
+    },
+    [updateGlobalToken, pendingTokens.__global]
+  );
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -187,14 +210,17 @@ export function ApplicationWebsiteBuilder({
 
   void updatePreviewLabel;
 
-  const updatePreviewTokens = useCallback((tokens: Partial<WebsiteTokens>) => {
-    if (iframeRef.current) {
-      postToIframe(iframeRef.current, {
-        type: "UPDATE_TOKENS",
-        payload: { tokens },
-      });
-    }
-  }, []);
+  const updatePreviewTokens = useCallback(
+    (tokens: Partial<HierarchicalWebsiteTokens>) => {
+      if (iframeRef.current) {
+        postToIframe(iframeRef.current, {
+          type: "UPDATE_TOKENS",
+          payload: { tokens },
+        });
+      }
+    },
+    []
+  );
 
   const getInitialContent = (): WebsiteContent => {
     const heroPhoto = data?.photos?.find(
@@ -430,7 +456,7 @@ export function ApplicationWebsiteBuilder({
       const payload: {
         websiteLabels?: WebsiteLabels;
         websiteSections?: WebsiteSection[];
-        websiteTokens?: WebsiteTokens;
+        websiteTokens?: HierarchicalWebsiteTokens;
       } = {};
 
       if (!areLabelsEqual(store.savedLabels, store.pendingLabels)) {
@@ -846,22 +872,13 @@ export function ApplicationWebsiteBuilder({
                       {colorPresets.map((preset) => (
                         <button
                           key={preset.name}
-                          onClick={() => {
-                            const tokens = {
-                              primary: preset.primary,
-                              primaryForeground: preset.primaryForeground,
-                              background: preset.background,
-                              headingColor: preset.headingColor,
-                              bodyColor: preset.bodyColor,
-                            };
-                            updateTokens(tokens);
-                            updatePreviewTokens(tokens);
-                            setHasChanges(true);
-                          }}
+                          onClick={() => applyColorPreset(preset)}
                           className={cn(
                             "relative aspect-square border rounded-md overflow-hidden hover:ring-2 hover:ring-primary hover:ring-offset-2 transition-all group",
-                            pendingTokens.primary === preset.primary &&
-                              pendingTokens.background === preset.background
+                            pendingTokens.__global.primaryColor ===
+                              preset.primary &&
+                              pendingTokens.__global.backgroundColor ===
+                                preset.background
                               ? "ring-2 ring-primary ring-offset-2"
                               : "border-border"
                           )}
@@ -887,14 +904,22 @@ export function ApplicationWebsiteBuilder({
                       <div className="flex items-center gap-3">
                         <div
                           className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
-                          style={{ backgroundColor: pendingTokens.primary }}
+                          style={{
+                            backgroundColor:
+                              pendingTokens.__global.primaryColor,
+                          }}
                         >
                           <input
                             type="color"
-                            value={pendingTokens.primary}
+                            value={pendingTokens.__global.primaryColor}
                             onChange={(e) => {
-                              updateTokens({ primary: e.target.value });
-                              updatePreviewTokens({ primary: e.target.value });
+                              updateGlobalToken("primaryColor", e.target.value);
+                              updatePreviewTokens({
+                                __global: {
+                                  ...pendingTokens.__global,
+                                  primaryColor: e.target.value,
+                                },
+                              });
                               setHasChanges(true);
                             }}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -908,10 +933,15 @@ export function ApplicationWebsiteBuilder({
                         </div>
                         <input
                           type="text"
-                          value={pendingTokens.primary}
+                          value={pendingTokens.__global.primaryColor}
                           onChange={(e) => {
-                            updateTokens({ primary: e.target.value });
-                            updatePreviewTokens({ primary: e.target.value });
+                            updateGlobalToken("primaryColor", e.target.value);
+                            updatePreviewTokens({
+                              __global: {
+                                ...pendingTokens.__global,
+                                primaryColor: e.target.value,
+                              },
+                            });
                             setHasChanges(true);
                           }}
                           className="w-20 h-8 px-2 text-xs border border-border rounded-md bg-background uppercase text-center"
@@ -920,15 +950,24 @@ export function ApplicationWebsiteBuilder({
                       <div className="flex items-center gap-3">
                         <div
                           className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
-                          style={{ backgroundColor: pendingTokens.background }}
+                          style={{
+                            backgroundColor:
+                              pendingTokens.__global.backgroundColor,
+                          }}
                         >
                           <input
                             type="color"
-                            value={pendingTokens.background}
+                            value={pendingTokens.__global.backgroundColor}
                             onChange={(e) => {
-                              updateTokens({ background: e.target.value });
+                              updateGlobalToken(
+                                "backgroundColor",
+                                e.target.value
+                              );
                               updatePreviewTokens({
-                                background: e.target.value,
+                                __global: {
+                                  ...pendingTokens.__global,
+                                  backgroundColor: e.target.value,
+                                },
                               });
                               setHasChanges(true);
                             }}
@@ -943,10 +982,18 @@ export function ApplicationWebsiteBuilder({
                         </div>
                         <input
                           type="text"
-                          value={pendingTokens.background}
+                          value={pendingTokens.__global.backgroundColor}
                           onChange={(e) => {
-                            updateTokens({ background: e.target.value });
-                            updatePreviewTokens({ background: e.target.value });
+                            updateGlobalToken(
+                              "backgroundColor",
+                              e.target.value
+                            );
+                            updatePreviewTokens({
+                              __global: {
+                                ...pendingTokens.__global,
+                                backgroundColor: e.target.value,
+                              },
+                            });
                             setHasChanges(true);
                           }}
                           className="w-20 h-8 px-2 text-xs border border-border rounded-md bg-background uppercase text-center"
@@ -956,16 +1003,20 @@ export function ApplicationWebsiteBuilder({
                         <div
                           className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
                           style={{
-                            backgroundColor: pendingTokens.headingColor,
+                            backgroundColor:
+                              pendingTokens.__global.headingColor,
                           }}
                         >
                           <input
                             type="color"
-                            value={pendingTokens.headingColor}
+                            value={pendingTokens.__global.headingColor}
                             onChange={(e) => {
-                              updateTokens({ headingColor: e.target.value });
+                              updateGlobalToken("headingColor", e.target.value);
                               updatePreviewTokens({
-                                headingColor: e.target.value,
+                                __global: {
+                                  ...pendingTokens.__global,
+                                  headingColor: e.target.value,
+                                },
                               });
                               setHasChanges(true);
                             }}
@@ -980,11 +1031,14 @@ export function ApplicationWebsiteBuilder({
                         </div>
                         <input
                           type="text"
-                          value={pendingTokens.headingColor}
+                          value={pendingTokens.__global.headingColor}
                           onChange={(e) => {
-                            updateTokens({ headingColor: e.target.value });
+                            updateGlobalToken("headingColor", e.target.value);
                             updatePreviewTokens({
-                              headingColor: e.target.value,
+                              __global: {
+                                ...pendingTokens.__global,
+                                headingColor: e.target.value,
+                              },
                             });
                             setHasChanges(true);
                           }}
@@ -994,15 +1048,20 @@ export function ApplicationWebsiteBuilder({
                       <div className="flex items-center gap-3">
                         <div
                           className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
-                          style={{ backgroundColor: pendingTokens.bodyColor }}
+                          style={{
+                            backgroundColor: pendingTokens.__global.bodyColor,
+                          }}
                         >
                           <input
                             type="color"
-                            value={pendingTokens.bodyColor}
+                            value={pendingTokens.__global.bodyColor}
                             onChange={(e) => {
-                              updateTokens({ bodyColor: e.target.value });
+                              updateGlobalToken("bodyColor", e.target.value);
                               updatePreviewTokens({
-                                bodyColor: e.target.value,
+                                __global: {
+                                  ...pendingTokens.__global,
+                                  bodyColor: e.target.value,
+                                },
                               });
                               setHasChanges(true);
                             }}
@@ -1017,10 +1076,15 @@ export function ApplicationWebsiteBuilder({
                         </div>
                         <input
                           type="text"
-                          value={pendingTokens.bodyColor}
+                          value={pendingTokens.__global.bodyColor}
                           onChange={(e) => {
-                            updateTokens({ bodyColor: e.target.value });
-                            updatePreviewTokens({ bodyColor: e.target.value });
+                            updateGlobalToken("bodyColor", e.target.value);
+                            updatePreviewTokens({
+                              __global: {
+                                ...pendingTokens.__global,
+                                bodyColor: e.target.value,
+                              },
+                            });
                             setHasChanges(true);
                           }}
                           className="w-20 h-8 px-2 text-xs border border-border rounded-md bg-background uppercase text-center"
@@ -1046,14 +1110,19 @@ export function ApplicationWebsiteBuilder({
                         Used for names and section titles
                       </p>
                       <select
-                        value={pendingTokens.headingFont}
+                        value={pendingTokens.__global.bigFont}
                         onChange={(e) => {
-                          updateTokens({ headingFont: e.target.value });
-                          updatePreviewTokens({ headingFont: e.target.value });
+                          updateGlobalToken("bigFont", e.target.value);
+                          updatePreviewTokens({
+                            __global: {
+                              ...pendingTokens.__global,
+                              bigFont: e.target.value,
+                            },
+                          });
                           setHasChanges(true);
                         }}
                         className="w-full h-10 px-3 text-sm border border-border rounded-md bg-background cursor-pointer"
-                        style={{ fontFamily: pendingTokens.headingFont }}
+                        style={{ fontFamily: pendingTokens.__global.bigFont }}
                       >
                         {fontOptions.map((font) => (
                           <option key={font.value} value={font.value}>
@@ -1063,7 +1132,7 @@ export function ApplicationWebsiteBuilder({
                       </select>
                       <div
                         className="mt-2 p-3 rounded-md bg-muted/50 text-xl"
-                        style={{ fontFamily: pendingTokens.headingFont }}
+                        style={{ fontFamily: pendingTokens.__global.bigFont }}
                       >
                         {data?.fieldNameA && data?.fieldNameB
                           ? `${data.fieldNameA} & ${data.fieldNameB}`
@@ -1078,14 +1147,21 @@ export function ApplicationWebsiteBuilder({
                         Used for paragraphs and details
                       </p>
                       <select
-                        value={pendingTokens.bodyFont}
+                        value={pendingTokens.__global.defaultFont}
                         onChange={(e) => {
-                          updateTokens({ bodyFont: e.target.value });
-                          updatePreviewTokens({ bodyFont: e.target.value });
+                          updateGlobalToken("defaultFont", e.target.value);
+                          updatePreviewTokens({
+                            __global: {
+                              ...pendingTokens.__global,
+                              defaultFont: e.target.value,
+                            },
+                          });
                           setHasChanges(true);
                         }}
                         className="w-full h-10 px-3 text-sm border border-border rounded-md bg-background cursor-pointer"
-                        style={{ fontFamily: pendingTokens.bodyFont }}
+                        style={{
+                          fontFamily: pendingTokens.__global.defaultFont,
+                        }}
                       >
                         {fontOptions.map((font) => (
                           <option key={font.value} value={font.value}>
@@ -1095,7 +1171,9 @@ export function ApplicationWebsiteBuilder({
                       </select>
                       <div
                         className="mt-2 p-3 rounded-md bg-muted/50 text-sm"
-                        style={{ fontFamily: pendingTokens.bodyFont }}
+                        style={{
+                          fontFamily: pendingTokens.__global.defaultFont,
+                        }}
                       >
                         We are excited to celebrate our special day with you.
                       </div>

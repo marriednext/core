@@ -1,3 +1,7 @@
+import type { WebsiteTokens } from "@/database/types";
+
+export type { WebsiteTokens };
+
 export type WeddingPhoto = {
   id: string;
   themeId: string;
@@ -10,16 +14,6 @@ export type WebsiteSection = {
   id: string;
   enabled: boolean;
   order: number;
-};
-
-export type WebsiteTokens = {
-  primary: string;
-  primaryForeground: string;
-  background: string;
-  headingColor: string;
-  bodyColor: string;
-  headingFont: string;
-  bodyFont: string;
 };
 
 export type WeddingData = {
@@ -59,5 +53,3 @@ export type OurStorySection = {
   photoUrl: string;
   text: string;
 };
-
-

@@ -5,7 +5,7 @@ import { useWebsiteBuilderStore } from "../../../stores/websiteBuilderStore";
 import {
   mergeSectionsWithDefaults,
   type WebsiteSection,
-  type WebsiteTokens,
+  type HierarchicalWebsiteTokens,
 } from "component-shelf";
 import {
   postToParent,
@@ -36,7 +36,7 @@ export type WebsiteBuilderData = {
   photos?: WebsiteBuilderPhoto[];
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: WebsiteLabels | null;
-  websiteTokens?: WebsiteTokens | null;
+  websiteTokens?: HierarchicalWebsiteTokens | null;
   subdomain?: string | null;
   customDomain?: string | null;
   subscriptionPlan?: string;

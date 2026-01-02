@@ -107,53 +107,44 @@ export type WebsiteSection = {
   order: number;
 };
 
-export type WebsiteTokens = {
-  __global: {
-    primaryColor: string;
-    bigFont: string;
-    defaultFont: string;
-    backgroundColor: string;
-    headingColor: string;
-    bodyColor: string;
-  };
-  page: {
-    background: string;
-    fontFamily: string;
-  };
-  primaryButtonOnLightBackground: {
-    background: string;
-    color: string;
-    fontFamily: string;
-  };
-  primaryButtonOnDarkBackground: {
-    background: string;
-    color: string;
-    fontFamily: string;
-  };
-  secondaryButtonOnLightBackground: {
-    background: string;
-    color: string;
-    fontFamily: string;
-  };
-  secondaryButtonOnDarkBackground: {
-    background: string;
-    color: string;
-    fontFamily: string;
-  };
-  largeTextOnLightBackground: {
-    color: string;
-    fontFamily: string;
-  };
-  largeTextOnDarkBackground: {
-    color: string;
-    fontFamily: string;
-  };
-  defaultTextOnLightBackground: {
-    color: string;
-    fontFamily: string;
-  };
-  defaultTextOnDarkBackground: {
-    color: string;
-    fontFamily: string;
-  };
+export type GlobalTokens = {
+  primaryColor: string;
+  bigFont: string;
+  defaultFont: string;
+  backgroundColor: string;
+  headingColor: string;
+  bodyColor: string;
 };
+
+export type TokenValueOrRef = string;
+
+export type PageTokens = {
+  background: TokenValueOrRef;
+  fontFamily: TokenValueOrRef;
+};
+
+export type ButtonTokens = {
+  background: TokenValueOrRef;
+  color: TokenValueOrRef;
+  fontFamily: TokenValueOrRef;
+};
+
+export type TextTokens = {
+  color: TokenValueOrRef;
+  fontFamily: TokenValueOrRef;
+};
+
+export type WebsiteTokens = {
+  __global: GlobalTokens;
+  page: PageTokens;
+  primaryButtonOnLightBackground: ButtonTokens;
+  primaryButtonOnDarkBackground: ButtonTokens;
+  secondaryButtonOnLightBackground: ButtonTokens;
+  secondaryButtonOnDarkBackground: ButtonTokens;
+  largeTextOnLightBackground: TextTokens;
+  largeTextOnDarkBackground: TextTokens;
+  defaultTextOnLightBackground: TextTokens;
+  defaultTextOnDarkBackground: TextTokens;
+};
+
+export type ComponentTokenKey = Exclude<keyof WebsiteTokens, "__global">;

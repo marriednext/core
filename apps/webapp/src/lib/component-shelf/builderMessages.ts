@@ -1,4 +1,4 @@
-import type { WebsiteTokens } from "component-shelf";
+import type { HierarchicalWebsiteTokens } from "component-shelf";
 
 export type BuilderMessageType =
   | "SECTION_CLICKED"
@@ -26,7 +26,7 @@ export type UpdateLabelPayload = {
 };
 
 export type UpdateTokensPayload = {
-  tokens: Partial<WebsiteTokens>;
+  tokens: Partial<HierarchicalWebsiteTokens>;
 };
 
 export type BuilderMessage =

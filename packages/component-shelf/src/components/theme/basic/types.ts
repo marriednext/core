@@ -32,6 +32,153 @@ export const defaultWebsiteTokens: WebsiteTokens = {
   bodyFont: "Inter",
 };
 
+export type GlobalTokens = {
+  primaryColor: string;
+  bigFont: string;
+  defaultFont: string;
+  backgroundColor: string;
+  headingColor: string;
+  bodyColor: string;
+};
+
+export type TokenValueOrRef = string;
+
+export type PageTokens = {
+  background: TokenValueOrRef;
+  fontFamily: TokenValueOrRef;
+};
+
+export type ButtonTokens = {
+  background: TokenValueOrRef;
+  color: TokenValueOrRef;
+  fontFamily: TokenValueOrRef;
+};
+
+export type TextTokens = {
+  color: TokenValueOrRef;
+  fontFamily: TokenValueOrRef;
+};
+
+export type HierarchicalWebsiteTokens = {
+  __global: GlobalTokens;
+  page: PageTokens;
+  primaryButtonOnLightBackground: ButtonTokens;
+  primaryButtonOnDarkBackground: ButtonTokens;
+  secondaryButtonOnLightBackground: ButtonTokens;
+  secondaryButtonOnDarkBackground: ButtonTokens;
+  largeTextOnLightBackground: TextTokens;
+  largeTextOnDarkBackground: TextTokens;
+  defaultTextOnLightBackground: TextTokens;
+  defaultTextOnDarkBackground: TextTokens;
+};
+
+export type ComponentTokenKey = Exclude<
+  keyof HierarchicalWebsiteTokens,
+  "__global"
+>;
+
+export const defaultGlobalTokens: GlobalTokens = {
+  primaryColor: "#0a0a0a",
+  bigFont: "Playfair Display",
+  defaultFont: "Inter",
+  backgroundColor: "#fafafa",
+  headingColor: "#0a0a0a",
+  bodyColor: "#404040",
+};
+
+export const isTokenReference = (value: string): boolean =>
+  value.startsWith("{__global.") && value.endsWith("}");
+
+export const resolveTokenValue = (
+  value: string,
+  globals: GlobalTokens
+): string => {
+  if (!isTokenReference(value)) return value;
+  const key = value.slice(10, -1) as keyof GlobalTokens;
+  return globals[key] ?? value;
+};
+
+export const createDefaultHierarchicalTokens = (
+  globals: GlobalTokens = defaultGlobalTokens
+): HierarchicalWebsiteTokens => ({
+  __global: globals,
+  page: {
+    background: "{__global.backgroundColor}",
+    fontFamily: "{__global.defaultFont}",
+  },
+  primaryButtonOnLightBackground: {
+    background: "{__global.primaryColor}",
+    color: "{__global.backgroundColor}",
+    fontFamily: "{__global.defaultFont}",
+  },
+  primaryButtonOnDarkBackground: {
+    background: "{__global.backgroundColor}",
+    color: "{__global.primaryColor}",
+    fontFamily: "{__global.defaultFont}",
+  },
+  secondaryButtonOnLightBackground: {
+    background: "{__global.backgroundColor}",
+    color: "{__global.primaryColor}",
+    fontFamily: "{__global.defaultFont}",
+  },
+  secondaryButtonOnDarkBackground: {
+    background: "{__global.primaryColor}",
+    color: "{__global.backgroundColor}",
+    fontFamily: "{__global.defaultFont}",
+  },
+  largeTextOnLightBackground: {
+    color: "{__global.headingColor}",
+    fontFamily: "{__global.bigFont}",
+  },
+  largeTextOnDarkBackground: {
+    color: "{__global.backgroundColor}",
+    fontFamily: "{__global.bigFont}",
+  },
+  defaultTextOnLightBackground: {
+    color: "{__global.bodyColor}",
+    fontFamily: "{__global.defaultFont}",
+  },
+  defaultTextOnDarkBackground: {
+    color: "{__global.backgroundColor}",
+    fontFamily: "{__global.defaultFont}",
+  },
+});
+
+export const defaultHierarchicalTokens = createDefaultHierarchicalTokens();
+
+export const toFlatTokens = (
+  tokens: HierarchicalWebsiteTokens
+): WebsiteTokens => {
+  const globals = tokens.__global;
+  return {
+    primary: resolveTokenValue(
+      tokens.primaryButtonOnLightBackground.background,
+      globals
+    ),
+    primaryForeground: resolveTokenValue(
+      tokens.primaryButtonOnLightBackground.color,
+      globals
+    ),
+    background: resolveTokenValue(tokens.page.background, globals),
+    headingColor: resolveTokenValue(
+      tokens.largeTextOnLightBackground.color,
+      globals
+    ),
+    bodyColor: resolveTokenValue(
+      tokens.defaultTextOnLightBackground.color,
+      globals
+    ),
+    headingFont: resolveTokenValue(
+      tokens.largeTextOnLightBackground.fontFamily,
+      globals
+    ),
+    bodyFont: resolveTokenValue(
+      tokens.defaultTextOnLightBackground.fontFamily,
+      globals
+    ),
+  };
+};
+
 export const colorPresets = [
   {
     name: "Classic Black",
@@ -100,10 +247,22 @@ export const colorPresets = [
 ] as const;
 
 export const fontOptions = [
-  { value: "Playfair Display", label: "Playfair Display", style: "Elegant Serif" },
-  { value: "Cormorant Garamond", label: "Cormorant Garamond", style: "Classic Serif" },
+  {
+    value: "Playfair Display",
+    label: "Playfair Display",
+    style: "Elegant Serif",
+  },
+  {
+    value: "Cormorant Garamond",
+    label: "Cormorant Garamond",
+    style: "Classic Serif",
+  },
   { value: "Crimson Text", label: "Crimson Text", style: "Traditional Serif" },
-  { value: "Libre Baskerville", label: "Libre Baskerville", style: "Book Serif" },
+  {
+    value: "Libre Baskerville",
+    label: "Libre Baskerville",
+    style: "Book Serif",
+  },
   { value: "Lora", label: "Lora", style: "Modern Serif" },
   { value: "Inter", label: "Inter", style: "Clean Sans" },
   { value: "DM Sans", label: "DM Sans", style: "Geometric Sans" },
