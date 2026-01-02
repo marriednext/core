@@ -251,13 +251,6 @@ export interface OurStorySectionProps {
   ) => void;
 }
 
-export interface TimeLeft {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-}
-
 /**
  * Optional label customizations for CountdownSection.
  * @customizable

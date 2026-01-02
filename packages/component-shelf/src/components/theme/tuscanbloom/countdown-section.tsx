@@ -1,43 +1,18 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { gsap } from "gsap"
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { useCountdown } from "../../../hooks";
 
 interface CountdownSectionProps {
-  targetDate: Date
-}
-
-interface TimeLeft {
-  days: number
-  hours: number
-  minutes: number
-  seconds: number
+  targetDate: Date;
 }
 
 export function CountdownSection({ targetDate }: CountdownSectionProps) {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 })
-  const sectionRef = useRef<HTMLElement>(null)
-  const numbersRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLElement>(null);
+  const numbersRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const calculateTimeLeft = () => {
-      const difference = targetDate.getTime() - new Date().getTime()
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        })
-      }
-    }
-
-    calculateTimeLeft()
-    const timer = setInterval(calculateTimeLeft, 1000)
-
-    return () => clearInterval(timer)
-  }, [targetDate])
+  const { timeUnits } = useCountdown({ targetDate });
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -55,19 +30,12 @@ export function CountdownSection({ targetDate }: CountdownSectionProps) {
             start: "top 80%",
             toggleActions: "play none none none",
           },
-        },
-      )
-    }, sectionRef)
+        }
+      );
+    }, sectionRef);
 
-    return () => ctx.revert()
-  }, [])
-
-  const timeUnits = [
-    { value: timeLeft.days, label: "Days" },
-    { value: timeLeft.hours, label: "Hours" },
-    { value: timeLeft.minutes, label: "Minutes" },
-    { value: timeLeft.seconds, label: "Seconds" },
-  ]
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section ref={sectionRef} className="py-32 lg:py-48 bg-muted">
@@ -79,13 +47,18 @@ export function CountdownSection({ targetDate }: CountdownSectionProps) {
           Until we say "I do"
         </p>
 
-        <div ref={numbersRef} className="flex flex-wrap justify-center gap-8 lg:gap-16">
+        <div
+          ref={numbersRef}
+          className="flex flex-wrap justify-center gap-8 lg:gap-16"
+        >
           {timeUnits.map((unit, index) => (
-            <div key={unit.label} className="text-center">
+            <div key={unit.key} className="text-center">
               <div className="font-serif text-[clamp(4rem,10vw,10rem)] leading-none text-foreground">
-                {String(unit.value).padStart(2, "0")}
+                {unit.formatted}
               </div>
-              <div className="mt-4 text-xs uppercase tracking-[0.3em] text-muted-foreground">{unit.label}</div>
+              <div className="mt-4 text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                {unit.label}
+              </div>
               {index < timeUnits.length - 1 && (
                 <span className="hidden lg:block absolute top-1/2 -right-8 -translate-y-1/2 text-4xl text-muted-foreground/30">
                   :
@@ -96,5 +69,5 @@ export function CountdownSection({ targetDate }: CountdownSectionProps) {
         </div>
       </div>
     </section>
-  )
+  );
 }

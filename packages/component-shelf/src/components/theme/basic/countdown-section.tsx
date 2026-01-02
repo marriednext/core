@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCountdown } from "../../../hooks";
 import type { CountdownSectionProps } from "./types";
 
 const getDefaultEventDate = () => {
@@ -22,41 +22,17 @@ export function CountdownSection({
   customization = defaultCustomization,
 }: CountdownSectionProps) {
   const labels = { ...defaultCustomization, ...customization };
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
   const eventDate = data.eventDate || getDefaultEventDate();
 
-  useEffect(() => {
-    const weddingDate = new Date(eventDate);
-
-    const timer = setInterval(() => {
-      const now = new Date();
-      const difference = weddingDate.getTime() - now.getTime();
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        });
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [eventDate]);
-
-  const countdownItems = [
-    { value: timeLeft.days, label: labels.daysLabel },
-    { value: timeLeft.hours, label: labels.hoursLabel },
-    { value: timeLeft.minutes, label: labels.minutesLabel },
-    { value: timeLeft.seconds, label: labels.secondsLabel },
-  ];
+  const { timeUnits } = useCountdown({
+    targetDate: eventDate,
+    labels: {
+      days: labels.daysLabel,
+      hours: labels.hoursLabel,
+      minutes: labels.minutesLabel,
+      seconds: labels.secondsLabel,
+    },
+  });
 
   return (
     <section className="py-24 md:py-32 px-4 border-b-2 border-foreground">
@@ -66,16 +42,16 @@ export function CountdownSection({
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-foreground">
-          {countdownItems.map((item) => (
+          {timeUnits.map((unit) => (
             <div
-              key={item.label}
+              key={unit.key}
               className="bg-background p-8 md:p-12 text-center"
             >
               <span className="font-serif text-5xl md:text-7xl lg:text-8xl block">
-                {item.value.toString().padStart(2, "0")}
+                {unit.formatted}
               </span>
               <span className="text-xs tracking-[0.2em] mt-4 block text-muted-foreground">
-                {item.label}
+                {unit.label}
               </span>
             </div>
           ))}

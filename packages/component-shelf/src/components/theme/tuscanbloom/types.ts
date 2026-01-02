@@ -1,6 +1,12 @@
 import type { ApplicationImageComponent } from "../../../types/image-types";
 import type { ApplicationLinkComponent } from "../../../types/link-types";
 
+export type WebsiteSection = {
+  id: string;
+  enabled: boolean;
+  order: number;
+};
+
 export interface TuscanBloomLocation {
   fieldLocationName: string;
   fieldPreferredLocationAddressLine1: string;
@@ -28,6 +34,7 @@ export interface TuscanBloomProps {
   location: TuscanBloomLocation;
   ceremony: TuscanBloomCeremony;
   reception: TuscanBloomReception;
+  websiteSections?: WebsiteSection[] | null;
   Image?: ApplicationImageComponent;
   Link?: ApplicationLinkComponent;
 }

@@ -1,15 +1,13 @@
-"use client";
+"use client"
 
-import "style-shelf/tailwind";
-import { useState, useEffect } from "react";
-import { differenceInSeconds } from "date-fns";
-import labels from "label-shelf/lisastheme";
+import "style-shelf/tailwind"
+import labels from "label-shelf/lisastheme"
+import { useCountdown } from "../../../hooks"
 import type {
   CountdownSectionCustomization,
   CountdownSectionProps,
-  TimeLeft,
-} from "./types";
-import { EditableLabel } from "../../ui/editable-label";
+} from "./types"
+import { EditableLabel } from "../../ui/editable-label"
 
 const defaultCountdownLabels = {
   pretextLabel: labels["lisastheme.countdown.pretext.label"],
@@ -17,7 +15,7 @@ const defaultCountdownLabels = {
   hoursLabel: labels["lisastheme.countdown.hours.label"],
   minutesLabel: labels["lisastheme.countdown.minutes.label"],
   secondsLabel: labels["lisastheme.countdown.seconds.label"],
-};
+}
 
 export function CountdownSection({
   data,
@@ -28,79 +26,26 @@ export function CountdownSection({
   const mergedCustomization = {
     ...defaultCountdownLabels,
     ...customization,
-  };
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+  }
 
-  useEffect(() => {
-    const weddingDate = data?.eventDate
-      ? new Date(data?.eventDate)
-      : new Date("2026-07-26T07:00:00");
+  const eventDate = data?.eventDate || "2026-07-26T07:00:00"
 
-    const calculateTimeLeft = () => {
-      const now = new Date();
-      const totalSeconds = differenceInSeconds(weddingDate, now);
-
-      if (totalSeconds > 0) {
-        const days = Math.floor(totalSeconds / 86400);
-        const hours = Math.floor((totalSeconds % 86400) / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-
-        setTimeLeft({
-          days,
-          hours,
-          minutes,
-          seconds,
-        });
-      } else {
-        setTimeLeft({
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-        });
-      }
-    };
-
-    calculateTimeLeft();
-    const timer = setInterval(calculateTimeLeft, 1000);
-    return () => clearInterval(timer);
-  }, [data?.eventDate]);
+  const { timeUnits } = useCountdown({
+    targetDate: eventDate,
+    labels: {
+      days: mergedCustomization.daysLabel,
+      hours: mergedCustomization.hoursLabel,
+      minutes: mergedCustomization.minutesLabel,
+      seconds: mergedCustomization.secondsLabel,
+    },
+  })
 
   const handleChange = (
     key: keyof CountdownSectionCustomization,
     value: string
   ) => {
-    onCustomizationChange?.(key, value);
-  };
-
-  const timeUnits = [
-    {
-      value: timeLeft.days,
-      label: mergedCustomization.daysLabel,
-      key: "daysLabel" as const,
-    },
-    {
-      value: timeLeft.hours,
-      label: mergedCustomization.hoursLabel,
-      key: "hoursLabel" as const,
-    },
-    {
-      value: timeLeft.minutes,
-      label: mergedCustomization.minutesLabel,
-      key: "minutesLabel" as const,
-    },
-    {
-      value: timeLeft.seconds,
-      label: mergedCustomization.secondsLabel,
-      key: "secondsLabel" as const,
-    },
-  ];
+    onCustomizationChange?.(key, value)
+  }
 
   return (
     <section className="@container py-32 bg-[#faf9f6]">
@@ -118,14 +63,14 @@ export function CountdownSection({
         <div className="flex flex-col @md:flex-row items-center justify-center gap-8 @md:gap-16 mt-12">
           <div className="text-center">
             <span className="block font-serif text-7xl @md:text-8xl text-[#2c2c2c] font-light">
-              {String(timeUnits[0].value).padStart(2, "0")}
+              {timeUnits[0].formatted}
             </span>
             {timeUnits[0].label && (
               <EditableLabel
                 as="span"
                 value={timeUnits[0].label}
                 editable={editable}
-                onChange={(v) => handleChange(timeUnits[0].key, v)}
+                onChange={(v) => handleChange("daysLabel", v)}
                 className="block mt-3 text-[#745656]/70 tracking-[0.3em] uppercase text-xs"
               />
             )}
@@ -136,14 +81,14 @@ export function CountdownSection({
               <div key={unit.key} className="flex items-center gap-8">
                 <div className="text-center">
                   <span className="block font-serif text-6xl @md:text-8xl text-[#2c2c2c] font-light">
-                    {String(unit.value).padStart(2, "0")}
+                    {unit.formatted}
                   </span>
                   {unit.label && (
                     <EditableLabel
                       as="span"
                       value={unit.label}
                       editable={editable}
-                      onChange={(v) => handleChange(unit.key, v)}
+                      onChange={(v) => handleChange(`${unit.key}Label` as keyof CountdownSectionCustomization, v)}
                       className="block mt-3 text-[#745656]/70 tracking-[0.3em] uppercase text-xs"
                     />
                   )}
@@ -159,5 +104,5 @@ export function CountdownSection({
         </div>
       </div>
     </section>
-  );
+  )
 }

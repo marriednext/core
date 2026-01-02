@@ -14,6 +14,7 @@ import { RsvpSection } from "./rsvp-section";
 import { RegistrySection } from "./registry-section";
 import { PhotoUploadSection } from "./photo-upload-section";
 import { FooterSection } from "./footer-section";
+import SideNavigation from "../defaults/SideNavigation";
 
 const defaultSections = [
   { id: "hero", enabled: true, order: 0 },
@@ -80,6 +81,20 @@ export function BasicTheme({
       ? `${fieldNameA.charAt(0)} & ${fieldNameB.charAt(0)}`
       : "E & J";
 
+  const allNavLinks = [
+    { label: "OUR STORY", href: "#story", sectionId: "ourStory" },
+    { label: "EVENT", href: "#event", sectionId: "eventDetails" },
+    { label: "GALLERY", href: "#gallery", sectionId: "gallery" },
+    { label: "RSVP", href: "#rsvp", sectionId: "rsvp" },
+    { label: "FAQ", href: "#faq", sectionId: "faq" },
+    { label: "REGISTRY", href: "#registry", sectionId: "registry" },
+    { label: "PHOTOS", href: "#photos", sectionId: "photos" },
+  ];
+
+  const navLinks = allNavLinks
+    .filter((link) => isSectionEnabled(link.sectionId))
+    .map(({ label, href }) => ({ label, href }));
+
   const cssVars = {
     "--basic-primary": tokens.primary,
     "--basic-primary-foreground": tokens.primaryForeground,
@@ -112,6 +127,14 @@ export function BasicTheme({
         }}
         editable={editable}
         onCustomizationChange={handleSectionChange("navigation")}
+      />
+      <SideNavigation
+        navLinks={navLinks}
+        getNavItemClass={() =>
+          "text-foreground hover:opacity-50 transition-opacity"
+        }
+        ariaLabel="Main navigation"
+        Link={LinkComponent}
       />
 
       {isSectionEnabled("hero") && (
@@ -283,7 +306,3 @@ export function BasicTheme({
     </div>
   );
 }
-
-
-
-

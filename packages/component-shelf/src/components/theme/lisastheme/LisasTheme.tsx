@@ -173,6 +173,18 @@ export function LisasTheme({
     ? "cursor-pointer hover:outline hover:outline-2 hover:outline-primary/50 hover:outline-offset-2 transition-all"
     : "";
 
+  const allNavLinks = [
+    { label: "Home", href: "#home", sectionId: "hero" },
+    { label: "Story", href: "#story", sectionId: "ourStory" },
+    { label: "Details", href: "#details", sectionId: "eventDetails" },
+    { label: "Gallery", href: "#gallery", sectionId: "gallery" },
+    { label: "RSVP", href: "#rsvp", sectionId: "rsvp" },
+  ];
+
+  const navLinks = allNavLinks
+    .filter((link) => isSectionEnabled(link.sectionId))
+    .map(({ label, href }) => ({ label, href }));
+
   const cssVars = {
     "--lisas-primary": tokens.primary,
     "--lisas-primary-foreground": tokens.primaryForeground,
@@ -205,20 +217,17 @@ export function LisasTheme({
         onCustomizationChange={handleSectionChange("stickyNav")}
       />
       <SideNavigation
-        navLinks={[
-          { label: "Home", href: "#home" },
-          { label: "Story", href: "#story" },
-          { label: "Details", href: "#details" },
-          { label: "Gallery", href: "#gallery" },
-          { label: "RSVP", href: "#rsvp" },
-        ]}
+        navLinks={navLinks}
         getNavItemClass={() =>
           "text-stone-700 hover:text-stone-900 transition-colors"
         }
         ariaLabel="Main navigation"
       />
       {isSectionEnabled("hero") && (
-        <div onClick={handleSectionClick("hero")} className={sectionWrapperClass}>
+        <div
+          onClick={handleSectionClick("hero")}
+          className={sectionWrapperClass}
+        >
           <HeroSection
             data={{
               nameA: fieldNameA,
@@ -236,7 +245,11 @@ export function LisasTheme({
         </div>
       )}
       {isSectionEnabled("countdown") && (
-        <div onClick={handleSectionClick("countdown")} className={sectionWrapperClass} suppressHydrationWarning>
+        <div
+          onClick={handleSectionClick("countdown")}
+          className={sectionWrapperClass}
+          suppressHydrationWarning
+        >
           <CountdownSection
             data={{ eventDate: fieldEventDate }}
             customization={getSectionLabels("countdown")}
@@ -246,7 +259,10 @@ export function LisasTheme({
         </div>
       )}
       {isSectionEnabled("ourStory") && (
-        <div onClick={handleSectionClick("ourStory")} className={sectionWrapperClass}>
+        <div
+          onClick={handleSectionClick("ourStory")}
+          className={sectionWrapperClass}
+        >
           <OurStorySection
             data={{
               nameA: fieldNameA,
@@ -261,7 +277,10 @@ export function LisasTheme({
         </div>
       )}
       {isSectionEnabled("eventDetails") && (
-        <div onClick={handleSectionClick("eventDetails")} className={sectionWrapperClass}>
+        <div
+          onClick={handleSectionClick("eventDetails")}
+          className={sectionWrapperClass}
+        >
           <EventDetailsSection
             data={{
               locationName: fieldLocationName,
@@ -277,7 +296,10 @@ export function LisasTheme({
         </div>
       )}
       {isSectionEnabled("gallery") && (
-        <div onClick={handleSectionClick("gallery")} className={sectionWrapperClass}>
+        <div
+          onClick={handleSectionClick("gallery")}
+          className={sectionWrapperClass}
+        >
           <GallerySection
             data={{
               images:
@@ -292,7 +314,10 @@ export function LisasTheme({
         </div>
       )}
       {isSectionEnabled("faq") && (
-        <div onClick={handleSectionClick("faq")} className={sectionWrapperClass}>
+        <div
+          onClick={handleSectionClick("faq")}
+          className={sectionWrapperClass}
+        >
           <FaqSection
             data={{}}
             customization={getSectionLabels("faq")}
@@ -302,7 +327,10 @@ export function LisasTheme({
         </div>
       )}
       {isSectionEnabled("rsvp") && (
-        <div onClick={handleSectionClick("rsvp")} className={sectionWrapperClass}>
+        <div
+          onClick={handleSectionClick("rsvp")}
+          className={sectionWrapperClass}
+        >
           <RsvpSection
             data={{ rsvpFormComponent }}
             customization={getSectionLabels("rsvp")}
@@ -311,7 +339,10 @@ export function LisasTheme({
           />
         </div>
       )}
-      <div onClick={handleSectionClick("footer")} className={sectionWrapperClass}>
+      <div
+        onClick={handleSectionClick("footer")}
+        className={sectionWrapperClass}
+      >
         <FooterSection
           data={{
             nameA: fieldNameA,
