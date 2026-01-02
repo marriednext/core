@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
+import Link from "next/link";
 import { Button } from "../../ui/button";
 import { Badge } from "../../ui/badge";
 import { Eye, Sparkles, Check, Lock, Loader2 } from "lucide-react";
@@ -371,9 +372,11 @@ function TemplateCard({
             isHovered ? "opacity-100" : "opacity-0"
           )}
         >
-          <Button size="sm" variant="secondary" className="gap-2">
-            <Eye className="h-4 w-4" />
-            Preview
+          <Button size="sm" variant="secondary" className="gap-2" asChild>
+            <Link href={`/preview/${template.themeId}`} target="_blank">
+              <Eye className="h-4 w-4" />
+              Preview
+            </Link>
           </Button>
           {canSelect && !isCurrent && (
             <Button
