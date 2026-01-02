@@ -2,6 +2,7 @@
 
 import "style-shelf/tailwind";
 import type { BasicThemeProps } from "./types";
+import { defaultWebsiteTokens } from "./types";
 import { Navigation } from "./navigation";
 import { HeroSection } from "./hero-section";
 import { CountdownSection } from "./countdown-section";
@@ -39,12 +40,14 @@ export function BasicTheme({
   galleryImages,
   websiteSections,
   websiteLabels,
+  websiteTokens,
   editable = false,
   onCustomizationChange,
   onSectionClick,
   LinkComponent = "a",
   ImageComponent = "img",
 }: BasicThemeProps) {
+  const tokens = websiteTokens || defaultWebsiteTokens;
   const handleSectionChange =
     (section: string) => (key: string, value: string) => {
       onCustomizationChange?.(section, key, value);
@@ -77,8 +80,31 @@ export function BasicTheme({
       ? `${fieldNameA.charAt(0)} & ${fieldNameB.charAt(0)}`
       : "E & J";
 
+  const cssVars = {
+    "--basic-primary": tokens.primary,
+    "--basic-primary-foreground": tokens.primaryForeground,
+    "--basic-background": tokens.background,
+    "--basic-heading-color": tokens.headingColor,
+    "--basic-body-color": tokens.bodyColor,
+    "--basic-heading-font": tokens.headingFont,
+    "--basic-body-font": tokens.bodyFont,
+    "--foreground": tokens.headingColor,
+    "--background": tokens.background,
+    "--muted-foreground": tokens.bodyColor,
+    "--primary": tokens.primary,
+    "--primary-foreground": tokens.primaryForeground,
+  } as React.CSSProperties;
+
   return (
-    <div className="min-h-screen @container">
+    <div
+      className="min-h-screen @container"
+      style={{
+        ...cssVars,
+        backgroundColor: tokens.background,
+        color: tokens.bodyColor,
+        fontFamily: tokens.bodyFont,
+      }}
+    >
       <Navigation
         customization={{
           logoLabel,
@@ -257,6 +283,7 @@ export function BasicTheme({
     </div>
   );
 }
+
 
 
 

@@ -12,6 +12,106 @@ export type WebsiteSection = {
 
 export type WebsiteLabels = Record<string, Record<string, string>>;
 
+export interface WebsiteTokens {
+  primary: string;
+  primaryForeground: string;
+  background: string;
+  headingColor: string;
+  bodyColor: string;
+  headingFont: string;
+  bodyFont: string;
+}
+
+export const defaultWebsiteTokens: WebsiteTokens = {
+  primary: "#0a0a0a",
+  primaryForeground: "#fafafa",
+  background: "#fafafa",
+  headingColor: "#0a0a0a",
+  bodyColor: "#404040",
+  headingFont: "Playfair Display",
+  bodyFont: "Inter",
+};
+
+export const colorPresets = [
+  {
+    name: "Classic Black",
+    primary: "#0a0a0a",
+    primaryForeground: "#fafafa",
+    background: "#fafafa",
+    headingColor: "#0a0a0a",
+    bodyColor: "#404040",
+  },
+  {
+    name: "Midnight",
+    primary: "#1e1b4b",
+    primaryForeground: "#fafafa",
+    background: "#f0f9ff",
+    headingColor: "#1e1b4b",
+    bodyColor: "#4c4770",
+  },
+  {
+    name: "Forest",
+    primary: "#14532d",
+    primaryForeground: "#fafafa",
+    background: "#f0fdf4",
+    headingColor: "#14532d",
+    bodyColor: "#3d6b4f",
+  },
+  {
+    name: "Navy",
+    primary: "#1e3a5f",
+    primaryForeground: "#fafafa",
+    background: "#f0f9ff",
+    headingColor: "#1e3a5f",
+    bodyColor: "#4a6a8a",
+  },
+  {
+    name: "Burgundy",
+    primary: "#7f1d1d",
+    primaryForeground: "#fafafa",
+    background: "#fef2f2",
+    headingColor: "#7f1d1d",
+    bodyColor: "#8b4a4a",
+  },
+  {
+    name: "Sage",
+    primary: "#4d7c5b",
+    primaryForeground: "#fafafa",
+    background: "#f8faf8",
+    headingColor: "#3d5c4b",
+    bodyColor: "#5a7a68",
+  },
+  {
+    name: "Dusty Rose",
+    primary: "#9d7a8c",
+    primaryForeground: "#fafafa",
+    background: "#fdf8fa",
+    headingColor: "#6d4a5c",
+    bodyColor: "#8a7080",
+  },
+  {
+    name: "Terracotta",
+    primary: "#c2703e",
+    primaryForeground: "#fafafa",
+    background: "#fdf8f5",
+    headingColor: "#8b4513",
+    bodyColor: "#a06a50",
+  },
+] as const;
+
+export const fontOptions = [
+  { value: "Playfair Display", label: "Playfair Display", style: "Elegant Serif" },
+  { value: "Cormorant Garamond", label: "Cormorant Garamond", style: "Classic Serif" },
+  { value: "Crimson Text", label: "Crimson Text", style: "Traditional Serif" },
+  { value: "Libre Baskerville", label: "Libre Baskerville", style: "Book Serif" },
+  { value: "Lora", label: "Lora", style: "Modern Serif" },
+  { value: "Inter", label: "Inter", style: "Clean Sans" },
+  { value: "DM Sans", label: "DM Sans", style: "Geometric Sans" },
+  { value: "Work Sans", label: "Work Sans", style: "Friendly Sans" },
+  { value: "Outfit", label: "Outfit", style: "Modern Sans" },
+  { value: "Space Grotesk", label: "Space Grotesk", style: "Technical Sans" },
+] as const;
+
 export interface BasicThemeProps {
   fieldNameA: string | null;
   fieldNameB: string | null;
@@ -25,6 +125,7 @@ export interface BasicThemeProps {
   galleryImages?: string[];
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: WebsiteLabels | null;
+  websiteTokens?: WebsiteTokens | null;
   editable?: boolean;
   onCustomizationChange?: (section: string, key: string, value: string) => void;
   onSectionClick?: (sectionId: string) => void;

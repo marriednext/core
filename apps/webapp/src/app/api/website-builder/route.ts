@@ -70,6 +70,7 @@ export async function GET() {
       subscriptionPlan,
       websiteSections: wedding.websiteSections,
       websiteLabels: wedding.websiteLabels,
+      websiteTokens: wedding.websiteTokens,
       websiteTemplate: wedding.websiteTemplate || "lisastheme",
     });
   } catch (error) {
@@ -96,20 +97,32 @@ const websiteLabelsSchema = z.record(
 
 const websiteTemplateSchema = z.enum(["lisastheme", "tuscanbloom", "basic"]);
 
+const websiteTokensSchema = z.object({
+  primary: z.string(),
+  primaryForeground: z.string(),
+  background: z.string(),
+  headingColor: z.string(),
+  bodyColor: z.string(),
+  headingFont: z.string(),
+  bodyFont: z.string(),
+});
+
 const patchBodySchema = z
   .object({
     websiteSections: websiteSectionsSchema.optional(),
     websiteLabels: websiteLabelsSchema.optional(),
     websiteTemplate: websiteTemplateSchema.optional(),
+    websiteTokens: websiteTokensSchema.optional(),
   })
   .refine(
     (data) =>
       data.websiteSections !== undefined ||
       data.websiteLabels !== undefined ||
-      data.websiteTemplate !== undefined,
+      data.websiteTemplate !== undefined ||
+      data.websiteTokens !== undefined,
     {
       message:
-        "At least one of websiteSections, websiteLabels, or websiteTemplate is required",
+        "At least one of websiteSections, websiteLabels, websiteTemplate, or websiteTokens is required",
     }
   );
 
@@ -134,6 +147,7 @@ export async function PATCH(req: NextRequest) {
       websiteSections?: typeof validated.websiteSections;
       websiteLabels?: typeof validated.websiteLabels;
       websiteTemplate?: typeof validated.websiteTemplate;
+      websiteTokens?: typeof validated.websiteTokens;
       updatedAt: string;
     } = {
       updatedAt: new Date().toISOString(),
@@ -163,6 +177,10 @@ export async function PATCH(req: NextRequest) {
       updateData.websiteTemplate = validated.websiteTemplate;
     }
 
+    if (validated.websiteTokens) {
+      updateData.websiteTokens = validated.websiteTokens;
+    }
+
     await db
       .update(wedding)
       .set(updateData)
@@ -178,6 +196,7 @@ export async function PATCH(req: NextRequest) {
       websiteSections: validated.websiteSections,
       websiteLabels: updateData.websiteLabels,
       websiteTemplate: updateData.websiteTemplate,
+      websiteTokens: updateData.websiteTokens,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

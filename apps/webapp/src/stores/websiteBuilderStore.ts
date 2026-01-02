@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import type { WebsiteTokens } from "component-shelf";
+import { defaultWebsiteTokens } from "component-shelf";
 
 export type WebsiteLabels = Record<string, Record<string, string>>;
 
@@ -19,13 +21,19 @@ interface WebsiteBuilderStore {
   pendingLabels: WebsiteLabels;
   savedSections: WebsiteSection[];
   pendingSections: WebsiteSection[];
+  savedTokens: WebsiteTokens;
+  pendingTokens: WebsiteTokens;
   selectedElement: SelectedElement;
   initializeLabels: (labels: WebsiteLabels) => void;
   initializeSections: (sections: WebsiteSection[]) => void;
+  initializeTokens: (tokens: WebsiteTokens | null | undefined) => void;
   updateLabel: (section: string, key: string, value: string) => void;
   updateSection: (sectionId: string, enabled: boolean) => void;
+  updateToken: <K extends keyof WebsiteTokens>(key: K, value: WebsiteTokens[K]) => void;
+  updateTokens: (tokens: Partial<WebsiteTokens>) => void;
   commitLabels: (labels: WebsiteLabels) => void;
   commitSections: (sections: WebsiteSection[]) => void;
+  commitTokens: (tokens: WebsiteTokens) => void;
   discardChanges: () => void;
   hasUnsavedChanges: () => boolean;
   setSelectedElement: (element: SelectedElement) => void;
@@ -88,12 +96,27 @@ export const areSectionsEqual = (
   return true;
 };
 
+export const areTokensEqual = (
+  tokens1: WebsiteTokens,
+  tokens2: WebsiteTokens
+): boolean => {
+  const keys = Object.keys(tokens1) as (keyof WebsiteTokens)[];
+  for (const key of keys) {
+    if (tokens1[key] !== tokens2[key]) {
+      return false;
+    }
+  }
+  return true;
+};
+
 export const useWebsiteBuilderStore = create<WebsiteBuilderStore>(
   (set, get) => ({
     savedLabels: {},
     pendingLabels: {},
     savedSections: [],
     pendingSections: [],
+    savedTokens: defaultWebsiteTokens,
+    pendingTokens: defaultWebsiteTokens,
     selectedElement: null,
 
     initializeLabels: (labels) => {
@@ -107,6 +130,14 @@ export const useWebsiteBuilderStore = create<WebsiteBuilderStore>(
       set({
         savedSections: sections,
         pendingSections: sections,
+      });
+    },
+
+    initializeTokens: (tokens) => {
+      const resolvedTokens = tokens || defaultWebsiteTokens;
+      set({
+        savedTokens: resolvedTokens,
+        pendingTokens: resolvedTokens,
       });
     },
 
@@ -130,6 +161,24 @@ export const useWebsiteBuilderStore = create<WebsiteBuilderStore>(
       }));
     },
 
+    updateToken: (key, value) => {
+      set((state) => ({
+        pendingTokens: {
+          ...state.pendingTokens,
+          [key]: value,
+        },
+      }));
+    },
+
+    updateTokens: (tokens) => {
+      set((state) => ({
+        pendingTokens: {
+          ...state.pendingTokens,
+          ...tokens,
+        },
+      }));
+    },
+
     commitLabels: (labels) => {
       set({
         savedLabels: labels,
@@ -144,19 +193,34 @@ export const useWebsiteBuilderStore = create<WebsiteBuilderStore>(
       });
     },
 
+    commitTokens: (tokens) => {
+      set({
+        savedTokens: tokens,
+        pendingTokens: tokens,
+      });
+    },
+
     discardChanges: () => {
       set((state) => ({
         pendingLabels: state.savedLabels,
         pendingSections: state.savedSections,
+        pendingTokens: state.savedTokens,
       }));
     },
 
     hasUnsavedChanges: () => {
-      const { savedLabels, pendingLabels, savedSections, pendingSections } =
-        get();
+      const {
+        savedLabels,
+        pendingLabels,
+        savedSections,
+        pendingSections,
+        savedTokens,
+        pendingTokens,
+      } = get();
       return (
         !areLabelsEqual(savedLabels, pendingLabels) ||
-        !areSectionsEqual(savedSections, pendingSections)
+        !areSectionsEqual(savedSections, pendingSections) ||
+        !areTokensEqual(savedTokens, pendingTokens)
       );
     },
 

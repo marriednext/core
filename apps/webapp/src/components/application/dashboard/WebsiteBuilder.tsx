@@ -5,6 +5,7 @@ import {
   useWebsiteBuilderStore,
   areLabelsEqual,
   areSectionsEqual,
+  areTokensEqual,
 } from "../../../stores/websiteBuilderStore";
 import {
   isBuilderMessage,
@@ -46,12 +47,16 @@ import {
   ChevronRight,
   X,
   ExternalLinkIcon,
+  Palette,
 } from "lucide-react";
 import { cn } from "../../../lib/component-shelf/utils";
 import {
   mergeSectionsWithDefaults,
   SECTION_DISPLAY_NAMES,
   type WebsiteSection,
+  type WebsiteTokens,
+  colorPresets,
+  fontOptions,
 } from "component-shelf";
 
 const MAX_GALLERY_PHOTOS = 8;
@@ -88,6 +93,7 @@ export type WebsiteBuilderData = {
   photos?: WebsiteBuilderPhoto[];
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: WebsiteLabels | null;
+  websiteTokens?: WebsiteTokens | null;
   subdomain?: string | null;
   customDomain?: string | null;
   subscriptionPlan?: string;
@@ -127,11 +133,15 @@ export function ApplicationWebsiteBuilder({
   const {
     pendingLabels,
     pendingSections,
+    pendingTokens,
     initializeLabels,
     initializeSections,
+    initializeTokens,
     updateSection,
+    updateTokens,
     commitLabels,
     commitSections,
+    commitTokens,
     discardChanges,
     hasUnsavedChanges,
     selectedElement,
@@ -288,8 +298,9 @@ export function ApplicationWebsiteBuilder({
       const mergedSections = mergeSectionsWithDefaults(data.websiteSections);
       initializeSections(mergedSections);
       initializeLabels(data.websiteLabels || {});
+      initializeTokens(data.websiteTokens);
     }
-  }, [data, themeId, initializeLabels, initializeSections]);
+  }, [data, themeId, initializeLabels, initializeSections, initializeTokens]);
 
   const handleUploadPhoto = async (
     photoType: "hero" | "story" | "gallery",
@@ -410,6 +421,7 @@ export function ApplicationWebsiteBuilder({
       const payload: {
         websiteLabels?: WebsiteLabels;
         websiteSections?: WebsiteSection[];
+        websiteTokens?: WebsiteTokens;
       } = {};
 
       if (!areLabelsEqual(store.savedLabels, store.pendingLabels)) {
@@ -418,6 +430,10 @@ export function ApplicationWebsiteBuilder({
 
       if (!areSectionsEqual(store.savedSections, store.pendingSections)) {
         payload.websiteSections = store.pendingSections;
+      }
+
+      if (!areTokensEqual(store.savedTokens, store.pendingTokens)) {
+        payload.websiteTokens = store.pendingTokens;
       }
 
       const response = await fetch("/api/website-builder", {
@@ -446,6 +462,13 @@ export function ApplicationWebsiteBuilder({
         commitSections(result.websiteSections);
       }
 
+      if (
+        payload.websiteTokens !== undefined &&
+        result.websiteTokens !== undefined
+      ) {
+        commitTokens(result.websiteTokens);
+      }
+
       setHasChanges(false);
     } catch (error) {
       console.error("Error saving changes:", error);
@@ -457,7 +480,7 @@ export function ApplicationWebsiteBuilder({
   useEffect(() => {
     const hasChangesToSave = hasUnsavedChanges();
     setHasChanges(hasChangesToSave);
-  }, [pendingLabels, pendingSections, hasUnsavedChanges]);
+  }, [pendingLabels, pendingSections, pendingTokens, hasUnsavedChanges]);
 
   useEffect(() => {
     if (!data?.fieldEventDate) {
@@ -556,6 +579,19 @@ export function ApplicationWebsiteBuilder({
               variant="ghost"
               size="icon"
               className={`h-9 w-9 ${
+                activeTab === "design"
+                  ? "text-foreground bg-muted"
+                  : "text-muted-foreground"
+              }`}
+              title="Design"
+              onClick={() => handleCollapsedTabClick("design")}
+            >
+              <Palette className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`h-9 w-9 ${
                 activeTab === "layout"
                   ? "text-foreground bg-muted"
                   : "text-muted-foreground"
@@ -575,10 +611,14 @@ export function ApplicationWebsiteBuilder({
               className="w-full"
             >
               <div className="flex items-center gap-2">
-                <TabsList className="grid flex-1 grid-cols-2">
+                <TabsList className="grid flex-1 grid-cols-3">
                   <TabsTrigger value="images" className="text-xs">
                     <ImageIcon className="h-4 w-4 sm:mr-1" />
                     <span className="hidden sm:inline">Images</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="design" className="text-xs">
+                    <Palette className="h-4 w-4 sm:mr-1" />
+                    <span className="hidden sm:inline">Design</span>
                   </TabsTrigger>
                   <TabsTrigger value="layout" className="text-xs">
                     <Layout className="h-4 w-4 sm:mr-1" />
@@ -778,6 +818,256 @@ export function ApplicationWebsiteBuilder({
                           <Upload className="h-5 w-5 text-muted-foreground" />
                         </div>
                       )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Design Tab */}
+              <TabsContent value="design" className="mt-4 space-y-4">
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base">Color Palette</CardTitle>
+                    <CardDescription>
+                      Choose a color scheme for your website
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-4 gap-2 mb-4">
+                      {colorPresets.map((preset) => (
+                        <button
+                          key={preset.name}
+                          onClick={() => {
+                            updateTokens({
+                              primary: preset.primary,
+                              primaryForeground: preset.primaryForeground,
+                              background: preset.background,
+                              headingColor: preset.headingColor,
+                              bodyColor: preset.bodyColor,
+                            });
+                            setHasChanges(true);
+                          }}
+                          className={cn(
+                            "relative aspect-square border rounded-md overflow-hidden hover:ring-2 hover:ring-primary hover:ring-offset-2 transition-all group",
+                            pendingTokens.primary === preset.primary &&
+                              pendingTokens.background === preset.background
+                              ? "ring-2 ring-primary ring-offset-2"
+                              : "border-border"
+                          )}
+                          title={preset.name}
+                        >
+                          <div className="absolute inset-0 flex">
+                            <div
+                              className="w-1/2 h-full"
+                              style={{ backgroundColor: preset.background }}
+                            />
+                            <div
+                              className="w-1/2 h-full"
+                              style={{ backgroundColor: preset.primary }}
+                            />
+                          </div>
+                          <span className="absolute inset-0 flex items-center justify-center text-[9px] font-medium opacity-0 group-hover:opacity-100 bg-black/50 text-white transition-opacity">
+                            {preset.name}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
+                          style={{ backgroundColor: pendingTokens.primary }}
+                        >
+                          <input
+                            type="color"
+                            value={pendingTokens.primary}
+                            onChange={(e) => {
+                              updateTokens({ primary: e.target.value });
+                              setHasChanges(true);
+                            }}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium">Primary</p>
+                          <p className="text-xs text-muted-foreground">
+                            Buttons and accents
+                          </p>
+                        </div>
+                        <input
+                          type="text"
+                          value={pendingTokens.primary}
+                          onChange={(e) => {
+                            updateTokens({ primary: e.target.value });
+                            setHasChanges(true);
+                          }}
+                          className="w-20 h-8 px-2 text-xs border border-border rounded-md bg-background uppercase text-center"
+                        />
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
+                          style={{ backgroundColor: pendingTokens.background }}
+                        >
+                          <input
+                            type="color"
+                            value={pendingTokens.background}
+                            onChange={(e) => {
+                              updateTokens({ background: e.target.value });
+                              setHasChanges(true);
+                            }}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium">Background</p>
+                          <p className="text-xs text-muted-foreground">
+                            Page background
+                          </p>
+                        </div>
+                        <input
+                          type="text"
+                          value={pendingTokens.background}
+                          onChange={(e) => {
+                            updateTokens({ background: e.target.value });
+                            setHasChanges(true);
+                          }}
+                          className="w-20 h-8 px-2 text-xs border border-border rounded-md bg-background uppercase text-center"
+                        />
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
+                          style={{ backgroundColor: pendingTokens.headingColor }}
+                        >
+                          <input
+                            type="color"
+                            value={pendingTokens.headingColor}
+                            onChange={(e) => {
+                              updateTokens({ headingColor: e.target.value });
+                              setHasChanges(true);
+                            }}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium">Headings</p>
+                          <p className="text-xs text-muted-foreground">
+                            Titles and names
+                          </p>
+                        </div>
+                        <input
+                          type="text"
+                          value={pendingTokens.headingColor}
+                          onChange={(e) => {
+                            updateTokens({ headingColor: e.target.value });
+                            setHasChanges(true);
+                          }}
+                          className="w-20 h-8 px-2 text-xs border border-border rounded-md bg-background uppercase text-center"
+                        />
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
+                          style={{ backgroundColor: pendingTokens.bodyColor }}
+                        >
+                          <input
+                            type="color"
+                            value={pendingTokens.bodyColor}
+                            onChange={(e) => {
+                              updateTokens({ bodyColor: e.target.value });
+                              setHasChanges(true);
+                            }}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium">Body Text</p>
+                          <p className="text-xs text-muted-foreground">
+                            Paragraphs and details
+                          </p>
+                        </div>
+                        <input
+                          type="text"
+                          value={pendingTokens.bodyColor}
+                          onChange={(e) => {
+                            updateTokens({ bodyColor: e.target.value });
+                            setHasChanges(true);
+                          }}
+                          className="w-20 h-8 px-2 text-xs border border-border rounded-md bg-background uppercase text-center"
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base">Typography</CardTitle>
+                    <CardDescription>
+                      Choose fonts for your website
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium mb-1.5 block">
+                        Heading Font
+                      </label>
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Used for names and section titles
+                      </p>
+                      <select
+                        value={pendingTokens.headingFont}
+                        onChange={(e) => {
+                          updateTokens({ headingFont: e.target.value });
+                          setHasChanges(true);
+                        }}
+                        className="w-full h-10 px-3 text-sm border border-border rounded-md bg-background cursor-pointer"
+                        style={{ fontFamily: pendingTokens.headingFont }}
+                      >
+                        {fontOptions.map((font) => (
+                          <option key={font.value} value={font.value}>
+                            {font.label} — {font.style}
+                          </option>
+                        ))}
+                      </select>
+                      <div
+                        className="mt-2 p-3 rounded-md bg-muted/50 text-xl"
+                        style={{ fontFamily: pendingTokens.headingFont }}
+                      >
+                        {data?.fieldNameA && data?.fieldNameB
+                          ? `${data.fieldNameA} & ${data.fieldNameB}`
+                          : "Emma & James"}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-1.5 block">
+                        Body Font
+                      </label>
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Used for paragraphs and details
+                      </p>
+                      <select
+                        value={pendingTokens.bodyFont}
+                        onChange={(e) => {
+                          updateTokens({ bodyFont: e.target.value });
+                          setHasChanges(true);
+                        }}
+                        className="w-full h-10 px-3 text-sm border border-border rounded-md bg-background cursor-pointer"
+                        style={{ fontFamily: pendingTokens.bodyFont }}
+                      >
+                        {fontOptions.map((font) => (
+                          <option key={font.value} value={font.value}>
+                            {font.label} — {font.style}
+                          </option>
+                        ))}
+                      </select>
+                      <div
+                        className="mt-2 p-3 rounded-md bg-muted/50 text-sm"
+                        style={{ fontFamily: pendingTokens.bodyFont }}
+                      >
+                        We are excited to celebrate our special day with you.
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

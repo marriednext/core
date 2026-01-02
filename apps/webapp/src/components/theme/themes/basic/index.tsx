@@ -1,6 +1,6 @@
 "use client";
 
-import { BasicTheme } from "component-shelf";
+import { BasicTheme, defaultWebsiteTokens } from "component-shelf";
 import type { ApplicationImageComponent } from "component-shelf";
 import { mapWeddingDataToBasicThemeProps } from "./mapper";
 import type { ThemeProps } from "../../types";
@@ -8,16 +8,6 @@ import RsvpFormContainer from "@/components/RsvpFormContainer";
 import type { RsvpFormTokens, RsvpFormStyles } from "@/components/RsvpForm";
 import Link from "next/link";
 import Image from "next/image";
-
-const basicThemeTokens: RsvpFormTokens = {
-  primary: "#0a0a0a",
-  primaryForeground: "#fafafa",
-  background: "#fafafa",
-  headingColor: "#0a0a0a",
-  bodyColor: "#404040",
-  headingFont: "'Playfair Display', serif",
-  bodyFont: "'Inter', sans-serif",
-};
 
 const basicThemeStyles: RsvpFormStyles = {
   container: "max-w-xl w-full",
@@ -42,13 +32,25 @@ export default function BasicThemeEntry({
   onSectionClick,
 }: ThemeProps) {
   const props = mapWeddingDataToBasicThemeProps(weddingData);
+  const tokens = weddingData.websiteTokens || defaultWebsiteTokens;
+
+  const rsvpTokens: RsvpFormTokens = {
+    primary: tokens.primary,
+    primaryForeground: tokens.primaryForeground,
+    background: tokens.background,
+    headingColor: tokens.headingColor,
+    bodyColor: tokens.bodyColor,
+    headingFont: `'${tokens.headingFont}', serif`,
+    bodyFont: `'${tokens.bodyFont}', sans-serif`,
+  };
 
   return (
     <BasicTheme
       {...props}
+      websiteTokens={tokens}
       rsvpFormComponent={
         <RsvpFormContainer
-          tokens={basicThemeTokens}
+          tokens={rsvpTokens}
           styles={basicThemeStyles}
           showTitle={false}
         />

@@ -26,8 +26,6 @@ export function mapWeddingDataToBasicThemeProps(weddingData: WeddingData) {
         : undefined,
     websiteSections: weddingData.websiteSections,
     websiteLabels: weddingData.websiteLabels,
+    websiteTokens: weddingData.websiteTokens,
   };
 }
-
-
-

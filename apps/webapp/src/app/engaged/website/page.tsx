@@ -59,6 +59,18 @@ const websiteBuilderSchema = z.object({
     .record(z.string(), z.record(z.string(), z.string()))
     .nullable()
     .optional(),
+  websiteTokens: z
+    .object({
+      primary: z.string(),
+      primaryForeground: z.string(),
+      background: z.string(),
+      headingColor: z.string(),
+      bodyColor: z.string(),
+      headingFont: z.string(),
+      bodyFont: z.string(),
+    })
+    .nullable()
+    .optional(),
   websiteTemplate: z.string(),
 });
 
@@ -90,6 +102,7 @@ function transformToBuilderData(
     subscriptionPlan: response.subscriptionPlan,
     websiteSections: response.websiteSections,
     websiteLabels: response.websiteLabels,
+    websiteTokens: response.websiteTokens,
     websiteTemplate: response.websiteTemplate,
   };
 }

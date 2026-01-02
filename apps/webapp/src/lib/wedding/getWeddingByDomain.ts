@@ -29,6 +29,7 @@ async function getWeddingFromDatabase(
       controlRsvpNameFormat: wedding.controlRsvpNameFormat,
       websiteSections: wedding.websiteSections,
       websiteLabels: wedding.websiteLabels,
+      websiteTokens: wedding.websiteTokens,
       websiteTemplate: wedding.websiteTemplate,
     })
     .from(wedding)

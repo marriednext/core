@@ -5,6 +5,7 @@ import { useWebsiteBuilderStore } from "../../../stores/websiteBuilderStore";
 import {
   mergeSectionsWithDefaults,
   type WebsiteSection,
+  type WebsiteTokens,
 } from "component-shelf";
 import {
   postToParent,
@@ -35,6 +36,7 @@ export type WebsiteBuilderData = {
   photos?: WebsiteBuilderPhoto[];
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: WebsiteLabels | null;
+  websiteTokens?: WebsiteTokens | null;
   subdomain?: string | null;
   customDomain?: string | null;
   subscriptionPlan?: string;
@@ -50,7 +52,7 @@ export function WebsiteBuilderPreview({
   data,
   isLoading = false,
 }: WebsiteBuilderPreviewProps) {
-  const { pendingLabels, initializeLabels, updateLabel } =
+  const { pendingLabels, pendingTokens, initializeLabels, initializeTokens, updateLabel } =
     useWebsiteBuilderStore();
 
   const sections = useMemo<WebsiteSection[]>(
@@ -81,9 +83,10 @@ export function WebsiteBuilderPreview({
       photos: data.photos,
       websiteSections: sections,
       websiteLabels: pendingLabels,
+      websiteTokens: pendingTokens,
       websiteTemplate: data.websiteTemplate,
     };
-  }, [data, sections, pendingLabels]);
+  }, [data, sections, pendingLabels, pendingTokens]);
 
   const themeId = (data?.websiteTemplate ?? "lisastheme") as ThemeId;
 
@@ -92,6 +95,10 @@ export function WebsiteBuilderPreview({
       initializeLabels(data.websiteLabels);
     }
   }, [data?.websiteLabels, initializeLabels]);
+
+  useEffect(() => {
+    initializeTokens(data?.websiteTokens);
+  }, [data?.websiteTokens, initializeTokens]);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {

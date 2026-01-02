@@ -40,6 +40,7 @@ export async function getCurrentWedding() {
       fieldPreferredLocationCountry: wedding.fieldPreferredLocationCountry,
       websiteSections: wedding.websiteSections,
       websiteLabels: wedding.websiteLabels,
+      websiteTokens: wedding.websiteTokens,
     })
     .from(weddingUsers)
     .innerJoin(wedding, eq(weddingUsers.weddingId, wedding.id))

@@ -12,6 +12,16 @@ export type WebsiteSection = {
   order: number;
 };
 
+export type WebsiteTokens = {
+  primary: string;
+  primaryForeground: string;
+  background: string;
+  headingColor: string;
+  bodyColor: string;
+  headingFont: string;
+  bodyFont: string;
+};
+
 export type WeddingData = {
   id: string;
   subdomain: string | null;
@@ -33,6 +43,7 @@ export type WeddingData = {
   photos?: WeddingPhoto[];
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: Record<string, Record<string, string>> | null;
+  websiteTokens?: WebsiteTokens | null;
   websiteTemplate?: string | null;
 };
 

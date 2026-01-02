@@ -21,6 +21,12 @@ export type {
   PageCollectInfoData,
   PageCollectInfoCustomization,
   CollectInfoFormData,
+  WebsiteTokens,
+} from "./components/theme/basic/types";
+export {
+  defaultWebsiteTokens,
+  colorPresets,
+  fontOptions,
 } from "./components/theme/basic/types";
 export type {
   TuscanBloomProps,

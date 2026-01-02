@@ -17,6 +17,7 @@ export default function BuilderPreviewPage() {
     photos: weddingData.photos,
     websiteSections: weddingData.websiteSections,
     websiteLabels: weddingData.websiteLabels,
+    websiteTokens: weddingData.websiteTokens,
     subdomain: weddingData.subdomain,
     customDomain: weddingData.customDomain,
     websiteTemplate: weddingData.websiteTemplate,
