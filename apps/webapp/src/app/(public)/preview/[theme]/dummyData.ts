@@ -44,11 +44,13 @@ export function createDummyWeddingData(theme: ValidTheme): WeddingData {
     fieldEventTime: "4:00 PM",
     fieldMapsEmbedUrl:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3132.123456789!2d-122.4194!3d37.7749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ2JzI5LjYiTiAxMjLCsDI1JzA5LjgiVw!5e0!3m2!1sen!2sus!4v1234567890",
-    fieldMapsShareUrl: "https://maps.google.com/?q=The+Grand+Estate+Napa+Valley",
+    fieldMapsShareUrl:
+      "https://maps.google.com/?q=The+Grand+Estate+Napa+Valley",
     fieldQuestionsAndAnswers: [
       {
         question: "What is the dress code?",
-        answer: "Formal attire is requested. Please dress in elegant evening wear.",
+        answer:
+          "Formal attire is requested. Please dress in elegant evening wear.",
       },
       {
         question: "Are children welcome?",
@@ -181,4 +183,3 @@ export function createDummyWeddingData(theme: ValidTheme): WeddingData {
     websiteTemplate: theme,
   };
 }
-

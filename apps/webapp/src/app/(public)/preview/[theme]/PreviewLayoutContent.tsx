@@ -3,7 +3,7 @@
 import { WeddingDataProvider } from "@/contexts/WeddingDataContext";
 import type { WeddingData } from "@/lib/wedding/types";
 
-export function BuilderLayoutContent({
+export function PreviewLayoutContent({
   children,
   initialData,
 }: {

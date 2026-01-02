@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import { Cormorant_Infant } from "next/font/google";
 import "style-shelf/tailwind";
 import { notFound } from "next/navigation";
-import { BuilderLayoutContent } from "./BuilderLayoutContent";
-import { createDummyWeddingData, isValidTheme, VALID_THEMES } from "./dummyData";
+import { PreviewLayoutContent } from "./PreviewLayoutContent";
+import {
+  createDummyWeddingData,
+  isValidTheme,
+  VALID_THEMES,
+} from "./dummyData";
 
 const cormorantInfant = Cormorant_Infant({
   variable: "--font-cormorant-infant",
@@ -11,11 +15,11 @@ const cormorantInfant = Cormorant_Infant({
 });
 
 export const metadata: Metadata = {
-  title: "Local Theme Preview",
+  title: "Theme Preview",
   robots: "noindex, nofollow",
 };
 
-export default async function BuilderLayout({
+export default async function PreviewLayout({
   children,
   params,
 }: Readonly<{
@@ -33,9 +37,9 @@ export default async function BuilderLayout({
   return (
     <html lang="en">
       <body className={`${cormorantInfant.variable} antialiased`}>
-        <BuilderLayoutContent initialData={weddingData}>
+        <PreviewLayoutContent initialData={weddingData}>
           {children}
-        </BuilderLayoutContent>
+        </PreviewLayoutContent>
       </body>
     </html>
   );

@@ -3,10 +3,10 @@
 import { WebsiteBuilderPreview } from "@/components/application";
 import { useWeddingData } from "@/contexts/WeddingDataContext";
 
-export default function BuilderPreviewPage() {
+export default function ThemePreviewPage() {
   const weddingData = useWeddingData();
 
-  const builderData = {
+  const previewData = {
     fieldNameA: weddingData.fieldNameA,
     fieldNameB: weddingData.fieldNameB,
     fieldLocationName: weddingData.fieldLocationName,
@@ -23,5 +23,5 @@ export default function BuilderPreviewPage() {
     websiteTemplate: weddingData.websiteTemplate,
   };
 
-  return <WebsiteBuilderPreview data={builderData} />;
+  return <WebsiteBuilderPreview data={previewData} />;
 }
