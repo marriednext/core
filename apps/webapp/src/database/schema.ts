@@ -11,6 +11,7 @@ import {
   integer,
   pgEnum,
 } from "drizzle-orm/pg-core";
+import type { WebsiteTokens } from "./types";
 
 export const invitationStatus = pgEnum("invitation_status", [
   "pending",
@@ -82,15 +83,7 @@ export const wedding = pgTable(
     >(),
     websiteLabels:
       jsonb("website_labels").$type<Record<string, Record<string, string>>>(),
-    websiteTokens: jsonb("website_tokens").$type<{
-      primary: string;
-      primaryForeground: string;
-      background: string;
-      headingColor: string;
-      bodyColor: string;
-      headingFont: string;
-      bodyFont: string;
-    }>(),
+    websiteTokens: jsonb("website_tokens").$type<WebsiteTokens>(),
   },
   (table) => [
     unique("weddings_subdomain_unique").on(table.subdomain),

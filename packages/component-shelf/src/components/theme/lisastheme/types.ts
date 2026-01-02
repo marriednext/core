@@ -6,6 +6,26 @@ export type WebsiteSection = {
   order: number;
 };
 
+export interface WebsiteTokens {
+  primary: string;
+  primaryForeground: string;
+  background: string;
+  headingColor: string;
+  bodyColor: string;
+  headingFont: string;
+  bodyFont: string;
+}
+
+export const defaultLisasThemeTokens: WebsiteTokens = {
+  primary: "#745656",
+  primaryForeground: "#ffffff",
+  background: "#faf9f6",
+  headingColor: "#2c2c2c",
+  bodyColor: "#2c2c2c",
+  headingFont: "'Cormorant Infant', serif",
+  bodyFont: "'Cormorant Infant', serif",
+};
+
 /**
  * Top-level props for the LisasTheme component.
  * @database
@@ -28,6 +48,7 @@ export interface LisasThemeTypes {
   galleryImages?: string[];
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: WebsiteLabels | null;
+  websiteTokens?: WebsiteTokens | null;
   editable?: boolean;
   contained?: boolean;
   onCustomizationChange?: (section: string, key: string, value: string) => void;

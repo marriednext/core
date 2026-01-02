@@ -3,6 +3,7 @@
 import "style-shelf/tailwind";
 import labels from "label-shelf/lisastheme";
 import type { LisasThemeTypes } from "./types";
+import { defaultLisasThemeTokens } from "./types";
 import { StickyNav } from "./StickyNav";
 import { HeroSection } from "./HeroSection";
 import { CountdownSection } from "./CountdownSection";
@@ -31,11 +32,13 @@ export function LisasTheme({
   galleryImages,
   websiteSections,
   websiteLabels,
+  websiteTokens,
   editable = false,
   contained = false,
   onCustomizationChange,
   onSectionClick,
 }: LisasThemeTypes) {
+  const tokens = websiteTokens || defaultLisasThemeTokens;
   const handleSectionChange =
     (section: string) => (key: string, value: string) => {
       onCustomizationChange?.(section, key, value);
@@ -170,8 +173,31 @@ export function LisasTheme({
     ? "cursor-pointer hover:outline hover:outline-2 hover:outline-primary/50 hover:outline-offset-2 transition-all"
     : "";
 
+  const cssVars = {
+    "--lisas-primary": tokens.primary,
+    "--lisas-primary-foreground": tokens.primaryForeground,
+    "--lisas-background": tokens.background,
+    "--lisas-heading-color": tokens.headingColor,
+    "--lisas-body-color": tokens.bodyColor,
+    "--lisas-heading-font": tokens.headingFont,
+    "--lisas-body-font": tokens.bodyFont,
+    "--primary": tokens.primary,
+    "--primary-foreground": tokens.primaryForeground,
+    "--background": tokens.background,
+    "--foreground": tokens.headingColor,
+    "--muted-foreground": tokens.bodyColor,
+  } as React.CSSProperties;
+
   return (
-    <div className="min-h-screen @container">
+    <div
+      className="min-h-screen @container"
+      style={{
+        ...cssVars,
+        backgroundColor: tokens.background,
+        color: tokens.bodyColor,
+        fontFamily: tokens.bodyFont,
+      }}
+    >
       <StickyNav
         customization={getSectionLabels("stickyNav")}
         editable={editable}

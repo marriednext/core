@@ -1,8 +1,11 @@
+import type { WebsiteTokens } from "component-shelf";
+
 export type BuilderMessageType =
   | "SECTION_CLICKED"
   | "LABEL_CLICKED"
   | "DESELECT"
   | "UPDATE_LABEL"
+  | "UPDATE_TOKENS"
   | "REFRESH_PREVIEW";
 
 export type SectionClickedPayload = {
@@ -22,11 +25,16 @@ export type UpdateLabelPayload = {
   value: string;
 };
 
+export type UpdateTokensPayload = {
+  tokens: Partial<WebsiteTokens>;
+};
+
 export type BuilderMessage =
   | { type: "SECTION_CLICKED"; payload: SectionClickedPayload }
   | { type: "LABEL_CLICKED"; payload: LabelClickedPayload }
   | { type: "DESELECT" }
   | { type: "UPDATE_LABEL"; payload: UpdateLabelPayload }
+  | { type: "UPDATE_TOKENS"; payload: UpdateTokensPayload }
   | { type: "REFRESH_PREVIEW" };
 
 export const BUILDER_MESSAGE_SOURCE = "marriednext-builder";

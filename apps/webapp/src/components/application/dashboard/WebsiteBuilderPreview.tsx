@@ -52,8 +52,14 @@ export function WebsiteBuilderPreview({
   data,
   isLoading = false,
 }: WebsiteBuilderPreviewProps) {
-  const { pendingLabels, pendingTokens, initializeLabels, initializeTokens, updateLabel } =
-    useWebsiteBuilderStore();
+  const {
+    pendingLabels,
+    pendingTokens,
+    initializeLabels,
+    initializeTokens,
+    updateLabel,
+    updateTokens,
+  } = useWebsiteBuilderStore();
 
   const sections = useMemo<WebsiteSection[]>(
     () => mergeSectionsWithDefaults(data?.websiteSections),
@@ -111,12 +117,14 @@ export function WebsiteBuilderPreview({
           message.payload.labelKey,
           message.payload.value
         );
+      } else if (message.type === "UPDATE_TOKENS") {
+        updateTokens(message.payload.tokens);
       }
     };
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [updateLabel]);
+  }, [updateLabel, updateTokens]);
 
   const handleCustomizationChange = useCallback(
     (section: string, key: string, value: string) => {

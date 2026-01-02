@@ -25,9 +25,11 @@ export function mapWeddingDataToLisasThemeProps(weddingData: WeddingData) {
     heroImageUrl: heroPhoto?.blobUrl,
     ourStoryImageUrl: storyPhoto?.blobUrl,
     galleryImages:
-      galleryPhotos.length > 0 ? galleryPhotos.map((p) => p.blobUrl) : undefined,
+      galleryPhotos.length > 0
+        ? galleryPhotos.map((p) => p.blobUrl)
+        : undefined,
     websiteSections: weddingData.websiteSections,
     websiteLabels: weddingData.websiteLabels,
+    websiteTokens: weddingData.websiteTokens,
   };
 }
-

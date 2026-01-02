@@ -187,6 +187,15 @@ export function ApplicationWebsiteBuilder({
 
   void updatePreviewLabel;
 
+  const updatePreviewTokens = useCallback((tokens: Partial<WebsiteTokens>) => {
+    if (iframeRef.current) {
+      postToIframe(iframeRef.current, {
+        type: "UPDATE_TOKENS",
+        payload: { tokens },
+      });
+    }
+  }, []);
+
   const getInitialContent = (): WebsiteContent => {
     const heroPhoto = data?.photos?.find(
       (p) => p.photoType === "hero" && p.themeId === themeId
@@ -838,13 +847,15 @@ export function ApplicationWebsiteBuilder({
                         <button
                           key={preset.name}
                           onClick={() => {
-                            updateTokens({
+                            const tokens = {
                               primary: preset.primary,
                               primaryForeground: preset.primaryForeground,
                               background: preset.background,
                               headingColor: preset.headingColor,
                               bodyColor: preset.bodyColor,
-                            });
+                            };
+                            updateTokens(tokens);
+                            updatePreviewTokens(tokens);
                             setHasChanges(true);
                           }}
                           className={cn(
@@ -883,6 +894,7 @@ export function ApplicationWebsiteBuilder({
                             value={pendingTokens.primary}
                             onChange={(e) => {
                               updateTokens({ primary: e.target.value });
+                              updatePreviewTokens({ primary: e.target.value });
                               setHasChanges(true);
                             }}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -899,6 +911,7 @@ export function ApplicationWebsiteBuilder({
                           value={pendingTokens.primary}
                           onChange={(e) => {
                             updateTokens({ primary: e.target.value });
+                            updatePreviewTokens({ primary: e.target.value });
                             setHasChanges(true);
                           }}
                           className="w-20 h-8 px-2 text-xs border border-border rounded-md bg-background uppercase text-center"
@@ -914,6 +927,9 @@ export function ApplicationWebsiteBuilder({
                             value={pendingTokens.background}
                             onChange={(e) => {
                               updateTokens({ background: e.target.value });
+                              updatePreviewTokens({
+                                background: e.target.value,
+                              });
                               setHasChanges(true);
                             }}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -930,6 +946,7 @@ export function ApplicationWebsiteBuilder({
                           value={pendingTokens.background}
                           onChange={(e) => {
                             updateTokens({ background: e.target.value });
+                            updatePreviewTokens({ background: e.target.value });
                             setHasChanges(true);
                           }}
                           className="w-20 h-8 px-2 text-xs border border-border rounded-md bg-background uppercase text-center"
@@ -938,13 +955,18 @@ export function ApplicationWebsiteBuilder({
                       <div className="flex items-center gap-3">
                         <div
                           className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
-                          style={{ backgroundColor: pendingTokens.headingColor }}
+                          style={{
+                            backgroundColor: pendingTokens.headingColor,
+                          }}
                         >
                           <input
                             type="color"
                             value={pendingTokens.headingColor}
                             onChange={(e) => {
                               updateTokens({ headingColor: e.target.value });
+                              updatePreviewTokens({
+                                headingColor: e.target.value,
+                              });
                               setHasChanges(true);
                             }}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -961,6 +983,9 @@ export function ApplicationWebsiteBuilder({
                           value={pendingTokens.headingColor}
                           onChange={(e) => {
                             updateTokens({ headingColor: e.target.value });
+                            updatePreviewTokens({
+                              headingColor: e.target.value,
+                            });
                             setHasChanges(true);
                           }}
                           className="w-20 h-8 px-2 text-xs border border-border rounded-md bg-background uppercase text-center"
@@ -976,6 +1001,9 @@ export function ApplicationWebsiteBuilder({
                             value={pendingTokens.bodyColor}
                             onChange={(e) => {
                               updateTokens({ bodyColor: e.target.value });
+                              updatePreviewTokens({
+                                bodyColor: e.target.value,
+                              });
                               setHasChanges(true);
                             }}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -992,6 +1020,7 @@ export function ApplicationWebsiteBuilder({
                           value={pendingTokens.bodyColor}
                           onChange={(e) => {
                             updateTokens({ bodyColor: e.target.value });
+                            updatePreviewTokens({ bodyColor: e.target.value });
                             setHasChanges(true);
                           }}
                           className="w-20 h-8 px-2 text-xs border border-border rounded-md bg-background uppercase text-center"
@@ -1020,6 +1049,7 @@ export function ApplicationWebsiteBuilder({
                         value={pendingTokens.headingFont}
                         onChange={(e) => {
                           updateTokens({ headingFont: e.target.value });
+                          updatePreviewTokens({ headingFont: e.target.value });
                           setHasChanges(true);
                         }}
                         className="w-full h-10 px-3 text-sm border border-border rounded-md bg-background cursor-pointer"
@@ -1051,6 +1081,7 @@ export function ApplicationWebsiteBuilder({
                         value={pendingTokens.bodyFont}
                         onChange={(e) => {
                           updateTokens({ bodyFont: e.target.value });
+                          updatePreviewTokens({ bodyFont: e.target.value });
                           setHasChanges(true);
                         }}
                         className="w-full h-10 px-3 text-sm border border-border rounded-md bg-background cursor-pointer"
