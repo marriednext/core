@@ -1,5 +1,5 @@
 import "style-shelf/tailwind";
-import labels from "label-shelf/lisastheme";
+import { labels } from "./labels";
 import type {
   Milestone,
   OurStorySectionCustomization,

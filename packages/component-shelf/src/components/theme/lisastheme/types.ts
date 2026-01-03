@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { Locale } from "./labels";
 
 export type WebsiteSection = {
   id: string;
@@ -49,6 +50,7 @@ export interface LisasThemeTypes {
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: WebsiteLabels | null;
   websiteTokens?: WebsiteTokens | null;
+  locale?: Locale;
   editable?: boolean;
   contained?: boolean;
   onCustomizationChange?: (section: string, key: string, value: string) => void;

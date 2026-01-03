@@ -41,7 +41,7 @@ Values that come from your database. Required for the component to function.
 
 ### `customization` - Optional Overrides
 
-Labels and style tweaks. All have sensible defaults from `label-shelf`.
+Labels and style tweaks. All have sensible defaults.
 
 ```tsx
 <HeroSection
@@ -111,10 +111,10 @@ These use only `customization?` without a `data` prop.
 
 ## Default Labels
 
-All label defaults come from `label-shelf/lisastheme`. To customize:
+All label defaults are defined in `labels.ts`. To customize:
 
 1. Override via the `customization` prop at runtime
-2. Or modify the label-shelf source for global changes
+2. Or modify `labels.ts` for global changes
 
 ## Adding a New Section
 

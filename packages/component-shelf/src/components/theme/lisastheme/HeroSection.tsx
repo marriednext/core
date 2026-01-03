@@ -3,7 +3,7 @@
 import "style-shelf/tailwind";
 import { useEffect, useState } from "react";
 import type { HeroSectionCustomization, HeroSectionProps } from "./types";
-import labels from "label-shelf/lisastheme";
+import { labels } from "./labels";
 import { EditableLabel } from "../../ui/editable-label";
 import { cn } from "../../../lib/utils";
 import { PLACEHOLDER_IMAGES } from "./constants";

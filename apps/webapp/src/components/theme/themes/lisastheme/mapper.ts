@@ -1,4 +1,5 @@
 import type { WeddingData } from "@/lib/wedding/types";
+import type { LisasThemeTypes } from "component-shelf";
 
 const THEME_ID = "lisastheme";
 
@@ -30,6 +31,7 @@ export function mapWeddingDataToLisasThemeProps(weddingData: WeddingData) {
         : undefined,
     websiteSections: weddingData.websiteSections,
     websiteLabels: weddingData.websiteLabels,
-    websiteTokens: weddingData.websiteTokens,
+    websiteTokens:
+      weddingData.websiteTokens as LisasThemeTypes["websiteTokens"],
   };
 }

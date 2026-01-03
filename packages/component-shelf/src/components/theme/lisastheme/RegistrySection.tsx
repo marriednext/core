@@ -1,7 +1,7 @@
 "use client";
 
 import { ExternalLink } from "lucide-react";
-import labels from "label-shelf/lisastheme";
+import { labels } from "./labels";
 import type {
   RegistryEntry,
   RegistrySectionCustomization,

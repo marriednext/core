@@ -8,6 +8,7 @@ import { wedding, weddingPhotos } from "@/database/schema";
 import { eq, and, asc } from "drizzle-orm";
 import { z } from "zod";
 import { invalidateWeddingCache } from "@/lib/wedding/cache";
+import type { LisasThemeTokens } from "@/database/types";
 
 export async function GET() {
   try {
@@ -147,7 +148,7 @@ export async function PATCH(req: NextRequest) {
       websiteSections?: typeof validated.websiteSections;
       websiteLabels?: typeof validated.websiteLabels;
       websiteTemplate?: typeof validated.websiteTemplate;
-      websiteTokens?: typeof validated.websiteTokens;
+      websiteTokens?: LisasThemeTokens;
       updatedAt: string;
     } = {
       updatedAt: new Date().toISOString(),

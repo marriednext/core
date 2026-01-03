@@ -102,7 +102,8 @@ function transformToBuilderData(
     subscriptionPlan: response.subscriptionPlan,
     websiteSections: response.websiteSections,
     websiteLabels: response.websiteLabels,
-    websiteTokens: response.websiteTokens,
+    websiteTokens:
+      response.websiteTokens as WebsiteBuilderData["websiteTokens"],
     websiteTemplate: response.websiteTemplate,
   };
 }

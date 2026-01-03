@@ -1,7 +1,7 @@
 "use client";
 
 import "style-shelf/tailwind";
-import labels from "label-shelf/lisastheme";
+import { getLabels } from "./labels";
 import type { LisasThemeTypes } from "./types";
 import { defaultLisasThemeTokens } from "./types";
 import { StickyNav } from "./StickyNav";
@@ -33,12 +33,14 @@ export function LisasTheme({
   websiteSections,
   websiteLabels,
   websiteTokens,
+  locale = "en",
   editable = false,
   contained = false,
   onCustomizationChange,
   onSectionClick,
 }: LisasThemeTypes) {
   const tokens = websiteTokens || defaultLisasThemeTokens;
+  const labels = getLabels(locale);
   const handleSectionChange =
     (section: string) => (key: string, value: string) => {
       onCustomizationChange?.(section, key, value);

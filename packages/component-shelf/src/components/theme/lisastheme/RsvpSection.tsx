@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { ArrowRight, Check } from "lucide-react";
-import labels from "label-shelf/lisastheme";
+import { labels } from "./labels";
 import type { RsvpSectionCustomization, RsvpSectionProps } from "./types";
 import { EditableLabel } from "../../ui/editable-label";
 

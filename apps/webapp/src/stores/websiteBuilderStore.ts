@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type {
-  WebsiteTokens,
+  HierarchicalWebsiteTokens,
   GlobalTokens,
   ComponentTokenKey,
 } from "@/database/types";
@@ -31,12 +31,14 @@ interface WebsiteBuilderStore {
   pendingLabels: WebsiteLabels;
   savedSections: WebsiteSection[];
   pendingSections: WebsiteSection[];
-  savedTokens: WebsiteTokens;
-  pendingTokens: WebsiteTokens;
+  savedTokens: HierarchicalWebsiteTokens;
+  pendingTokens: HierarchicalWebsiteTokens;
   selectedElement: SelectedElement;
   initializeLabels: (labels: WebsiteLabels) => void;
   initializeSections: (sections: WebsiteSection[]) => void;
-  initializeTokens: (tokens: WebsiteTokens | null | undefined) => void;
+  initializeTokens: (
+    tokens: HierarchicalWebsiteTokens | null | undefined
+  ) => void;
   updateLabel: (section: string, key: string, value: string) => void;
   updateSection: (sectionId: string, enabled: boolean) => void;
   updateGlobalToken: <K extends keyof GlobalTokens>(
@@ -45,7 +47,7 @@ interface WebsiteBuilderStore {
   ) => void;
   updateComponentToken: <
     C extends ComponentTokenKey,
-    K extends keyof WebsiteTokens[C]
+    K extends keyof HierarchicalWebsiteTokens[C]
   >(
     component: C,
     key: K,
@@ -53,22 +55,22 @@ interface WebsiteBuilderStore {
   ) => void;
   resetComponentToken: <
     C extends ComponentTokenKey,
-    K extends keyof WebsiteTokens[C]
+    K extends keyof HierarchicalWebsiteTokens[C]
   >(
     component: C,
     key: K
   ) => void;
   isTokenOverridden: <
     C extends ComponentTokenKey,
-    K extends keyof WebsiteTokens[C]
+    K extends keyof HierarchicalWebsiteTokens[C]
   >(
     component: C,
     key: K
   ) => boolean;
-  updateTokens: (tokens: Partial<WebsiteTokens>) => void;
+  updateTokens: (tokens: Partial<HierarchicalWebsiteTokens>) => void;
   commitLabels: (labels: WebsiteLabels) => void;
   commitSections: (sections: WebsiteSection[]) => void;
-  commitTokens: (tokens: WebsiteTokens) => void;
+  commitTokens: (tokens: HierarchicalWebsiteTokens) => void;
   discardChanges: () => void;
   hasUnsavedChanges: () => boolean;
   setSelectedElement: (element: SelectedElement) => void;
@@ -132,10 +134,10 @@ export const areSectionsEqual = (
 };
 
 export const areTokensEqual = (
-  tokens1: WebsiteTokens,
-  tokens2: WebsiteTokens
+  tokens1: HierarchicalWebsiteTokens,
+  tokens2: HierarchicalWebsiteTokens
 ): boolean => {
-  const keys = Object.keys(tokens1) as (keyof WebsiteTokens)[];
+  const keys = Object.keys(tokens1) as (keyof HierarchicalWebsiteTokens)[];
   for (const key of keys) {
     const val1 = tokens1[key];
     const val2 = tokens2[key];

@@ -4,7 +4,7 @@ import "style-shelf/tailwind";
 import { useState, useEffect, useMemo, useRef } from "react";
 import type { StickyNavCustomization, StickyNavProps } from "./types";
 import { cn } from "../../../lib/utils";
-import labels from "label-shelf/lisastheme";
+import { labels } from "./labels";
 import { EditableLabel } from "../../ui/editable-label";
 
 export function StickyNav({

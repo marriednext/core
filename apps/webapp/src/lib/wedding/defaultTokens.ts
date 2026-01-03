@@ -1,4 +1,4 @@
-import type { GlobalTokens, WebsiteTokens } from "@/database/types";
+import type { GlobalTokens, HierarchicalWebsiteTokens } from "@/database/types";
 
 export const defaultGlobalTokens: GlobalTokens = {
   primaryColor: "#0a0a0a",
@@ -11,7 +11,7 @@ export const defaultGlobalTokens: GlobalTokens = {
 
 export const createDefaultTokens = (
   globals: GlobalTokens = defaultGlobalTokens
-): WebsiteTokens => ({
+): HierarchicalWebsiteTokens => ({
   __global: globals,
   page: {
     background: "{__global.backgroundColor}",
@@ -55,4 +55,5 @@ export const createDefaultTokens = (
   },
 });
 
-export const defaultWebsiteTokens: WebsiteTokens = createDefaultTokens();
+export const defaultWebsiteTokens: HierarchicalWebsiteTokens =
+  createDefaultTokens();

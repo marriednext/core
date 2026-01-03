@@ -59,6 +59,7 @@ import {
   colorPresets,
   fontOptions,
 } from "component-shelf";
+import type { WebsiteTokens } from "@/database/types";
 
 const MAX_GALLERY_PHOTOS = 8;
 
@@ -94,7 +95,7 @@ export type WebsiteBuilderData = {
   photos?: WebsiteBuilderPhoto[];
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: WebsiteLabels | null;
-  websiteTokens?: HierarchicalWebsiteTokens | null;
+  websiteTokens?: WebsiteTokens | null;
   subdomain?: string | null;
   customDomain?: string | null;
   subscriptionPlan?: string;
@@ -165,11 +166,11 @@ export function ApplicationWebsiteBuilder({
         }
       });
       updatePreviewTokens({
-        __global: { ...pendingTokens.__global, ...globals } as GlobalTokens,
+        __global: { ...pendingTokens?.__global, ...globals } as GlobalTokens,
       });
       setHasChanges(true);
     },
-    [updateGlobalToken, pendingTokens.__global]
+    [updateGlobalToken, pendingTokens?.__global]
   );
 
   useEffect(() => {
@@ -333,7 +334,9 @@ export function ApplicationWebsiteBuilder({
       const mergedSections = mergeSectionsWithDefaults(data.websiteSections);
       initializeSections(mergedSections);
       initializeLabels(data.websiteLabels || {});
-      initializeTokens(data.websiteTokens);
+      initializeTokens(
+        data.websiteTokens as HierarchicalWebsiteTokens | null | undefined
+      );
     }
   }, [data, themeId, initializeLabels, initializeSections, initializeTokens]);
 
@@ -875,9 +878,9 @@ export function ApplicationWebsiteBuilder({
                           onClick={() => applyColorPreset(preset)}
                           className={cn(
                             "relative aspect-square border rounded-md overflow-hidden hover:ring-2 hover:ring-primary hover:ring-offset-2 transition-all group",
-                            pendingTokens.__global.primaryColor ===
+                            pendingTokens?.__global?.primaryColor ===
                               preset.primary &&
-                              pendingTokens.__global.backgroundColor ===
+                              pendingTokens?.__global?.backgroundColor ===
                                 preset.background
                               ? "ring-2 ring-primary ring-offset-2"
                               : "border-border"
@@ -906,17 +909,17 @@ export function ApplicationWebsiteBuilder({
                           className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
                           style={{
                             backgroundColor:
-                              pendingTokens.__global.primaryColor,
+                              pendingTokens?.__global?.primaryColor,
                           }}
                         >
                           <input
                             type="color"
-                            value={pendingTokens.__global.primaryColor}
+                            value={pendingTokens?.__global?.primaryColor}
                             onChange={(e) => {
                               updateGlobalToken("primaryColor", e.target.value);
                               updatePreviewTokens({
                                 __global: {
-                                  ...pendingTokens.__global,
+                                  ...pendingTokens?.__global,
                                   primaryColor: e.target.value,
                                 },
                               });
@@ -933,12 +936,12 @@ export function ApplicationWebsiteBuilder({
                         </div>
                         <input
                           type="text"
-                          value={pendingTokens.__global.primaryColor}
+                          value={pendingTokens?.__global?.primaryColor}
                           onChange={(e) => {
                             updateGlobalToken("primaryColor", e.target.value);
                             updatePreviewTokens({
                               __global: {
-                                ...pendingTokens.__global,
+                                ...pendingTokens?.__global,
                                 primaryColor: e.target.value,
                               },
                             });
@@ -952,12 +955,12 @@ export function ApplicationWebsiteBuilder({
                           className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
                           style={{
                             backgroundColor:
-                              pendingTokens.__global.backgroundColor,
+                              pendingTokens?.__global?.backgroundColor,
                           }}
                         >
                           <input
                             type="color"
-                            value={pendingTokens.__global.backgroundColor}
+                            value={pendingTokens?.__global?.backgroundColor}
                             onChange={(e) => {
                               updateGlobalToken(
                                 "backgroundColor",
@@ -965,7 +968,7 @@ export function ApplicationWebsiteBuilder({
                               );
                               updatePreviewTokens({
                                 __global: {
-                                  ...pendingTokens.__global,
+                                  ...pendingTokens?.__global,
                                   backgroundColor: e.target.value,
                                 },
                               });
@@ -982,7 +985,7 @@ export function ApplicationWebsiteBuilder({
                         </div>
                         <input
                           type="text"
-                          value={pendingTokens.__global.backgroundColor}
+                          value={pendingTokens?.__global?.backgroundColor}
                           onChange={(e) => {
                             updateGlobalToken(
                               "backgroundColor",
@@ -990,7 +993,7 @@ export function ApplicationWebsiteBuilder({
                             );
                             updatePreviewTokens({
                               __global: {
-                                ...pendingTokens.__global,
+                                ...pendingTokens?.__global,
                                 backgroundColor: e.target.value,
                               },
                             });
@@ -1004,17 +1007,17 @@ export function ApplicationWebsiteBuilder({
                           className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
                           style={{
                             backgroundColor:
-                              pendingTokens.__global.headingColor,
+                              pendingTokens?.__global?.headingColor,
                           }}
                         >
                           <input
                             type="color"
-                            value={pendingTokens.__global.headingColor}
+                            value={pendingTokens?.__global?.headingColor}
                             onChange={(e) => {
                               updateGlobalToken("headingColor", e.target.value);
                               updatePreviewTokens({
                                 __global: {
-                                  ...pendingTokens.__global,
+                                  ...pendingTokens?.__global,
                                   headingColor: e.target.value,
                                 },
                               });
@@ -1031,12 +1034,12 @@ export function ApplicationWebsiteBuilder({
                         </div>
                         <input
                           type="text"
-                          value={pendingTokens.__global.headingColor}
+                          value={pendingTokens?.__global?.headingColor}
                           onChange={(e) => {
                             updateGlobalToken("headingColor", e.target.value);
                             updatePreviewTokens({
                               __global: {
-                                ...pendingTokens.__global,
+                                ...pendingTokens?.__global,
                                 headingColor: e.target.value,
                               },
                             });
@@ -1049,17 +1052,17 @@ export function ApplicationWebsiteBuilder({
                         <div
                           className="w-8 h-8 rounded border border-border shrink-0 relative overflow-hidden"
                           style={{
-                            backgroundColor: pendingTokens.__global.bodyColor,
+                            backgroundColor: pendingTokens?.__global?.bodyColor,
                           }}
                         >
                           <input
                             type="color"
-                            value={pendingTokens.__global.bodyColor}
+                            value={pendingTokens?.__global?.bodyColor}
                             onChange={(e) => {
                               updateGlobalToken("bodyColor", e.target.value);
                               updatePreviewTokens({
                                 __global: {
-                                  ...pendingTokens.__global,
+                                  ...pendingTokens?.__global,
                                   bodyColor: e.target.value,
                                 },
                               });
@@ -1076,12 +1079,12 @@ export function ApplicationWebsiteBuilder({
                         </div>
                         <input
                           type="text"
-                          value={pendingTokens.__global.bodyColor}
+                          value={pendingTokens?.__global?.bodyColor}
                           onChange={(e) => {
                             updateGlobalToken("bodyColor", e.target.value);
                             updatePreviewTokens({
                               __global: {
-                                ...pendingTokens.__global,
+                                ...pendingTokens?.__global,
                                 bodyColor: e.target.value,
                               },
                             });
@@ -1110,19 +1113,19 @@ export function ApplicationWebsiteBuilder({
                         Used for names and section titles
                       </p>
                       <select
-                        value={pendingTokens.__global.bigFont}
+                        value={pendingTokens?.__global?.bigFont}
                         onChange={(e) => {
                           updateGlobalToken("bigFont", e.target.value);
                           updatePreviewTokens({
                             __global: {
-                              ...pendingTokens.__global,
+                              ...pendingTokens?.__global,
                               bigFont: e.target.value,
                             },
                           });
                           setHasChanges(true);
                         }}
                         className="w-full h-10 px-3 text-sm border border-border rounded-md bg-background cursor-pointer"
-                        style={{ fontFamily: pendingTokens.__global.bigFont }}
+                        style={{ fontFamily: pendingTokens?.__global?.bigFont }}
                       >
                         {fontOptions.map((font) => (
                           <option key={font.value} value={font.value}>
@@ -1132,7 +1135,7 @@ export function ApplicationWebsiteBuilder({
                       </select>
                       <div
                         className="mt-2 p-3 rounded-md bg-muted/50 text-xl"
-                        style={{ fontFamily: pendingTokens.__global.bigFont }}
+                        style={{ fontFamily: pendingTokens?.__global?.bigFont }}
                       >
                         {data?.fieldNameA && data?.fieldNameB
                           ? `${data.fieldNameA} & ${data.fieldNameB}`
@@ -1147,12 +1150,12 @@ export function ApplicationWebsiteBuilder({
                         Used for paragraphs and details
                       </p>
                       <select
-                        value={pendingTokens.__global.defaultFont}
+                        value={pendingTokens?.__global?.defaultFont}
                         onChange={(e) => {
                           updateGlobalToken("defaultFont", e.target.value);
                           updatePreviewTokens({
                             __global: {
-                              ...pendingTokens.__global,
+                              ...pendingTokens?.__global,
                               defaultFont: e.target.value,
                             },
                           });
@@ -1160,7 +1163,7 @@ export function ApplicationWebsiteBuilder({
                         }}
                         className="w-full h-10 px-3 text-sm border border-border rounded-md bg-background cursor-pointer"
                         style={{
-                          fontFamily: pendingTokens.__global.defaultFont,
+                          fontFamily: pendingTokens?.__global?.defaultFont,
                         }}
                       >
                         {fontOptions.map((font) => (
@@ -1172,7 +1175,7 @@ export function ApplicationWebsiteBuilder({
                       <div
                         className="mt-2 p-3 rounded-md bg-muted/50 text-sm"
                         style={{
-                          fontFamily: pendingTokens.__global.defaultFont,
+                          fontFamily: pendingTokens?.__global?.defaultFont,
                         }}
                       >
                         We are excited to celebrate our special day with you.

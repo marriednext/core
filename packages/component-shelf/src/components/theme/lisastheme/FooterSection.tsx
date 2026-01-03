@@ -1,5 +1,5 @@
 import "style-shelf/tailwind";
-import labels from "label-shelf/lisastheme";
+import { labels } from "./labels";
 import type { FooterSectionCustomization, FooterSectionProps } from "./types";
 import { EditableLabel } from "../../ui/editable-label";
 

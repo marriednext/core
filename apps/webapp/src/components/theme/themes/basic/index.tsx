@@ -3,9 +3,14 @@
 import {
   BasicTheme,
   defaultHierarchicalTokens,
+  defaultWebsiteTokens,
   toFlatTokens,
 } from "component-shelf";
-import type { ApplicationImageComponent } from "component-shelf";
+import type {
+  ApplicationImageComponent,
+  HierarchicalWebsiteTokens,
+  WebsiteTokens,
+} from "component-shelf";
 import { mapWeddingDataToBasicThemeProps } from "./mapper";
 import type { ThemeProps } from "../../types";
 import RsvpFormContainer from "@/components/RsvpFormContainer";
@@ -29,6 +34,22 @@ const basicThemeStyles: RsvpFormStyles = {
   errorMessage: "mt-6 md:mt-10 text-lg md:text-xl",
 };
 
+const isHierarchicalTokens = (
+  tokens: unknown
+): tokens is HierarchicalWebsiteTokens =>
+  typeof tokens === "object" &&
+  tokens !== null &&
+  "__global" in tokens &&
+  "primaryButtonOnLightBackground" in tokens;
+
+const resolveTokens = (
+  websiteTokens: HierarchicalWebsiteTokens | WebsiteTokens | null | undefined
+): WebsiteTokens => {
+  if (!websiteTokens) return defaultWebsiteTokens;
+  if (isHierarchicalTokens(websiteTokens)) return toFlatTokens(websiteTokens);
+  return websiteTokens as WebsiteTokens;
+};
+
 export default function BasicThemeEntry({
   weddingData,
   editable,
@@ -36,9 +57,7 @@ export default function BasicThemeEntry({
   onSectionClick,
 }: ThemeProps) {
   const props = mapWeddingDataToBasicThemeProps(weddingData);
-  const hierarchicalTokens =
-    weddingData.websiteTokens || defaultHierarchicalTokens;
-  const tokens = toFlatTokens(hierarchicalTokens);
+  const tokens = resolveTokens(weddingData.websiteTokens);
 
   const rsvpTokens: RsvpFormTokens = {
     primary: tokens.primary,

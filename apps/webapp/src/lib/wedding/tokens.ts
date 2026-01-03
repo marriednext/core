@@ -1,6 +1,6 @@
 import type {
   GlobalTokens,
-  WebsiteTokens,
+  HierarchicalWebsiteTokens,
   ComponentTokenKey,
   PageTokens,
   ButtonTokens,
@@ -75,7 +75,9 @@ export type ResolvedWebsiteTokens = {
   defaultTextOnDarkBackground: TextTokens;
 };
 
-export const resolveTokens = (tokens: WebsiteTokens): ResolvedWebsiteTokens => {
+export const resolveTokens = (
+  tokens: HierarchicalWebsiteTokens
+): ResolvedWebsiteTokens => {
   const globals = tokens.__global;
   return {
     __global: globals,
@@ -116,10 +118,10 @@ export const resolveTokens = (tokens: WebsiteTokens): ResolvedWebsiteTokens => {
 };
 
 export const updateGlobalToken = <K extends keyof GlobalTokens>(
-  tokens: WebsiteTokens,
+  tokens: HierarchicalWebsiteTokens,
   key: K,
   value: GlobalTokens[K]
-): WebsiteTokens => ({
+): HierarchicalWebsiteTokens => ({
   ...tokens,
   __global: {
     ...tokens.__global,
@@ -129,13 +131,13 @@ export const updateGlobalToken = <K extends keyof GlobalTokens>(
 
 export const updateComponentToken = <
   C extends ComponentTokenKey,
-  K extends keyof WebsiteTokens[C]
+  K extends keyof HierarchicalWebsiteTokens[C]
 >(
-  tokens: WebsiteTokens,
+  tokens: HierarchicalWebsiteTokens,
   component: C,
   key: K,
   value: string
-): WebsiteTokens => ({
+): HierarchicalWebsiteTokens => ({
   ...tokens,
   [component]: {
     ...tokens[component],
@@ -147,12 +149,12 @@ const defaultTokensTemplate = createDefaultTokens();
 
 export const resetComponentToken = <
   C extends ComponentTokenKey,
-  K extends keyof WebsiteTokens[C]
+  K extends keyof HierarchicalWebsiteTokens[C]
 >(
-  tokens: WebsiteTokens,
+  tokens: HierarchicalWebsiteTokens,
   component: C,
   key: K
-): WebsiteTokens => {
+): HierarchicalWebsiteTokens => {
   const defaultValue = defaultTokensTemplate[component][key];
   return {
     ...tokens,
@@ -165,9 +167,9 @@ export const resetComponentToken = <
 
 export const isTokenOverridden = <
   C extends ComponentTokenKey,
-  K extends keyof WebsiteTokens[C]
+  K extends keyof HierarchicalWebsiteTokens[C]
 >(
-  tokens: WebsiteTokens,
+  tokens: HierarchicalWebsiteTokens,
   component: C,
   key: K
 ): boolean => {
@@ -185,7 +187,9 @@ export type FlatRenderTokens = {
   bodyFont: string;
 };
 
-export const toFlatRenderTokens = (tokens: WebsiteTokens): FlatRenderTokens => {
+export const toFlatRenderTokens = (
+  tokens: HierarchicalWebsiteTokens
+): FlatRenderTokens => {
   const resolved = resolveTokens(tokens);
   return {
     primary: resolved.primaryButtonOnLightBackground.background,

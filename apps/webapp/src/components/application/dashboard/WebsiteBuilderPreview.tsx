@@ -5,8 +5,11 @@ import { useWebsiteBuilderStore } from "../../../stores/websiteBuilderStore";
 import {
   mergeSectionsWithDefaults,
   type WebsiteSection,
-  type HierarchicalWebsiteTokens,
 } from "component-shelf";
+import type {
+  WebsiteTokens,
+  HierarchicalWebsiteTokens,
+} from "@/database/types";
 import {
   postToParent,
   isBuilderMessage,
@@ -36,7 +39,7 @@ export type WebsiteBuilderData = {
   photos?: WebsiteBuilderPhoto[];
   websiteSections?: WebsiteSection[] | null;
   websiteLabels?: WebsiteLabels | null;
-  websiteTokens?: HierarchicalWebsiteTokens | null;
+  websiteTokens?: WebsiteTokens | null;
   subdomain?: string | null;
   customDomain?: string | null;
   subscriptionPlan?: string;
@@ -103,7 +106,9 @@ export function WebsiteBuilderPreview({
   }, [data?.websiteLabels, initializeLabels]);
 
   useEffect(() => {
-    initializeTokens(data?.websiteTokens);
+    initializeTokens(
+      data?.websiteTokens as HierarchicalWebsiteTokens | null | undefined
+    );
   }, [data?.websiteTokens, initializeTokens]);
 
   useEffect(() => {

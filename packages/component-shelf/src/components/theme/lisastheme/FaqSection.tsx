@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "../../../lib/utils";
-import labels from "label-shelf/lisastheme";
+import { labels } from "./labels";
 import type {
   FaqItem,
   FaqSectionCustomization,

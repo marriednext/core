@@ -3,6 +3,9 @@ export { googleMapsDefaults } from "./stories/GoogleMaps/GoogleMaps.constants";
 export type { GoogleMapsTypes } from "./stories/GoogleMaps/GoogleMaps.types";
 
 export { LisasTheme } from "./components/theme/lisastheme/LisasTheme";
+export { locales, getLabels } from "./components/theme/lisastheme/labels";
+export type { Locale } from "./components/theme/lisastheme/labels";
+export type { LisasThemeTypes } from "./components/theme/lisastheme/types";
 export { TuscanBloom } from "./components/theme/tuscanbloom/tuscanbloom";
 export { BasicTheme } from "./components/theme/basic/BasicTheme";
 export { PagePhotos } from "./components/theme/basic/page-photos";

@@ -18,9 +18,6 @@ rm -rf packages/style-shelf/node_modules packages/style-shelf/.turbo packages/st
 echo -e "${YELLOW}▸ Cleaning component-shelf...${NC}"
 rm -rf packages/component-shelf/node_modules packages/component-shelf/.turbo packages/component-shelf/dist packages/component-shelf/package-lock.json packages/component-shelf/pnpm-lock.json
 
-echo -e "${BLUE}▸ Cleaning label-shelf...${NC}"
-rm -rf packages/label-shelf/node_modules packages/label-shelf/.turbo packages/label-shelf/dist packages/label-shelf/package-lock.json packages/label-shelf/pnpm-lock.json
-
 echo -e "${RED}▸ Cleaning orm-shelf...${NC}"
 rm -rf packages/orm-shelf/node_modules packages/orm-shelf/.turbo packages/orm-shelf/dist packages/orm-shelf/package-lock.json packages/orm-shelf/pnpm-lock.json
 

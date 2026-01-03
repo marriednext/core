@@ -134,7 +134,7 @@ export type TextTokens = {
   fontFamily: TokenValueOrRef;
 };
 
-export type WebsiteTokens = {
+export type HierarchicalWebsiteTokens = {
   __global: GlobalTokens;
   page: PageTokens;
   primaryButtonOnLightBackground: ButtonTokens;
@@ -147,4 +147,19 @@ export type WebsiteTokens = {
   defaultTextOnDarkBackground: TextTokens;
 };
 
-export type ComponentTokenKey = Exclude<keyof WebsiteTokens, "__global">;
+export type LisasThemeTokens = {
+  primary: string;
+  primaryForeground: string;
+  background: string;
+  headingColor: string;
+  bodyColor: string;
+  headingFont: string;
+  bodyFont: string;
+};
+
+export type WebsiteTokens = HierarchicalWebsiteTokens | LisasThemeTokens;
+
+export type ComponentTokenKey = Exclude<
+  keyof HierarchicalWebsiteTokens,
+  "__global"
+>;
